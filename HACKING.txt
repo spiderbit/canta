@@ -1,0 +1,382 @@
+Hacking Guidelines
+========================
+
+Introduction
+~~~~~~~~~~~~
+Free software commnunity projects are usually worked on by more than
+one person.  Each developer has her/his own preferences for code layout.
+Python limits creativity a bit :) but there is still room for discussion.
+
+In order to reduce all issues to a common determinator we henceforth set
+these guidelines based on Guido van Rossum's and Barry Warsaw's
+"Style Guide for Python Code" (http://python.org/dev/peps/pep-0008).
+
+Rules a meant to be broken, so use them when it makes sense,
+bend or break them if necessary, and don't complain if someone cleans
+up your code to better meet these guidelines.
+
+
+Code Layout
+~~~~~~~~~~~
+
+ * Indentation
+
+   - Use 4 spaces per indentation level.
+   - Never mix tabs and spaces.
+
+ * Maximum Line Length
+
+   - Limit all lines to a maximum of 79 characters.
+   - Indent parameter lists to the start of the list.
+   - Use a backslash to escape carriage returns when needed.
+   - Move function returns to variables to shorten long lines.
+   - Try to minimize deeply-nested code.
+
+   - Example:
+
+      class Rectangle(Blob):
+
+         def __init__(self, width, height, color='black', \
+                      emphasis=None, highlight=0):
+             if width == 0 and height == 0 and \
+                color == 'red' and emphasis == 'strong' or \
+                highlight > 100:
+                 raise ValueError('sorry, you lose')
+             if width == 0 and height == 0 and (color == 'red' or
+                                                emphasis is None):
+                 raise ValueError('I don't think so')
+              Blob.__init__(self, width, height,
+                            color, emphasis, highlight)
+
+ * Blank Lines
+
+   - Separate top-level function and class definitions with two blank lines.
+   - Separate method definitions inside a class with a single blank line.
+
+ * Encoding
+
+   - Use UTF-8 as encoding and unicode strings for text that is
+     displayed on-screen eg. label = u'Options'.
+
+
+Imports
+~~~~~~~
+
+ - Separate imports by new lines.
+
+     Yes: import os
+          import sys
+
+     Ok:  from foo.bar.yourclass import YourClass
+
+     No:  import sys, os
+
+ - Group imports in the following order:
+
+     1. standard library imports
+     2. related third party imports
+     3. local application/library specific imports
+
+
+Whitespace in Expressions and Statements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * Pet Peeves
+
+   - Immediately inside parentheses, brackets or braces:
+
+       Yes: spam(ham[1], {eggs: 2})
+       No:  spam( ham[ 1 ], { eggs: 2 } )
+
+   - Immediately before a comma, semicolon, or colon:
+
+       Yes: if x == 4: print x, y; x, y = y, x
+       No:  if x == 4 : print x , y ; x , y = y , x
+
+   - Immediately before the open parenthesis that starts the argument
+     list of a function call:
+
+       Yes: spam(1)
+       No:  spam (1)
+
+   - Immediately before the open parenthesis that starts an indexing or
+     slicing:
+
+       Yes: dict['key'] = list[index]
+       No:  dict ['key'] = list [index]
+
+   - More than one space around an assignment (or other) operator to
+     align it with another.
+
+       Yes:
+          x = 1
+          y = 2
+          long_variable = 3
+
+       No:
+          x             = 1
+          y             = 2
+          long_variable = 3
+
+ * Other
+
+   - Use spaces around binary and arithmetic operators.
+
+       Yes:
+          i = i + 1
+          submitted += 1
+          x = x * 2 - 1
+          hypot2 = x * x + y * y
+          c = (a + b) * (a - b)
+
+       No:
+          i=i+1
+          submitted +=1
+          x = x*2 - 1
+          hypot2 = x*x + y*y
+          c = (a+b) * (a-b)
+
+   - Don't use spaces around the '=' sign when used to indicate a
+     keyword argument or a default parameter value.
+
+       Yes:
+          def complex(real, imag=0.0):
+              return magic(r=real, i=imag)
+
+       No:
+          def complex(real, imag = 0.0):
+              return magic(r = real, i = imag)
+
+    - Compound statements (multiple statements on the same line) are
+      generally discouraged.
+
+        Yes:
+          if foo == 'blah':
+              do_blah_thing()
+          do_one()
+          do_two()
+          do_three()
+
+        No:
+          if foo == 'blah': do_blah_thing()
+          do_one(); do_two(); do_three()
+
+
+Comments
+~~~~~~~~
+
+ - Write your comments in English, unless you are 120% sure that the code
+   will never be read by people who don't speak your language.
+
+ - Keep comments up-to-date when the code changes.
+
+ - Write complete sentences with the first word capitalized,
+   unless it is an identifier that begins with a lower case letter
+   (never alter the case of identifiers!).
+
+ - End each sentence with a period (.), unless it is very short.
+
+ - Use two spaces after a sentence-ending period.
+
+ * Block Comments
+
+   - Start each line of a block comment with a # and a single space (unless
+     it is indented text inside the comment).
+
+   - Paragraphs inside a block comment are separated by a line containing a
+     single #.
+
+ * Inline Comments
+
+   - Use inline comments sparingly.
+
+   - Separate inline comments by at least two spaces from the statement.
+
+   - Start them with a # and a single space.
+
+
+Documentation Strings
+~~~~~~~~~~~~~~~~~~~~~
+
+ - Write docstrings for all public modules, functions, classes, and
+   methods.
+
+ - Begin docstrings after the "class" and "def" line with three double-quotes (""").
+
+ - End multiline docstrings with """ on a line by itself, preceded by a blank
+   line, e.g.:
+
+      """Return a foobang
+
+      Optional plotz says to frobnicate the bizbaz first.
+
+      """
+
+
+Version Bookkeeping
+~~~~~~~~~~~~~~~~~~~
+
+ - use the follwing stuff:
+
+   __version__ = "$Revision: 56036 $"
+   # $Source$
+
+
+Naming Conventions
+~~~~~~~~~~~~~~~~~~
+
+ * Package and Module Names
+
+   - Use short lowercase names and underscores for multi-word names, eg.
+
+     your_module
+
+ * Class Names
+
+   - Use CamelCode/CapWords for class names, eg.
+
+     YourClass
+
+   - Begin classes for internal use with an underscore, eg.
+
+     _YourInternalClass
+
+ * Exception Names
+
+   - Use the class naming convention.  However, you should use the suffix
+     "Error" on your exception names (if the exception actually is an error).
+
+ * Function Names
+
+   - Use short lowercase names and underscores for multi-word names, eg.
+
+     your_function()
+
+ * Function and method arguments
+
+   - Use 'self' for the first argument to instance methods.
+
+   - Use a single underscore if the argument name clashes with a reserved keyword, eg.
+
+     print_
+
+ * Method Names and Instance Variables
+
+   - Use the function naming rules.
+
+   - Use one leading underscore only for non-public methods and instance variables.
+
+ * Design for inheritance
+
+   - Decide whether a class's methods and instance variables 
+     (collectively: "attributes") should be public or non-public.
+
+   - Public attributes should have no leading underscores.
+
+
+Programming Recommendations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+ * Comparisons
+
+   - Comparisons to singletons like None should always be done with
+     'is' or 'is not', never the equality operators (==, !=).
+
+   - Write "if x is not None", not "if x" when you check if a variable
+     is set to None.
+
+ * Exceptions
+
+   - Use class-based exceptions.
+
+   - Modules or packages should define their own domain-specific base
+     exception class, which should be subclassed from the built-in Exception
+     class.  Always include a class docstring, e.g.:
+
+        class MessageError(Exception):
+            """Base class for errors in the email package."""
+
+   - Add the suffix "Error" to your exception classes, if the exception
+     is an error.
+
+   - When raising an exception, use "raise ValueError('message')" instead of
+     the older form "raise ValueError, 'message'".
+
+   - When catching exceptions, mention specific exceptions
+     whenever possible instead of using a bare 'except:' clause.
+
+      For example, use:
+
+          try:
+              import platform_specific_module
+          except ImportError:
+              platform_specific_module = None 
+
+ * Strings
+
+   - Use ''.startswith() and ''.endswith() instead of string slicing to check
+     for prefixes or suffixes.
+
+        Yes: if foo.startswith('bar'):
+
+        No:  if foo[:3] == 'bar':
+
+ * Types
+
+   - use isinstance() instead of comparing types directly.
+
+       Yes: if isinstance(obj, int):
+
+       No:  if type(obj) is type(1):
+
+ * Boolean Values
+
+   - Don't compare boolean values to True or False using ==
+
+       Yes:   if greeting:
+
+       No:    if greeting == True:
+
+       Worse: if greeting is True:
+
+
+Module Layout
+~~~~~~~~~~~~~
+
+ * Modules should contain many classes.
+
+   - Consider merging with another module if there's only one or two classes.
+
+ * Modules should often be named plural with the base class the singular.
+
+   - e.g., event.observers.ResultView
+
+ * Modules must begin with pydoc strings
+
+   - begin with standard multiline pydoc help for the module
+
+   - include GPLv3 license information in __credits__
+
+   - __author__ should contain the module's current maintainer
+
+   - __version__ string should be $Rev:$ so users can find code revisions 
+
+
+Class Layout
+~~~~~~~~~~~~
+
+ * Dimensions and ranges should be combined into a single property
+
+   - reduces code and API complexity
+
+       Yes:   Model.position = (x, y, z)
+
+       No:    Model.x
+              Model.y
+              Model.z
+
+ * Classes should accept common (or all) properties as __new__/__init__
+   keywords.
+
+   - ie, MenuButton(width=100, height=30)
+

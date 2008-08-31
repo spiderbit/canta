@@ -1,0 +1,11 @@
+- moving LabeList, CubeList and certanly CubeObserver away from Observers
+- renaming Observers (all with or without Observer in name)
+- try to make buttons/labbels without pudding
+- item_group file contains Menugroup class ( class names should be the same
+as package names)
+- We need a seperation of the look and the content of our menu and we could then define the content in an xml file
+- Some stuff could be out of our vcs, language files, changelog
+- the distribute Makefile target needs to be better, deleting stuff and make
+all so we can upload the tar.gz directly, optionaly packaging to deb/rpm and
+windows-installer
+

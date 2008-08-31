@@ -1,0 +1,246 @@
+# German translations for PACKAGE package.
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# stef <test@gmail.com>, 2008.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2008-04-23 01:08+0200\n"
+"PO-Revision-Date: 2008-04-23 00:44+0100\n"
+"Last-Translator: Stefan Huchler <stefan (at) canta-game (dot) org>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-Language: German\n"
+"X-Poedit-Country: GERMANY\n"
+"X-Poedit-SourceCharset: utf-8\n"
+
+#: canta/event/observers/resultview.py:35
+msgid "main menu"
+msgstr "Hauptmenü"
+
+#: canta/event/observers/resultview.py:36
+msgid "choose another song"
+msgstr "Wähle einen anderen Song"
+
+#: canta/event/observers/resultview.py:37 canta/display/core_init.py:319
+msgid "quit"
+msgstr "Beenden"
+
+#: canta/event/observers/resultview.py:39
+msgid "Right: "
+msgstr "Richtig:"
+
+#: canta/event/observers/resultview.py:40
+msgid "Wrong: "
+msgstr "Falsch:"
+
+#: canta/event/observers/resultview.py:41
+msgid "Score: "
+msgstr "Punktestand:"
+
+#: canta/event/observers/time_label.py:39
+msgid "Time: "
+msgstr "Zeit:"
+
+#: canta/event/observers/pause.py:31
+msgid "continue singing"
+msgstr "weiter Singen"
+
+#: canta/event/observers/pause.py:32
+msgid "quit song"
+msgstr "Song beenden"
+
+#: canta/menus/browser.py:38
+msgid "next >>"
+msgstr "weiter >>"
+
+#: canta/menus/browser.py:39
+msgid "<< previous"
+msgstr "<< zurück"
+
+#: canta/menus/browser.py:43
+msgid "Genre: "
+msgstr "Stil"
+
+#: canta/menus/browser.py:44
+msgid "Edition: "
+msgstr "Edition:"
+
+#: canta/menus/browser.py:45
+msgid "Creator: "
+msgstr "Ersteller:"
+
+#: canta/menus/browser.py:46 canta/song/song_editor.py:51
+msgid "BPM: "
+msgstr "Takte pro Minute:"
+
+#: canta/menus/browser.py:47
+msgid "Sing "
+msgstr "Singe"
+
+#: canta/song/song_editor.py:48
+msgid "Press [h] for help..."
+msgstr "Drücke [h] für Hilfe..."
+
+#: canta/song/song_editor.py:49
+msgid "Press [ESC] to go back..."
+msgstr "Drücke [ESC] um zurück zu gehen"
+
+#: canta/song/song_editor.py:52
+msgid "Line: "
+msgstr "Linie:"
+
+#: canta/song/song_editor.py:54
+msgid "Help"
+msgstr "Hilfe"
+
+#: canta/display/core_init.py:283
+msgid "Loading, please wait..."
+msgstr "Lade, bitte warten..."
+
+#: canta/display/core_init.py:305
+msgid "Sing"
+msgstr "Singe"
+
+#: canta/display/core_init.py:306
+msgid "Song Editor"
+msgstr "Lied Editor"
+
+#: canta/display/core_init.py:308 canta/display/core_init.py:323
+msgid "Settings"
+msgstr "Einstellungen"
+
+#: canta/display/core_init.py:309
+msgid "Screen"
+msgstr "Bildschirm"
+
+#: canta/display/core_init.py:310
+msgid "Sound"
+msgstr "Musik"
+
+#: canta/display/core_init.py:311
+msgid "Theme"
+msgstr "Theme"
+
+#: canta/display/core_init.py:312
+msgid "Misc"
+msgstr "Sonstiges"
+
+#: canta/display/core_init.py:313 canta/display/core_init.py:332
+msgid "About"
+msgstr "Über Canta"
+
+#: canta/display/core_init.py:314
+msgid "Quit"
+msgstr "Beenden"
+
+#: canta/display/core_init.py:316
+msgid "back"
+msgstr "zurück"
+
+#: canta/display/core_init.py:317
+msgid "save"
+msgstr "speichern"
+
+#: canta/display/core_init.py:318
+msgid "save & restart"
+msgstr "speichern & neustart"
+
+#: canta/display/core_init.py:322
+msgid "Main Menu"
+msgstr "Hauptmenü"
+
+#: canta/display/core_init.py:324
+msgid "Screen Settings"
+msgstr "Bildschirm Einstellungen"
+
+#: canta/display/core_init.py:325
+msgid "SCREEN:"
+msgstr "BILDSCHIRM:"
+
+#: canta/display/core_init.py:326
+msgid "Sound Settings"
+msgstr "Klang-einstellungen"
+
+#: canta/display/core_init.py:327
+msgid "SOUND:"
+msgstr "KLANG:"
+
+#: canta/display/core_init.py:328
+msgid "Theme Settings"
+msgstr "Themen einstellungen"
+
+#: canta/display/core_init.py:329
+msgid "THEME:"
+msgstr "THEMA:"
+
+#: canta/display/core_init.py:330
+msgid "Miscellaneous Settings"
+msgstr "Sonstige Einstellungen"
+
+#: canta/display/core_init.py:331
+msgid "Miscellaneous"
+msgstr "Sonstiges"
+
+#: canta/display/core_init.py:333
+msgid "Choose a song..."
+msgstr "Wähle einen Song..."
+
+#: canta/display/core_init.py:340
+msgid "Resolution:"
+msgstr "Auflösung:"
+
+#: canta/display/core_init.py:341
+msgid "Fullscreen:"
+msgstr "Vollbild:"
+
+#: canta/display/core_init.py:342
+msgid "FPS label:"
+msgstr "Bilder pro Sekunde Anzeige"
+
+#: canta/display/core_init.py:343
+msgid "Cover images:"
+msgstr "Cover Bilder:"
+
+#: canta/display/core_init.py:344
+msgid "Select sound output engine:"
+msgstr "Wähle Musikausgabe Engine:"
+
+#: canta/display/core_init.py:345
+msgid "Select sound input engine:"
+msgstr "Wähle Musikeingabe Engine:"
+
+#: canta/display/core_init.py:346
+msgid "Play preview in song browser (experimental):"
+msgstr "Spiele vorschaumusik in Song Browser (experimentel):"
+
+#: canta/display/core_init.py:347
+msgid "Choose a theme:"
+msgstr "Wähle ein Thema:"
+
+#: canta/display/core_init.py:348
+msgid "Choose a language:"
+msgstr "Wähle eine Sprache:"
+
+#: canta/display/core_init.py:349
+msgid "Octave correctness:"
+msgstr "Oktaven Genauigkeit"
+
+#: canta/display/sing_screen.py:76
+msgid "Pause"
+msgstr "Pause"
+
+#: canta/display/sing_screen.py:77
+msgid "Results"
+msgstr "Ergebnisse"
+
+#~ msgid "off"
+#~ msgstr "aus"
+
+#~ msgid "on"
+#~ msgstr "an"

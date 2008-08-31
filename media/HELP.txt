@@ -1,0 +1,30 @@
+Keyboard Shortcuts for Song Editor:
+
+=== SONG ===
+
+[d/c] increase/decrease BPM
+
+
+=== LINE ===
+
+[l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
+[n] play (Frequencys)
+[b] play (both)                   [u/i] split/merge
+
+=== TONE ===
+
+[ARROW-LEFT/RIGHT] select next/previous
+[ARROW-UP/DOWN] increase/decrease pitch
+
+[a/r] Add/Remove                      [SPACE] play (Waveform)         
+[x/y] move to the right/left              [m] play (Frequencies)           
+[+/-] increase/decrease duration         [v] play (both)                 
+
+[t] change Text
+
+=== FILE ===
+
+[s] Save changes                       [q] Quit to main menu
+
+
+P.S: try, error and enjoy!! ;-)

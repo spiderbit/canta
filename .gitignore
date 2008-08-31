@@ -1,0 +1,8 @@
+songs/*
+themes/*
+#.gitignore
+tmp
+*.mo
+*.pyc
+*.pyo
+lang/*/LC_MESSAGES/canta-old.po

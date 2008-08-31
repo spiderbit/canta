@@ -1,0 +1,42 @@
+Installation / Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. RUN DIRECTLY
+
+	> python main.py	starts canta
+	> python csg.py 	starts canta song generator 
+				(--help for more)
+
+	you need all the Dependencies listet under Point 3
+
+2. INSTALL IT TO YOUR SYSTEM
+
+ * Windows
+
+	Just download the windows installer
+
+ * Ubuntu, Debian, Other debian-based distries
+
+	Download the deb package from the homepage and all listet other files there
+	and install it with your packetmanager
+   
+ * Other Distries:
+	** did only try under ubuntu,
+	but should work on freebsd and other linux distries
+
+ 	> make install   (in this directory)
+	
+	you need the Dependencies listet under Point 3
+ 
+
+3. DEPENDENCIES:
+
+	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
+	- python-wxgtk		
+	- python-numpy or python-numeric
+	- python-xdg
+	- python-soya
+	- python-pygame
+	- and of course: python (2.5)
+
+

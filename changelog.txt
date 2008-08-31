@@ -1,0 +1,28 @@
+Canta 0.2-beta4 (not yet released ;)
+* new Canta Song Generator which can make a skelet for a new song, with and
+without a midi file
+* Support for different languages
+* accepting all options without manual restart of canta
+* faster config file parsing/generation -> faster start of canta
+* script for generating and managing po-files (language-files) 
+* removed pyxml dependency (now canta works now also in windows with python 2.5)
+* Bugfix: You can now add musical notes textures to a song, without needing a theme_cfg.xml file.
+* Font sizes now use dynamic sizes.
+* Improved rotation you can now rotate static models x, y, z.
+* some bugfixes (look at svn log or sometimes svn diff)
+* Canta bar-colors can now be adjusted by themes
+
+Canta 0.2-beta3
+* Swichted off "maximize" button.
+
+Canta 0.2-beta2
+* New code for finding the song position.
+* Huge parser update.
+* SongEditor plays mp3s and notes as midi (Windows-only)
+* Improved look of SongBrowser and ResultsScreen.
+* Improved Settings menu.
+
+Canta 0.2-beta1
+* Initial version.
+
+
