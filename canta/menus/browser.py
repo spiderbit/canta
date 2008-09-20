@@ -184,8 +184,8 @@ class MenuBrowser(Menu):
 		song = self.browsable_items[self.selected]
 
 		# Song preview:
-		self.player.load(song.path, song.info['mp3'])
 		if self.preview_sound:
+			self.player.load(song.path, song.info['mp3'])
 			self.player.play()
 
 		song_title = song.info['title']
