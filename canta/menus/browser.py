@@ -24,7 +24,7 @@ import time
 import soya.pudding as pudding
 from canta.menus.menu import Menu
 from canta.menus.button import MenuButton
-from canta.player.pygame_player import PygamePlayer
+
 
 from canta.theme.rotating_body import RotatingBody
 from PIL import Image
@@ -32,7 +32,7 @@ import soya.pudding.ext.slicingimage
 
 class MenuBrowser(Menu):
 	def __init__(self, browsable_items, widget_properties, \
-			use_pil=False, preview=False, octave=False, debug=False):
+			use_pil=False, preview=False, octave=False, player=None, debug=False):
 		Menu.__init__(self, widget_properties)
 
 		l_next = _(u'next >>')
@@ -73,7 +73,7 @@ class MenuBrowser(Menu):
 		scr_right = 75
 		scr_width = self.screen_res_x - 20
 		scr_height = self.screen_res_y - 20
-		self.player = PygamePlayer()
+		self.player = player
 
 		self.cover_cont = pudding.container.VerticalContainer( \
 			self.parent_widget, top=scr_top + 120, \

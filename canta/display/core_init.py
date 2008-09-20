@@ -257,6 +257,20 @@ class CoreInit:
 		self.light.set_xyz(0.0, 7.7, 17.0)
 
 
+	def load_player(self):
+		# The music players:
+		player = self.user_cfg.get_player()
+		if player == 'PyAudio':
+			from canta.player.pyaudio_player import PyaudioPlayer
+			self.player = PyaudioPlayer()
+		elif player == 'Soya3D':
+			from canta.player.soya_player import SoyaPlayer
+			self.player = SoyaPlayer()
+		else:
+			from canta.player.pygame_player import PygamePlayer
+			self.player = PygamePlayer()
+
+
 	def _init_widget_engine(self):
 		"""Initialize the pudding widget system, create a root widget.
 		"""
@@ -389,9 +403,10 @@ class CoreInit:
 		song_editor = SongEditor(self.app_dir, self.widget_properties, \
 			self.theme_mgr, main_menu, self.debug)
 
+                self.load_player()
 
 		song_editor_browser = SongEditorBrowser(song_objects_home, \
-			self.widget_properties, self.use_pil, self.sound_preview, start_screen=song_editor)
+			self.widget_properties, self.use_pil, self.sound_preview, player = self.player, start_screen=song_editor)
 		song_editor_browser.set_heading(h1_song_browser)
 		song_editor_browser.set_bg_box()
 		self.menus['browser_editor'] = song_editor_browser
@@ -408,11 +423,12 @@ class CoreInit:
 					camera=self.camera, theme_mgr=self.theme_mgr, \
 					widget_properties=self.widget_properties, \
 					menu_list=self.menus, user_cfg=self.user_cfg, \
-					octave=self.octave,debug=self.debug)
+					octave=self.octave, player=self.player,debug=self.debug)
 
 		song_browser = SongBrowser(song_objects, \
 			self.widget_properties, self.use_pil, \
-				self.sound_preview, self.octave, start_screen=sing_screen)
+			self.sound_preview, self.octave, start_screen=sing_screen, \
+			player=self.player)
 	
 		song_browser.set_heading(h1_song_browser)
 		song_browser.set_bg_box()

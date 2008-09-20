@@ -53,13 +53,14 @@ class SingScreen(Menu):
 	"""Sing screen.
 	"""
 	def __init__(self, app_dir, camera, theme_mgr, widget_properties, \
-			menu_list, user_cfg, octave, debug=False):
+			menu_list, user_cfg, octave, player=None,debug=False):
 		Menu.__init__(self, widget_properties)
 
 		self.app_dir = app_dir
 		self.camera = camera
 		self.theme_mgr = theme_mgr
 		self.octave = octave
+		self.player= player
 
 		self.widget_properties = widget_properties
 		self.menu_list = menu_list
@@ -193,27 +194,6 @@ class SingScreen(Menu):
 		pos_size['left'] = 35
 		self.widget_properties['pos_size'] = pos_size
 		self.widget_properties['anchoring'] = 'bottom'
-
-
-
-		# The music players:
-		player = self.user_cfg.get_player()
-		if player == 'PyAudio':
-			from canta.player.pyaudio_player import PyaudioPlayer
-			self.player = PyaudioPlayer(real_path, \
-					os.path.join(self.song.info['mp3']), \
-					self.song.info['start'])
-		elif player == 'Soya3D':
-			from canta.player.soya_player import SoyaPlayer
-			self.player = SoyaPlayer(self.parent_world,real_path, \
-					os.path.join(self.song.info['mp3']), \
-					self.song.info['start'])
-		else:
-			from canta.player.pygame_player import PygamePlayer
-			self.player = PygamePlayer(real_path, \
-					os.path.join(self.song.info['mp3']), \
-					self.song.info['start'])
-
 
 		# The observer for the lyrics:
 		label = SongLabelObserver(self.widget_properties, self.debug)

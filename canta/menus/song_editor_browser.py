@@ -3,9 +3,9 @@ from browser import MenuBrowser
 class SongEditorBrowser(MenuBrowser):
 
 	def __init__(self, browsable_items, widget_properties, \
-			use_pil=False, preview=False, octave=False, debug=False, start_screen=None):
+			use_pil=False, preview=False, octave=False, player=None, debug=False, start_screen=None):
 		MenuBrowser.__init__(self, browsable_items, widget_properties, \
-			use_pil, preview, octave, debug)
+			use_pil, preview, octave, player, debug)
 
 		self.l_start = 'Edit'
 		self.start_screen=start_screen
