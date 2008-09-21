@@ -33,6 +33,7 @@ class DummyPlayer(Player):
 		Player.__init__(self, path, file, time=0.0)
 		self.loaded = False
 		self.pos = 0.0
+		pygame.mixer.init()
 
 
 	def load(self, path=None, file=None):
@@ -41,7 +42,7 @@ class DummyPlayer(Player):
 			self.path=path
 		if file:
 			self.file=file
-		pygame.mixer.init()
+		
 		tmp = os.path.join(self.path, self.file).encode('utf-8')
 		sound = pygame.mixer.Sound(tmp)
 		self.length = sound.get_length()
