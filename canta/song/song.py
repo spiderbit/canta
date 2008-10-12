@@ -238,6 +238,26 @@ class Song:
 						float(words[0]), '', '', ''))
 
 
+		self.convert_to_absolute()		
+
+
+
+
+	def convert_to_absolute(self):
+		if 'relative' in self.info and self.info['relative'].lower() == 'yes':
+			if self.splitted:
+				pass # join-lines??
+			abs_line_start = 0
+			for segment in self.segments:
+				if segment.type == 'pause':
+					abs_line_start = abs_line_start + segment.time_stamp
+					segment.time_stamp = abs_line_start
+				else:
+					segment.time_stamp = abs_line_start + segment.time_stamp
+
+					
+
+
 
 
 
