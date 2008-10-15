@@ -133,6 +133,8 @@ class Song:
 		if us_file == '':
 			us_file = os.path.join(self.path, self.file)
 
+
+
 		f = open(us_file,'r')
 		sample = f.read(4)
 		#if sample.startswith(codecs.BOM_UTF8):
@@ -173,72 +175,74 @@ class Song:
 				return
 
 			elif type=="full" or type == "segments":
-				if line.startswith('-'):
-					words = self.clean_string(line[1:].encode())
-					if len(words) == 1:
-						#print words
-						self.addSegment(SongSegment( "pause", \
-							float(words[0]), '', '', ''))
-					elif len(words) == 2:
-						self.addSegment(SongSegment( "pause", \
-							float(words[1]), '', '', ''))
-					else:
-						print 'Song - readFile()-error: something wrong in the songfile:'\
-							+ txtFile + words[0] + "blub" + words + line + line[1:]
-						sys.exit()
-
-				# Find out if the note is a
-				#   : <- normal note
-				#   * <- special note
-				#   F <- freestyle note
-				elif line.startswith(':') or line.startswith('*') or line.startswith('F'):
-					#break
-					words = self.clean_string(line[1:])
-					tmp_list = []
-					before_syllable = False
-					syllable_found = False
-					line_range = range(len(line))
-					line_range.reverse()
-					for i in line_range:
-						#print "4", i, line[i]
-						if line[i] == ' ':
-							tmp_list.append(' ')
-							if syllable_found:
-								before_syllable = True
-						else:
-							if not before_syllable:
-								tmp_list.append(line[i])
-								syllable_found = True
-							else:
-								break
-
-					tmp_list.reverse()
-					text = ''.join(tmp_list[1:])
-								
-					special = False
-					if line.startswith('*'):
-						special = True # !!! That we should use something (*) ???
-					freestyle = False
-					if line.startswith('F'):
-						freestyle = True
-					time_stamp = int(words[0])
-					duration = int(words[1])
-					pitch = int(words[2])
-					if not self.octave:
-						pitch = pitch
-						
-					self.addSegment(SongSegment("note", \
-								time_stamp, \
-								duration, \
-								pitch, \
-								text, special, freestyle))
-
-				elif line.startswith('E'):
-					self.addSegment(SongSegment("end", \
-						float(words[0]), '', '', ''))
-
-
+				self.parse_segment(line)
 		self.convert_to_absolute()		
+
+	def parse_segment(self, line):
+		if line.startswith('-'):
+			words = self.clean_string(line[1:].encode())
+			if len(words) == 1:
+				#print words
+				self.addSegment(SongSegment( "pause", \
+					float(words[0]), '', '', ''))
+			elif len(words) == 2:
+				self.addSegment(SongSegment( "pause", \
+					float(words[1]), '', '', ''))
+			else:
+				print 'Song - readFile()-error: something wrong in the songfile:'\
+					+ txtFile + words[0] + "blub" + words + line + line[1:]
+				sys.exit()
+
+		# Find out if the note is a
+		#   : <- normal note
+		#   * <- special note
+		#   F <- freestyle note
+		elif line.startswith(':') or line.startswith('*') or line.startswith('F'):
+			#break
+			words = self.clean_string(line[1:])
+			tmp_list = []
+			before_syllable = False
+			syllable_found = False
+			line_range = range(len(line))
+			line_range.reverse()
+			for i in line_range:
+				#print "4", i, line[i]
+				if line[i] == ' ':
+					tmp_list.append(' ')
+					if syllable_found:
+						before_syllable = True
+				else:
+					if not before_syllable:
+						tmp_list.append(line[i])
+						syllable_found = True
+					else:
+						break
+
+			tmp_list.reverse()
+			text = ''.join(tmp_list[1:])
+						
+			special = False
+			if line.startswith('*'):
+				special = True # !!! That we should use something (*) ???
+			freestyle = False
+			if line.startswith('F'):
+				freestyle = True
+			time_stamp = int(words[0])
+			duration = int(words[1])
+			pitch = int(words[2])
+			if not self.octave:
+				pitch = pitch
+				
+			self.addSegment(SongSegment("note", \
+						time_stamp, \
+						duration, \
+						pitch, \
+						text, special, freestyle))
+
+		elif line.startswith('E'):
+			print line
+			self.addSegment(SongSegment("end", \
+				float(self.segments[-1].time_stamp), '', '', ''))
 
 
 
