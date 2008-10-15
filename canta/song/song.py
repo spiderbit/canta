@@ -180,14 +180,13 @@ class Song:
 
 	def parse_segment(self, line):
 		if line.startswith('-'):
-			words = self.clean_string(line[1:].encode())
-			if len(words) == 1:
-				#print words
-				self.addSegment(SongSegment( "pause", \
-					float(words[0]), '', '', ''))
-			elif len(words) == 2:
+			words = line.split(' ')
+			if len(words) == 2:
 				self.addSegment(SongSegment( "pause", \
 					float(words[1]), '', '', ''))
+			elif len(words) == 3:
+				self.addSegment(SongSegment( "pause", \
+					float(words[2]), '', '', ''))
 			else:
 				print 'Song - readFile()-error: something wrong in the songfile:'\
 					+ txtFile + words[0] + "blub" + words + line + line[1:]
@@ -198,41 +197,19 @@ class Song:
 		#   * <- special note
 		#   F <- freestyle note
 		elif line.startswith(':') or line.startswith('*') or line.startswith('F'):
-			#break
-			words = self.clean_string(line[1:])
-			tmp_list = []
-			before_syllable = False
-			syllable_found = False
-			line_range = range(len(line))
-			line_range.reverse()
-			for i in line_range:
-				#print "4", i, line[i]
-				if line[i] == ' ':
-					tmp_list.append(' ')
-					if syllable_found:
-						before_syllable = True
-				else:
-					if not before_syllable:
-						tmp_list.append(line[i])
-						syllable_found = True
-					else:
-						break
-
-			tmp_list.reverse()
-			text = ''.join(tmp_list[1:])
-						
-			special = False
+			words = line.split(' ', 4)
+			special = freestyle = False
 			if line.startswith('*'):
-				special = True # !!! That we should use something (*) ???
-			freestyle = False
-			if line.startswith('F'):
-				freestyle = True
-			time_stamp = int(words[0])
-			duration = int(words[1])
-			pitch = int(words[2])
+				special = True
+			elif line.startswith('F'):
+				freestype = True    
+			time_stamp = int(words[1])
+			duration = int(words[2])
+			pitch = int(words[3])
 			if not self.octave:
 				pitch = pitch
-				
+			text = words[4]
+			
 			self.addSegment(SongSegment("note", \
 						time_stamp, \
 						duration, \
@@ -409,23 +386,6 @@ class Song:
 			#		tone_nr = None
 			#print "tone_nr ", tone_nr
 		return line_nr, tone_nr
-
-
-
-
-
-
-	def clean_string(self, parse_string):
-		target_list = parse_string.split(' ')
-		new_list = []
-		for i, item in enumerate(target_list):
-			if item == '' or item =='\r':
-				pass
-			else:
-				new_list.append(target_list[i])
-	
-		return new_list
-
 
 
 	def get_midi(self, line_nr, tone_nr):
