@@ -269,6 +269,9 @@ class CoreInit:
 		elif player == 'Dummy':
 			from canta.player.dummy_player import DummyPlayer
 			self.player = DummyPlayer()
+		elif player == 'Gstreamer':
+			from canta.player.gst_player import GSTPlayer
+			self.player = GSTPlayer()
 		else:
 			from canta.player.pygame_player import PygamePlayer
 			self.player = PygamePlayer()
@@ -354,7 +357,7 @@ class CoreInit:
 		h1_song_browser =  _(u'Choose a song...')
 
 		# Settings:
-		valid_sound_players = ['PyGame', 'Soya3D', 'Dummy']
+		valid_sound_players = ['PyGame', 'Soya3D', 'Dummy', 'Gstreamer']
 		valid_sound_inputs = ['OSS', 'PyAudio']
 		valid_languages = self.lm.get_langs()
 		on_off_toggle = [('off'), ('on')]
