@@ -25,7 +25,6 @@ import getopt
 
 import sys, os, string
 import user, shutil
-import pygame
 import wx
 import os.path
 
@@ -209,12 +208,9 @@ def get_length(path, song_file):
 	'''
 		parameters: todo...
 	'''
-	pygame.mixer.init()
-
-	sound = pygame.mixer.Sound(os.path.join(path,song_file))
-	length = sound.get_length()
-	
-	return length
+	from mutagen.oggvorbis import OggVorbis
+	audio = OggVorbis(os.path.join(path,song_file))
+	return audio.info.length
 
 
 def fill_song_object(song, length, entries_per_line = 5, tone_distance = 8, tone_duration = 5):
