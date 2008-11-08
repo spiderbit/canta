@@ -17,15 +17,12 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# better would be other method to get length of the song:
-import pygame
-import pygame.mixer
 
 import os
 import wave
 from time import time
 from player import Player
-
+import canta.metadata as metadata
 
 class DummyPlayer(Player):
 
@@ -33,8 +30,6 @@ class DummyPlayer(Player):
 		Player.__init__(self, path, file, time=0.0)
 		self.loaded = False
 		self.pos = 0.0
-		pygame.mixer.init()
-
 
 	def load(self, path=None, file=None):
 		self.loaded = True
@@ -42,10 +37,11 @@ class DummyPlayer(Player):
 			self.path=path
 		if file:
 			self.file=file
-		
-		tmp = os.path.join(self.path, self.file).encode('utf-8')
-		sound = pygame.mixer.Sound(tmp)
-		self.length = sound.get_length()
+		f = metadata.get_format(os.path.join(self.path, self.file))
+		if f is None:
+			print "format not supported"
+		else:
+			self.length = f.get_length()
 
 
 	def play(self, start=0, length=None):

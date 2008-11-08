@@ -19,6 +19,7 @@
 
 from canta.song.song import Song
 from canta.song.song_segment import SongSegment
+import canta.metadata as metadata
 
 #from xdg import Mime
 import getopt
@@ -208,9 +209,11 @@ def get_length(path, song_file):
 	'''
 		parameters: todo...
 	'''
-	from mutagen.oggvorbis import OggVorbis
-	audio = OggVorbis(os.path.join(path,song_file))
-	return audio.info.length
+	f = metadata.get_format(os.path.join(path,song_file))
+	if f is None:
+		return False # nto a supported type
+	length = f.get_length()
+	return length
 
 
 def fill_song_object(song, length, entries_per_line = 5, tone_distance = 8, tone_duration = 5):
