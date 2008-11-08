@@ -13,7 +13,21 @@
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 import os
-from xl import common
+#from xl import common revno: 1695
+''' the one dependency from the module common  '''
+VALID_TAGS = (
+    # Ogg Vorbis spec tags
+    "title version album tracknumber artist genre performer copyright "
+    "license organization description location contact isrc date "
+
+    # Other tags we like
+    "arranger author composer conductor lyricist discnumber labelid part "
+    "website language encodedby bpm albumartist originaldate originalalbum "
+    "originalartist recordingdate"
+    ).split()
+
+
+
 
 INFO_TAGS = ['bitrate', 'length', 'lyrics']
 
@@ -59,7 +73,7 @@ class BaseFormat(object):
             return None
 
     def read_all(self):
-        all = self.read_tags(common.VALID_TAGS)
+        all = self.read_tags(VALID_TAGS)
         all.update(self.read_tags(INFO_TAGS))
         return all
 

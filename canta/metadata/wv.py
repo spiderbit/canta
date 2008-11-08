@@ -12,7 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from xl.metadata._apev2 import ApeFormat
+from canta.metadata._apev2 import ApeFormat
 from mutagen import wavpack
 
 class WavpackFormat(ApeFormat):

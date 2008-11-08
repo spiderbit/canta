@@ -12,7 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from xl.metadata._id3 import ID3Format
+from canta.metadata._id3 import ID3Format
 from mutagen import trueaudio
 
 class TTAFormat(ID3Format):

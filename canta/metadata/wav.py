@@ -12,7 +12,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-from xl.metadata import BaseFormat
+from canta.metadata import BaseFormat
 import wave, sunau, aifc, sndhdr
 
 type_map = {
