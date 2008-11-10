@@ -29,7 +29,12 @@ import user, shutil
 import wx
 import os.path
 
-
+def supported_formats():
+	formats = []
+	for ext, format in metadata.formats.iteritems():
+		if format:
+			formats.append(ext)
+	return formats
 
 how_to_get_help_msg = '''
 
@@ -39,11 +44,10 @@ Help to use this Programm:\tpython %s <-h|--help>
 
 unsupported_format_msg = '''
 Format: not supported!
-Supported formats are: OGG
-'''
+Supported formats are: 
+%s
+''' % ('\n'.join(supported_formats()))
 # + how_to_get_help_msg
-
-
 
 def get_error_msg(song_path):
 
@@ -111,9 +115,9 @@ QUICK MODE (without need of a midi):
 
 \t> %s example.ogg\t\t\t<allowed options: -tAaesd>
 
-allowed music files: <OGG VORBIS>
+supported formats: <%s>
 	
-""" % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0])
+""" % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0], (', '.join(supported_formats())))
 
 
 
@@ -176,7 +180,6 @@ def create_song(title, src_path, song_file, song_path, song):
 			midi_file:	the midifile you want to use
 	'''
 
-
 	config_path, songs_path = get_paths()
 	shutil.copy(os.path.join(src_path, song_file), song_path)	
 	song.write_to_txt(os.path.join(song_path, title+'.txt'))
@@ -192,28 +195,14 @@ def create_song_object(song_path, song_file, midi_file = None):
 		fill_song_object(song, length)
 
 
-
-def check_format(path, song_file):
-
-	#supported_formats = ['video/x-theora+ogg', 'audio/x-vorbis+ogg']
-
-	#mime_type = str(Mime.get_type_by_name(os.path.join(path, song_file)))
-
-	if song_file.upper().endswith('OGG'):
-		return True, ''
-	else:
-		return False, unsupported_format_msg
-
-
-def get_length(path, song_file):
+def get_length(audio_file_absolute):
 	'''
 		parameters: todo...
 	'''
-	f = metadata.get_format(os.path.join(path,song_file))
+	f = metadata.get_format(audio_file_absolute)
 	if f is None:
-		return False # nto a supported type
-	length = f.get_length()
-	return length
+		return False # not a supported format
+	return f.get_length()
 
 
 def fill_song_object(song, length, entries_per_line = 5, tone_distance = 8, tone_duration = 5):
@@ -277,30 +266,30 @@ def do_ask(text, default=None):
 
 
 
-def cli_client(music_file, ask, midi_file, title, artist, entries, spacing, duration):
+def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spacing, duration):
 
 	print start_screen
 
 	if ask:
-		music_file = do_ask('Music file', music_file)
-	if music_file != None:
-		check_file(music_file)
+		music_file = do_ask('Music file', music_file_absolute)
+	if music_file_absolute != None:
+		check_file(music_file_absolute)
 	else:
 		print "Error: You need a music file!!"
 		sys.exit(1)
 	
 	if ask:
-		midi_file = do_ask('Midi file', midi_file)
+		midi_file = do_ask('Midi file', midi_file_absolute)
 	if midi_file != None:
 		check_file(midi_file)
 	
-	head, tail = os.path.split(music_file)
+	head, tail = os.path.split(music_file_absolute)
 	music_file = tail
 	src_path = head
 
-	format_accepted, error_msg = check_format(src_path, music_file)
-	if not format_accepted:
-		print error_msg
+	format = metadata.get_format(music_file_absolute)
+	if not format:
+		print unsupported_format_msg
 		sys.exit()
 
 	if title == None:
@@ -337,7 +326,10 @@ def cli_client(music_file, ask, midi_file, title, artist, entries, spacing, dura
 		song.read_from_midi(midi_file)
 		shutil.copy(midi_file, song_path)
 	else:
-		length = get_length(src_path, music_file)
+		length = format.get_length()
+		if not length:
+			print unsupported_format_msg
+			sys.exit()
 		fill_song_object(song, length, entries, spacing, duration)
 
 	create_song(title, src_path, music_file, song_path, song)
@@ -379,7 +371,7 @@ class MainWindow(wx.Frame):
 		self.create_menu()
 
 
-		self.file_lbl = wx.StaticText(self.panel, -1, "The Music File (OGG) :",wx.Point(20,60))
+		self.file_lbl = wx.StaticText(self.panel, -1, "The Music File :",wx.Point(20,60))
 		self.file_ctl = wx.TextCtrl(self.panel, 20, "", wx.Point(220, 60), wx.Size(140,-1))
 
 		self.artist_lbl = wx.StaticText(self.panel, -1, "Artist Name :",wx.Point(20,90))
@@ -420,8 +412,8 @@ class MainWindow(wx.Frame):
 		return
 
 	def OnClick(self, event):
-		file = os.path.join(self.dirname, self.filename)
-		check_file(file)
+		file_name_absolute = os.path.join(self.dirname, self.filename)
+		check_file(file_name_absolute)
 
 		title_error = "At least a Songtitle is needed for creating a Canta song"
 
@@ -432,10 +424,10 @@ class MainWindow(wx.Frame):
 		if self.artist_ctl.GetValue() == '':
 			self.artist_ctl.SetValue('UNKNOWN')
 			
-		format_accepted, error_msg = check_format(self.dirname, self.filename)
+		format = metadata.get_format(file_name_absolute)
 
-		if not format_accepted:
-			self.error_Msg(error_msg)
+		if not format:
+			self.error_Msg(unsupported_format_msg)
 			return
 
 		song_name = get_long_song_name(self.artist_ctl.GetValue() ,self.title_ctl.GetValue())
@@ -447,7 +439,7 @@ class MainWindow(wx.Frame):
 
 		song = Song(self.title_ctl.GetValue(), self.artist_ctl.GetValue(), self.filename, debug = 0)
 
-		length = get_length(self.dirname, self.filename)
+		length = get_length(file_name_absolute)
 		fill_song_object(song, length)
 
 		create_song(song_name, self.dirname, self.filename, song_path, song)
@@ -476,8 +468,11 @@ class MainWindow(wx.Frame):
 		''' Return a dictionary with file dialog options that can be
 			used in both the save file dialog as well as in the open
 			file dialog. '''
+		wildcard = "Audio files (*.ogg, *.mp3 ...)|"
+		for format in supported_formats():
+			wildcard += '*.%s;' % (format)
 		return dict(message="Choose a file", defaultDir=self.dirname,
-			wildcard="OGG files (*.ogg)|*.ogg")
+			wildcard=wildcard)
 
 	def ask_for_filename(self, **dialogOptions):
 		dialog = wx.FileDialog(self, **dialogOptions)
@@ -534,7 +529,7 @@ def main():
 	elif len(args) == 0 and '--ask' or '-A' in argv:
 		pass
 	else:
-		print sys.argv[0], 'requires a sound file (ogg)'
+		print sys.argv[0], 'requires a audio file '
 		print usage
 		sys.exit(2)
 		
