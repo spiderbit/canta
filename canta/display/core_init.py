@@ -260,22 +260,24 @@ class CoreInit:
 	def load_player(self):
 		# The music players:
 		player = self.user_cfg.get_player()
-		if player == 'PyAudio':
-			from canta.player.pyaudio_player import PyaudioPlayer
-			self.player = PyaudioPlayer()
-		elif player == 'Soya3D':
-			from canta.player.soya_player import SoyaPlayer
-			self.player = SoyaPlayer()
-		elif player == 'Dummy':
+		#if player == 'PyAudio':
+		#	from canta.player.pyaudio_player import PyaudioPlayer
+		#	self.player = PyaudioPlayer()
+		#elif player == 'Soya3D':
+		#	from canta.player.soya_player import SoyaPlayer
+		#	self.player = SoyaPlayer()
+		if player == 'Dummy':
 			from canta.player.dummy_player import DummyPlayer
 			self.player = DummyPlayer()
 		elif player == 'Gstreamer':
 			from canta.player.gst_player import GSTPlayer
 			self.player = GSTPlayer()
-		else:
+		elif player == 'PyGame':
 			from canta.player.pygame_player import PygamePlayer
 			self.player = PygamePlayer()
-
+		else:
+			print "something wrong in configfile, player not found!"
+			sys.exit(0)          
 
 	def _init_widget_engine(self):
 		"""Initialize the pudding widget system, create a root widget.
@@ -357,7 +359,7 @@ class CoreInit:
 		h1_song_browser =  _(u'Choose a song...')
 
 		# Settings:
-		valid_sound_players = ['PyGame', 'Soya3D', 'Dummy', 'Gstreamer']
+		valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
 		valid_sound_inputs = ['OSS', 'PyAudio']
 		valid_languages = self.lm.get_langs()
 		on_off_toggle = [('off'), ('on')]
@@ -404,12 +406,13 @@ class CoreInit:
 		song_objects_home = self.song_loader.load_songs(os.path.join(self.config_path, 'songs'))
 		song_objects.extend(song_objects_home)
 
+                self.load_player()
 
 		# Song editor:'theme_mgr'
 		song_editor = SongEditor(self.app_dir, self.widget_properties, \
-			self.theme_mgr, main_menu, self.debug)
+			self.theme_mgr, main_menu, player=self.player, debug=self.debug )
 
-                self.load_player()
+
 
 		song_editor_browser = SongEditorBrowser(song_objects_home, \
 			self.widget_properties, self.use_pil, self.sound_preview, player = self.player, start_screen=song_editor)

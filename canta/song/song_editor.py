@@ -47,7 +47,7 @@ from canta.song.song_segment import SongSegment
 class SongEditor(soya.Body):
 	"""TODO...
 	"""
-	def __init__(self, app_dir, widget_properties, theme_mgr,main_menu, debug=0):
+	def __init__(self, app_dir, widget_properties, theme_mgr, main_menu, player, debug=0):
 
 
 		self.l_help_hint_0 = _(u'Press [h] for help...')
@@ -93,7 +93,7 @@ class SongEditor(soya.Body):
 		self.tone_txt_input = InputField(self.widget_properties, '')
 		self.tone_txt_input.label.visible = 0
 		
-
+		self.player = player
 		self.connect_keys()
 		self.msg = dict()
 
@@ -163,8 +163,6 @@ class SongEditor(soya.Body):
 		self.msg['type'] = 'activateNote'
 		self.song_data.set_data(self.msg)
 
-		#Player
-		self.player = PygamePlayer()
 		if self.check_format(self.song.path, self.selected_song):
 			self.player.load_sound(path=self.song.path, file= self.selected_song)
 			self.snd = True
