@@ -108,7 +108,16 @@ class GSTPlayer(Player):
         self._pause()
 
     def beep(self, freq, dur=0.1):
-        print "not implemented yet"
+        pipeline = gst.Pipeline("mypipeline")
+        audiotestsrc = gst.element_factory_make("audiotestsrc", "audio")
+        pipeline.add(audiotestsrc)
+        sink = gst.element_factory_make("autoaudiosink", "sink")
+        pipeline.add(sink)
+        audiotestsrc.link(sink)
+        audiotestsrc.set_property("freq", freq)
+        pipeline.set_state(gst.STATE_PLAYING)
+        time.sleep(dur)
+        pipeline.set_state(gst.STATE_NULL)
         
     def fadeout(self):
         print "not implemented yet"
