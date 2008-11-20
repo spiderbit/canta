@@ -45,6 +45,8 @@ class GSTPlayer(Player):
         Player.__init__(self, path, file, time)
         self.playbin = gst.element_factory_make("playbin", "player")
         self.clock = None
+        self.time_format = gst.Format(gst.FORMAT_TIME)
+
 
     def load(self, path=None, file=None):
         self.loaded = True
@@ -60,7 +62,11 @@ class GSTPlayer(Player):
     def stop(self):
         self.playbin.set_state(gst.STATE_NULL)
 
-    def play(self,start=0,length=None):
+    def play(self, start=0, length=None):
+        result = self.playbin.set_state(gst.STATE_PAUSED)
+        self.playbin.get_state() # block until the state is really changed
+        seek_ns = start * 1000000000
+        self.playbin.seek_simple(self.time_format, gst.SEEK_FLAG_FLUSH, seek_ns)
         self.playbin.set_state(gst.STATE_PLAYING)
         if length !=None:
             time.sleep(length)
