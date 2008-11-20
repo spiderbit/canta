@@ -54,10 +54,11 @@ class GSTPlayer(Player):
         self.playbin.set_state(gst.STATE_NULL)
 
     def play(self, start=0):
-        result = self.playbin.set_state(gst.STATE_PAUSED)
-        self.playbin.get_state() # block until the state is really changed
-        seek_ns = start * 1000000000
-        self.playbin.seek_simple(self.time_format, gst.SEEK_FLAG_FLUSH, seek_ns)
+        if not self.paused and start!=0:
+            result = self.playbin.set_state(gst.STATE_PAUSED)
+            self.playbin.get_state() # block until the state is really changed
+            seek_ns = start * 1000000000
+            self.playbin.seek_simple(self.time_format, gst.SEEK_FLAG_FLUSH, seek_ns)
         self.playbin.set_state(gst.STATE_PLAYING)
         self._play()
 
