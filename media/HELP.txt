@@ -8,7 +8,7 @@ Keyboard Shortcuts for Song Editor:
 === LINE ===
 
 [l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
-[n] play (Frequencys)
+[n] play (Frequencies)
 [b] play (both)                   [u/i] split/merge
 
 === TONE ===
