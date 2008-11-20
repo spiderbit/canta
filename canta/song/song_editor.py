@@ -24,8 +24,6 @@ import thread
 import soya
 import soya.pudding as pudding
 
-from xdg import Mime
-
 from canta.event.observers.song_label_observer import SongLabelObserver
 from canta.event.observers.main_cube_observer import MainCubeObserver
 from canta.event.observers.click_observer import ClickObserver
@@ -37,7 +35,6 @@ from canta.menus.button import MenuButton
 from canta.menus.text import MenuText
 from canta.menus.input_field import InputField
 from canta.event.keyboard_event import KeyboardEvent
-from canta.player.pygame_player import PygamePlayer
 from canta.event.song_event import SongEvent
 from canta.song.song_segment import SongSegment
 
@@ -108,14 +105,6 @@ class SongEditor(soya.Body):
 		self.v_cont.visible = 1
 		self.setup()
 
-	def check_format(self, path, song_file):
-		supported_formats = ['video/x-theora+ogg', 'audio/x-vorbis+ogg']
-		mime_type = str(Mime.get_type_by_contents(os.path.join(path, song_file)))
-		if mime_type in supported_formats: 
-			return True
-		else:
-			return False
-
 
 	def setup(self):
 		# Sizes and positions for the lyrics:
@@ -163,12 +152,7 @@ class SongEditor(soya.Body):
 		self.msg['type'] = 'activateNote'
 		self.song_data.set_data(self.msg)
 
-		if self.check_format(self.song.path, self.selected_song):
-			self.player.load_sound(path=self.song.path, file= self.selected_song)
-			self.snd = True
-		else:
-			self.snd = False
-			self.player.load(path=self.song.path, file= self.selected_song)
+		self.player.load(path=self.song.path, file= self.selected_song)
 
 		self.heading_label = pudding.control.SimpleLabel( \
 				self.v_cont, label=self.song.info['artist'] + \
@@ -344,10 +328,7 @@ class SongEditor(soya.Body):
 		beats = end_tone.duration + end_tone.time_stamp - start_tone.time_stamp
 		length = beats * duration_of_one_beat / 4
 		start = self.song.get_real_time(start_tone.time_stamp)
-		if self.snd:
-			self.player.play_sound(start=float (start), length= length)
-		else:
-			self.player.play(start=float (start), length= length)
+		self.player.play(start=float (start), length= length)
 
 	def play_line_wave(self):
 		start_tone = self.song.lines[self.song.line_nr].segments[0]

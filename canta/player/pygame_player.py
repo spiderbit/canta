@@ -58,16 +58,6 @@ class PygamePlayer(Player):
 		tmp = os.path.join(self.path, self.file).encode('utf-8')
 		pygame.mixer.music.load(tmp)
 
-	def load_sound(self, path=None, file=None):
-		try:
-			pygame.mixer.pre_init(self.samples_per_sec, -self.bits_per_sample, 1, 1024 * 3)
-			pygame.mixer.init()
-			self.snd = pygame.mixer.Sound(os.path.join(path, file))
-			self.snd.set_volume(0.50)
-			return True
-		except:
-			return False
-
 	def stop(self):
 		if pygame.mixer.get_init():
 			pygame.mixer.music.stop()
@@ -75,10 +65,14 @@ class PygamePlayer(Player):
 	def fadeout(self):
 		pygame.mixer.music.fadeout(2)
 
-	def play(self,start=0,length=None):
+	def play(self, start=0, length=None):
 		if self.paused and start==0:
 			pygame.mixer.music.unpause()
 		elif self.loaded:
+			if start != 0 and not self.file[-3:].upper() == 'OGG':
+				print "[WARNING] this player supports the used function " \
+					+ "only for ogg audio files, use another player"
+				return
 			pygame.mixer.music.play(0, start)
 			if length !=None:
 				time.sleep(length)
@@ -86,19 +80,6 @@ class PygamePlayer(Player):
 		self._play()
 
 
-	def play_sound(self, start=0, length=None):
-		if length != None:
-			sample = pygame.sndarray.samples(self.snd)
-			bitrate, a, b = pygame.mixer.get_init()
-			start_bits = int(start * bitrate)
-			last_bits = start_bits + int(length * bitrate)
-			sample = sample[start_bits:last_bits]
-			new_sound = pygame.sndarray.make_sound(sample)
-			new_sound.play()
-		else:
-			self.snd.play(0, start)
-
-				
 	def get_pos(self):
 		if self.paused:
 			return "pause"

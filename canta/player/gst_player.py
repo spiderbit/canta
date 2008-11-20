@@ -103,18 +103,11 @@ class GSTPlayer(Player):
 
     def beep(self, freq, dur=0.1):
         print "not implemented yet"
-
-    def make_tone(self, frequency=240, duration=1, fade_cycles=0):
-        print "not implemented yet"
-
-    def load_sound(self, path=None, file=None):
-        print "not implemented yet"
         
     def fadeout(self):
         print "not implemented yet"
 
-    def play_sound(self, start=0, length=None):
-        print "not implemented yet"
+ 
 
 def main():
     x = GSTPlayer()

@@ -43,7 +43,6 @@ class DummyPlayer(Player):
 		else:
 			self.length = f.get_length()
 
-
 	def play(self, start=0, length=None):
 		if self.paused and start == 0:
 			self.paused = False
@@ -55,7 +54,6 @@ class DummyPlayer(Player):
 				time.sleep(length)
 				self.pos = 0.0
 		self._play()
-
 
 	def get_pos(self):
 		if self.paused:
@@ -70,15 +68,8 @@ class DummyPlayer(Player):
 		self.pos += time() - self.start_time
 		self._pause()
 
-
 	def beep(self, freq, dur=0.1):
 		print "BEEP, you choose the dummy player so will hear nothing!"
-
-	def load_sound(self, path=None, file=None):
-		pass
-
-	def play_sound(self, start=0, length=None):
-		print "you choose the dummy player so will hear nothing!"
 
 	def stop(self):
 		self.running = False
