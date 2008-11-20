@@ -22,21 +22,6 @@ import pygst
 pygst.require("0.10")
 import gst
 
-import os
-import time
-import random
-import math
-
-NUM_IMPL = 'numeric'
-
-# needs to be tested:
-#if pygame.version.vernum > (1,8):
-#   NUM_IMPL = 'numpy'
-
-if NUM_IMPL == 'numeric':
-    import Numeric as N
-elif NUM_IMPL == 'numpy':
-    import numpy
 from player import Player
 
 class GSTPlayer(Player):
