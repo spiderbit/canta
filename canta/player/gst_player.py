@@ -30,6 +30,12 @@ class GSTPlayer(Player):
         Player.__init__(self, path, file, time)
         self.playbin = gst.element_factory_make("playbin", "player")
         self.clock = None
+        self.pipeline = gst.Pipeline("mypipeline")
+        self.audiotestsrc = gst.element_factory_make("audiotestsrc", "audio")
+        self.pipeline.add(self.audiotestsrc)
+        sink = gst.element_factory_make("autoaudiosink", "sink")
+        self.pipeline.add(sink)
+        self.audiotestsrc.link(sink)
         self.time_format = gst.Format(gst.FORMAT_TIME)
 
 
@@ -47,15 +53,12 @@ class GSTPlayer(Player):
     def stop(self):
         self.playbin.set_state(gst.STATE_NULL)
 
-    def play(self, start=0, length=None):
+    def play(self, start=0):
         result = self.playbin.set_state(gst.STATE_PAUSED)
         self.playbin.get_state() # block until the state is really changed
         seek_ns = start * 1000000000
         self.playbin.seek_simple(self.time_format, gst.SEEK_FLAG_FLUSH, seek_ns)
         self.playbin.set_state(gst.STATE_PLAYING)
-        if length !=None:
-            time.sleep(length)
-            self.playbin.set_state(gst.STATE_NULL)
         self._play()
 
     def is_paused(self):
@@ -92,17 +95,12 @@ class GSTPlayer(Player):
         self.playbin.set_state(gst.STATE_PAUSED)
         self._pause()
 
-    def beep(self, freq, dur=0.1):
-        pipeline = gst.Pipeline("mypipeline")
-        audiotestsrc = gst.element_factory_make("audiotestsrc", "audio")
-        pipeline.add(audiotestsrc)
-        sink = gst.element_factory_make("autoaudiosink", "sink")
-        pipeline.add(sink)
-        audiotestsrc.link(sink)
-        audiotestsrc.set_property("freq", freq)
-        pipeline.set_state(gst.STATE_PLAYING)
-        time.sleep(dur)
-        pipeline.set_state(gst.STATE_NULL)
+    def play_freq(self, freq):
+        self.audiotestsrc.set_property("freq", freq)
+        self.pipeline.set_state(gst.STATE_PLAYING)
+
+    def stop_freq(self):
+        self.pipeline.set_state(gst.STATE_NULL)
         
     def fadeout(self):
         print "not implemented yet"

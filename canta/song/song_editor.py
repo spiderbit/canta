@@ -328,7 +328,9 @@ class SongEditor(soya.Body):
 		beats = end_tone.duration + end_tone.time_stamp - start_tone.time_stamp
 		length = beats * duration_of_one_beat / 4
 		start = self.song.get_real_time(start_tone.time_stamp)
-		self.player.play(start=float (start), length= length)
+		self.player.play(start=float (start))
+		time.sleep(length)
+		self.player.stop()
 
 	def play_line_wave(self):
 		start_tone = self.song.lines[self.song.line_nr].segments[0]
@@ -336,14 +338,14 @@ class SongEditor(soya.Body):
 		self.play_wave(start_tone, end_tone)
 
 	def play_tone_both(self):
-		self.play_tone_freq()
-		self.play_tone_wave()
+		thread.start_new_thread(self.play_tone_freq, () )
+		thread.start_new_thread(self.play_tone_wave, () )
 		
 	def play_line_both(self):
 		thread_id = thread.start_new_thread(self.play_line_wave,())
-		if thread_id == thread.get_ident():
-			thread.exit()
-		self.play_line_freq()
+		#if thread_id == thread.get_ident():
+		#	thread.exit()
+		thread.start_new_thread(self.play_line_freq, () )
 
 	def play_tone_freq(self):
 		self.play_freq(self.song.line_nr, self.pos)
@@ -364,7 +366,9 @@ class SongEditor(soya.Body):
 		note = self.song.lines[line_nr].segments[note_nr]
 		duration = note.duration* (1. /self.song.info['bpm'] *60) / 4
 		freq = self.song.get_freq(line_nr, note_nr)
-		self.player.beep(freq, duration)
+		self.player.play_freq(freq)
+		time.sleep(duration)
+		self.player.stop_freq()
 
 	def bpm_up(self):
 		self.song.info['bpm'] += 1

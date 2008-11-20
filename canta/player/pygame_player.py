@@ -65,7 +65,7 @@ class PygamePlayer(Player):
 	def fadeout(self):
 		pygame.mixer.music.fadeout(2)
 
-	def play(self, start=0, length=None):
+	def play(self, start=0):
 		if self.paused and start==0:
 			pygame.mixer.music.unpause()
 		elif self.loaded:
@@ -74,9 +74,6 @@ class PygamePlayer(Player):
 					+ "only for ogg audio files, use another player"
 				return
 			pygame.mixer.music.play(0, start)
-			if length !=None:
-				time.sleep(length)
-				pygame.mixer.music.stop()
 		self._play()
 
 
@@ -87,15 +84,18 @@ class PygamePlayer(Player):
 			return float(pygame.mixer.music.get_pos()) /1000. + self.time
 		else:
 			return "end"
-		
+
 	def pause(self):
 		pygame.mixer.music.pause()
 		self._pause()
 
 
-	def beep(self, freq, dur=0.1):
-		beep = self.make_tone(freq, dur)
-		beep.play()
+	def play_freq(self, freq):
+		self.beep = self.make_tone(freq, duration=1)
+		self.beep.play()
+
+	def stop_freq(self):
+		self.beep.stop()
 
 
 	def make_tone(self, frequency=240, duration=1, fade_cycles=0):
