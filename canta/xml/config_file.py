@@ -40,8 +40,8 @@ class ConfigFile(XmlFile):
 		self.item['screen']['fps_label'] = 'off'
 		self.item['screen']['pil'] = 'on'
 		
-		self.item['sound']['player'] = 'PyGame'
-		self.item['sound']['input'] = 'PyAudio'
+		self.item['sound']['player'] = 'Gstreamer'
+		self.item['sound']['input'] = 'Gstreamer'
 		self.item['sound']['preview'] = 'on'
 
 		self.item['theme']['name'] = 'default'
