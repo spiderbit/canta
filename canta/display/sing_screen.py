@@ -25,7 +25,6 @@ import soya
 import soya.pudding as pudding
 
 from canta.event.song_event import SongEvent
-from canta.event.input import Input
 from canta.event.keyboard_event import KeyboardEvent
 from canta.event.subjects.song_data import SongData
 from canta.event.observers.song_label_observer import SongLabelObserver
@@ -33,7 +32,6 @@ from canta.event.observers.main_cube_observer import MainCubeObserver
 from canta.event.observers.sing_cube_observer import SingCubeObserver
 from canta.event.observers.debug_widget import DebugWidget
 from canta.event.observers.resultview import ResultView
-#from canta.event.observers.main_label_observer import MainLabelObserver
 from canta.event.observers.pos_cube_observer import PosCubeObserver
 from canta.event.observers.music_notes import MusicNotes
 from canta.event.observers.lyrics_bg_box import LyricsBgBox
@@ -260,8 +258,6 @@ class SingScreen(Menu):
 		self.keyboard_event = KeyboardEvent(self.widget_properties, \
 				 self.debug)
 
-
-
 		self.keyboard_event.add_connection(type = soya.sdlconst.K_ESCAPE, \
 			action = self.pause)
 		self.keyboard_event.add_connection(type = soya.sdlconst.K_q, \
@@ -270,9 +266,19 @@ class SingScreen(Menu):
 			action = soya.toggle_wireframe)
 		self.keyboard_event.add_connection(type = soya.sdlconst.K_s, \
 			action = self.make_screenshot)
+			
+		selected_input = self.user_cfg.get_input()
+		if selected_input == 'PyAudio' or selected_input == 'OSS':
+			from canta.event.input_old import Input
+		elif selected_input == 'Gstreamer':
+			from canta.event.input_gstreamer import Input
+
+		self.input = Input(self.song, self.input_subject, \
+				self.player, self.octave, self.debug)
+		self.input.user_cfg = self.user_cfg
 		self.song_event = SongEvent(self.song, self.widget_properties,\
 				self.song_data, self.player, \
-				self.keyboard_event, self.debug)
+				self.keyboard_event, self.input, self.debug)
 
 
 		# Observer for the pause menu:
@@ -292,10 +298,6 @@ class SingScreen(Menu):
 		if img_observer:
 			self.song_data.attach(music_notes)
 		self.song_data.attach(l_bg_box)
-
-		self.input = Input(self.song, self.input_subject, \
-				self.player, self.octave, self.debug)
-		self.input.user_cfg = self.user_cfg
 
 		self.parent_world.add(self.keyboard_event)
 
@@ -325,6 +327,8 @@ class SingScreen(Menu):
 
 	def exit(self):
 		soya.MAIN_LOOP.stop()
+		self.input.stop()
+		self.input.join(0.1)
 		sys.exit()
 
 

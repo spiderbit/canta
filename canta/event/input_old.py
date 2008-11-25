@@ -27,11 +27,8 @@ import math
 
 
 from canta.event.subjects.song_data import SongData
-#from canta.sound_manager.sound_manager_oss import SoundManagerOSS
 from canta.fft.fft_numpy import FFTNumPy
 from canta.sound_manager.frequency_new import Frequency
-#from canta.sound_manager.sound_manager_pyaudio import SoundManagerPyAudio
-
 
 
 class Input(Thread):
@@ -169,6 +166,10 @@ class Input(Thread):
 		else:	# self.song.end
 			#print "end??"
 			sound_manager.stop()
-			#print "result: average differnce" 
-		#	sys.exit()
+		
+	def stop(self):
+		pass
+
+
+
 

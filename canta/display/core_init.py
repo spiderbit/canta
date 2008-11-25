@@ -360,7 +360,7 @@ class CoreInit:
 
 		# Settings:
 		valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
-		valid_sound_inputs = ['OSS', 'PyAudio']
+		valid_sound_inputs = ['OSS', 'PyAudio', 'Gstreamer']
 		valid_languages = self.lm.get_langs()
 		on_off_toggle = [('off'), ('on')]
 		i_resolution =  _(u'Resolution:')

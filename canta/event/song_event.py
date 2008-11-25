@@ -31,10 +31,12 @@ class SongEvent(soya.Body):
 	"""TODO!!
 	"""
 	def __init__(self, song=Song(), widget_properties=None, song_data=0, \
-			player=None, keyboard_event=None, debug=0):
+			player=None, keyboard_event=None, input=None, debug=0):
 	
 		self.debug = debug
 		self.song_data = song_data
+
+		self.input = input
 
 		self.keyboard_event = keyboard_event
 
@@ -64,11 +66,15 @@ class SongEvent(soya.Body):
 		self.last_note = None
 		self.status = ""
 		self.old_line_nr = None
+		
+		
 
 	# that must in a big loop for events from the file from
 	# the keyboard and from the microphone
 	def begin_round(self):
 		pos = self.player.get_pos()
+		if not pos:
+			return
 		#print "in begin_round (song_event) self.song.line_nr", self.song.line_nr
 		if self.debug: print "start: ",self.song.info['start']
 		if not self.end_sended:
@@ -83,7 +89,9 @@ class SongEvent(soya.Body):
 				self._check_for_next_line(pos) # check for nextLine Event
 
 		else:
-			self.parent_world.remove(self)
+			self.parent_world.remove(self)
+			self.input.stop()
+			self.input.join(0.1)
 
 	def _check_for_next_line(self, pos): # check for next Line		
 		
