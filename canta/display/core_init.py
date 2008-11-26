@@ -222,10 +222,6 @@ class CoreInit:
 		"""Initialize soya game engine, append our paths to soya's paths,
 			create the scene and set up a camera.
 		"""
-		if self.sound_player == 'Soya3D':
-			GAME_ENGINE_SOUND = True
-		else:
-			GAME_ENGINE_SOUND = False
 
 		# Hide window manager's resizability
 		# features (maximise, resize, ...):
@@ -234,14 +230,10 @@ class CoreInit:
 		soya.init(title=self.window_title, \
 				width=self.screen_res_x, height=self.screen_res_y, \
 				fullscreen=self.fullscreen_on, \
-				resizeable=RESIZEABLE, sound=GAME_ENGINE_SOUND)
+				resizeable=RESIZEABLE, sound=False)
 
 		# Enable/disable soya's auto (blender model) importer:
 		soya.AUTO_EXPORTERS_ENABLED = True
-
-		# does the following kill windows?
-		#if GAME_ENGINE_SOUND:
-			#soya.set_sound_volume(1.0)
 
 		# Append some paths:
 		#	* themes/[selected theme name]/media
@@ -281,12 +273,6 @@ class CoreInit:
 
 	def load_player(self):
 		# The music players:
-		#if player == 'PyAudio':
-		#	from canta.player.pyaudio_player import PyaudioPlayer
-		#	self.player = PyaudioPlayer()
-		#elif player == 'Soya3D':
-		#	from canta.player.soya_player import SoyaPlayer
-		#	self.player = SoyaPlayer()
 		if self.sound_player == 'Dummy':
 			from canta.player.dummy_player import DummyPlayer
 			self.player = DummyPlayer()
