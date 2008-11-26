@@ -71,7 +71,26 @@ class CoreInit:
 		self._start()
 
 
+	def check_sound_modules(self):
+		try:
+			 import pygame, numeric
+		except ImportError:
+			 self.valid_sound_players.remove('PyGame')
+		try:
+			 import oss, numpy
+		except ImportError:
+			 self.valid_sound_inputs.remove('OSS')
+ 		try:
+			 import pyaudio, numpy
+		except ImportError:
+			 self.valid_sound_inputs.remove('PyAudio')
+
+
 	def _start(self):
+
+		self.valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
+		self.valid_sound_inputs = ['OSS', 'PyAudio', 'Gstreamer']
+		self.check_sound_modules()
 		# get user config settings and store them:
 		self.config_path = os.path.join(user.home, '.canta')
 		if not os.access(self.config_path, os.F_OK):
@@ -84,6 +103,7 @@ class CoreInit:
 		self.config = ConfigObj(os.path.join(self.config_path, 'config'))
 		self.locale = self.config['misc']['locale']
 		self.octave = int(self.config['misc'].as_bool('octave'))
+
 		self.screen_res_x =  self.config['screen'].as_int('resolution_x')
 		self.screen_res_y =  self.config['screen'].as_int('resolution_y')
 		self.fullscreen_on = int(self.config['screen'].as_bool('fullscreen'))
@@ -366,8 +386,6 @@ class CoreInit:
 		h1_song_browser =  _(u'Choose a song...')
 
 		# Settings:
-		valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
-		valid_sound_inputs = ['OSS', 'PyAudio', 'Gstreamer']
 		valid_languages = self.lm.get_langs()
 		on_off_toggle = [('off'), ('on')]
 		i_resolution =  _(u'Resolution:')
@@ -564,24 +582,24 @@ class CoreInit:
 		self.options_menu_misc.add_group(misc_group)
 
 
-		if self.sound_player in valid_sound_players:
-			self.selected_player = valid_sound_players.index(self.sound_player)
+		if self.sound_player in self.valid_sound_players:
+			self.selected_player = self.valid_sound_players.index(self.sound_player)
 		else:
 			self.selected_player = 1 # defaults to PyGame
 		sound_items = []
 		sound_items.append({'info' : i_sound_output,
 					'button_type' : 'toggle',
-					'toggle_items' : valid_sound_players,
+					'toggle_items' : self.valid_sound_players,
 					'selected_item' : self.selected_player})
 
-		if self.sound_input in valid_sound_inputs:
-			self.selected_input = valid_sound_inputs.index(self.sound_input)
+		if self.sound_input in self.valid_sound_inputs:
+			self.selected_input = self.valid_sound_inputs.index(self.sound_input)
 		else:
 			self.selected_input = 0 # defaults to OSS
 
 		sound_items.append({'info' : i_sound_input,
 					'button_type' : 'toggle',
-					'toggle_items' : valid_sound_inputs,
+					'toggle_items' : self.valid_sound_inputs,
 					'selected_item' : self.selected_input})
 
 		sound_items.append({'info' : i_song_preview,
