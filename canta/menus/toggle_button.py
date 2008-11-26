@@ -38,7 +38,7 @@ class MenuToggle(pudding.control.Button):
 		self.border_color_off = widget_properties['button']['border']['off_focus']['color']
 
 		pudding.control.Button.__init__(self, \
-			width = widget_properties['config'].get_res_x() / 6)
+			width = widget_properties['config']['screen'].as_int('resolution_x') / 6)
 
 
 		self.border_color = self.border_color_off

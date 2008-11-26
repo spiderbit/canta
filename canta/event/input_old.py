@@ -70,7 +70,7 @@ class Input(Thread):
 	# that must in a big loop for events from the file from the
 	# keyboard and from the microphone
 	def run(self):
-		selected_input = self.user_cfg.get_input()
+		selected_input = self.config['sound']['input']
 		if selected_input == 'PyAudio':
 			from canta.sound_manager.sound_manager_pyaudio import SoundManagerPyAudio
 			sound_manager = SoundManagerPyAudio(sampling_frequency = 10000)

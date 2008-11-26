@@ -62,8 +62,8 @@ class SongEditor(soya.Body):
 		self.parent_widget = widget_properties['root_widget']
 		self.theme_mgr = theme_mgr
 
-		self.screen_res_x = self.widget_properties['config'].get_res_x()
-		self.screen_res_y = self.widget_properties['config'].get_res_y()
+		self.screen_res_x = self.widget_properties['config']['screen'].as_int('resolution_x')
+		self.screen_res_y = self.widget_properties['config']['screen'].as_int('resolution_y')
 
 		self.font_p = widget_properties['font']['p']['obj']
 		self.color_p = widget_properties['font']['p']['color']
@@ -111,7 +111,7 @@ class SongEditor(soya.Body):
 		pos_size = {}
 		pos_size['width'] = 70
 		pos_size['height'] = 30
-		pos_size['top'] = self.widget_properties['config'].get_res_y() / 1.1 - 12
+		pos_size['top'] = self.widget_properties['config']['screen'].as_int('resolution_y') / 1.1 - 12
 		pos_size['left'] = 35
 		self.widget_properties['pos_size'] = pos_size
 		self.widget_properties['anchoring'] = 'bottom'

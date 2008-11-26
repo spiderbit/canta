@@ -23,7 +23,6 @@ import os
 import gettext
 import user
 
-import pygame
 import soya
 import soya.pudding as pudding
 import soya.pudding.ext.fpslabel
@@ -32,9 +31,10 @@ import soya.sphere
 import PIL.Image as pil
 import soya.pudding.ext.slicingimage
 import soya.pudding.listbox
+from configobj import ConfigObj
+
 from canta.display.style import Style
 from canta.display.properties import DisplayProperties
-from canta.xml.config_file import ConfigFile
 from canta.theme.theme_manager import ThemeManager
 from canta.menus.song_editor_browser import SongEditorBrowser
 from canta.menus.song_browser import SongBrowser
@@ -72,38 +72,37 @@ class CoreInit:
 
 
 	def _start(self):
-
 		# get user config settings and store them:
 		self.config_path = os.path.join(user.home, '.canta')
 		if not os.access(self.config_path, os.F_OK):
 			os.mkdir(self.config_path)
-		config_file_path = os.path.join(self.config_path, 'config.xml')
-		self.user_cfg = ConfigFile(config_file_path, self.debug)
-		self.user_cfg.read_config()
+		self.config = ConfigObj()
+		self.config.filename = os.path.join(self.config_path, 'config')
+		if not os.access(os.path.join(self.config_path, 'config'), os.F_OK):
+			self.init_config()
 
-		self.lm = LocaleManager(self.app_dir)
-		self.locale =  self.user_cfg.get_locale()
-		self.octave =  self.user_cfg.get_octave()
-
-		self.lm.install(self.locale)
-	
-		self.screen_res_x =  self.user_cfg.get_res_x()
-		self.screen_res_y =  self.user_cfg.get_res_y()
-		self.fullscreen_on = self.user_cfg.get_fullscreen()
-
-		self.fps_label = self.user_cfg.get_fps_label()
-		self.use_pil = self.user_cfg.get_pil()
+		self.config = ConfigObj(os.path.join(self.config_path, 'config'))
+		self.locale = self.config['misc']['locale']
+		self.octave = int(self.config['misc'].as_bool('octave'))
+		self.screen_res_x =  self.config['screen'].as_int('resolution_x')
+		self.screen_res_y =  self.config['screen'].as_int('resolution_y')
+		self.fullscreen_on = int(self.config['screen'].as_bool('fullscreen'))
+		self.fps_label = int(self.config['screen'].as_bool('fps_label'))
+		self.use_pil = int(self.config['screen'].as_bool('pil'))
+		self.sound_player = self.config['sound']['player']
+		self.sound_input = self.config['sound']['input']
+		self.sound_preview = int(self.config['sound'].as_bool('preview'))
+		self.theme_name = self.config['theme']['name']
 		
-		self.sound_player = self.user_cfg.get_player()
-		self.sound_input = self.user_cfg.get_input()
-		self.sound_preview = self.user_cfg.get_preview()
 		self.widget_properties = {}
-		self.widget_properties['config'] = self.user_cfg
-
-		self.theme_name = self.user_cfg.get_theme_name()
 		self.widget_properties['theme'] = {}
 		self.widget_properties['theme']['main'] = self.theme_name
 		self.widget_properties['theme']['song'] = None
+
+		self.widget_properties['config'] = self.config
+
+		self.lm = LocaleManager(self.app_dir)
+		self.lm.install(self.locale)
 
 		self.disp = DisplayProperties()
 
@@ -196,6 +195,29 @@ class CoreInit:
 		self.init_menus()
 
 
+	def init_config(self):
+		self.config['screen'] = {
+			'resolution_x' : 800,
+			'resolution_y' : 600,
+			'fullscreen' : 'off',
+			'fps_label' : 'off',
+			'pil' : 'on'
+		}
+		self.config['sound'] = {
+			'player' : 'Gstreamer',
+			'input' : 'Gstreamer',
+			'preview' : 'on',
+		}
+		self.config['theme'] = {
+			'name' : 'default'
+		}
+		self.config['misc'] = {
+			'locale' : 'default',
+			'octave' : 'off'
+		}
+		self.config.write()
+
+
 	def _init_game_engine(self):
 		"""Initialize soya game engine, append our paths to soya's paths,
 			create the scene and set up a camera.
@@ -209,8 +231,8 @@ class CoreInit:
 		# features (maximise, resize, ...):
 		RESIZEABLE = False
 
-		soya.init(title=self.window_title, width=self.user_cfg.get_res_x(), \
-				height=self.screen_res_y, \
+		soya.init(title=self.window_title, \
+				width=self.screen_res_x, height=self.screen_res_y, \
 				fullscreen=self.fullscreen_on, \
 				resizeable=RESIZEABLE, sound=GAME_ENGINE_SOUND)
 
@@ -259,20 +281,19 @@ class CoreInit:
 
 	def load_player(self):
 		# The music players:
-		player = self.user_cfg.get_player()
 		#if player == 'PyAudio':
 		#	from canta.player.pyaudio_player import PyaudioPlayer
 		#	self.player = PyaudioPlayer()
 		#elif player == 'Soya3D':
 		#	from canta.player.soya_player import SoyaPlayer
 		#	self.player = SoyaPlayer()
-		if player == 'Dummy':
+		if self.sound_player == 'Dummy':
 			from canta.player.dummy_player import DummyPlayer
 			self.player = DummyPlayer()
-		elif player == 'Gstreamer':
+		elif self.sound_player == 'Gstreamer':
 			from canta.player.gst_player import GSTPlayer
 			self.player = GSTPlayer()
-		elif player == 'PyGame':
+		elif self.sound_player == 'PyGame':
 			from canta.player.pygame_player import PygamePlayer
 			self.player = PygamePlayer()
 		else:
@@ -286,7 +307,7 @@ class CoreInit:
 
 		# Create a pudding root widget:
 		self.root_widget = pudding.core.RootWidget( \
-				width=self.user_cfg.get_res_x(), \
+				width=self.screen_res_x, \
 				height=self.screen_res_y, \
 				top=0, left=0)
 
@@ -295,8 +316,8 @@ class CoreInit:
 		# Loading Label:
 		# This should come immediatly, but it comes too late (after
 		# the models are loaded).
-		lc_top = self.widget_properties['config'].get_res_x() / 2
-		lc_left = self.user_cfg.get_res_x() / 2 - 100
+		lc_top = self.screen_res_x / 2
+		lc_left = self.screen_res_x / 2 - 100
 		self.loading_cont = pudding.container.HorizontalContainer( \
 				self.root_widget, \
 				top=lc_top,
@@ -389,7 +410,7 @@ class CoreInit:
 
 		# About menu:
 		about_menu = MenuText(self.widget_properties, top=self.screen_res_y / 3, \
-				left=self.user_cfg.get_res_x() / 2)
+				left=self.screen_res_x / 2)
 		about_menu.set_heading(h1_about)
 		about_menu.set_bg_box()
 		about_back = MenuButton(l_back, widget_properties = self.widget_properties, target = main_menu)
@@ -431,7 +452,7 @@ class CoreInit:
 		sing_screen = SingScreen(app_dir=self.app_dir, \
 					camera=self.camera, theme_mgr=self.theme_mgr, \
 					widget_properties=self.widget_properties, \
-					menu_list=self.menus, user_cfg=self.user_cfg, \
+					menu_list=self.menus, config=self.config, \
 					octave=self.octave, player=self.player,debug=self.debug)
 
 		song_browser = SongBrowser(song_objects, \
@@ -465,8 +486,8 @@ class CoreInit:
 		self.options_menu_misc.set_heading(h1_settings_misc)
 
 		pos_size = {}
-		pos_size['height'] = self.user_cfg.get_res_y() / 16
-		pos_size['width'] = self.user_cfg.get_res_x() - 80
+		pos_size['height'] = self.screen_res_y / 16
+		pos_size['width'] = self.screen_res_x - 80
 		pos_size['top'] = 10
 		pos_size['left'] = 10
 
@@ -518,7 +539,7 @@ class CoreInit:
 		self.options_menu_misc.add(save_quit_button, 'center')
 
 
-		res = str(self.user_cfg.get_res_x()) + 'x' + str(self.user_cfg.get_res_y())
+		res = str(self.screen_res_x) + 'x' + str(self.screen_res_y)
 		if res in self.disp.valid_resolutions:
 			selected_resolution = \
 				self.disp.valid_resolutions.index(res)
@@ -647,21 +668,29 @@ class CoreInit:
 
 		locale = self.options_menu_misc.toggle_list[0].label
 		octave = self.options_menu_misc.toggle_list[1].label
-		self.user_cfg.set_res_x(x)
-		self.user_cfg.set_res_y(y)
-		self.user_cfg.set_fullscreen(fs)
-		self.user_cfg.set_fps_label(fps)
-		self.user_cfg.set_pil(pil)
-		self.user_cfg.set_player(sp)
-		self.user_cfg.set_input(si)
-		self.user_cfg.set_preview(spr)
-		self.user_cfg.set_theme_name(tn)
-		self.user_cfg.set_locale(locale)
-		self.user_cfg.set_octave(octave)
-		self.user_cfg.write_xml()
+
+		self.config['screen'] = {
+			'resolution_x' : x,
+			'resolution_y' : y,
+			'fullscreen' : fs,
+			'fps_label' : fps,
+			'pil' : pil
+		}
+		self.config['sound'] = {
+			'player' : sp,
+			'input' : si,
+			'preview' : spr,
+		}
+		self.config['theme'] = {
+			'name' : tn
+		}
+		self.config['misc'] = {
+			'locale' : locale,
+			'octave' : octave
+		}
+		self.config.write()
 
 		if args == 'quit':
-			pygame.mixer.quit()
 			soya.quit()
 			self._start()
 		

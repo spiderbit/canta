@@ -28,8 +28,8 @@ class LyricsBgBox:
 	
 		parent_widget = widget_properties['root_widget']
 
-		screen_res_x = widget_properties['config'].get_res_y()
-		screen_res_y = widget_properties['config'].get_res_x()
+		screen_res_x = widget_properties['config']['screen'].as_int('resolution_x')
+		screen_res_y = widget_properties['config']['screen'].as_int('resolution_y')
 
 		box_border_color = widget_properties['box']['border']['color']
 		box_bg_color = widget_properties['box']['background']['color']

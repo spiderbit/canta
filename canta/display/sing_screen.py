@@ -51,7 +51,7 @@ class SingScreen(Menu):
 	"""Sing screen.
 	"""
 	def __init__(self, app_dir, camera, theme_mgr, widget_properties, \
-			menu_list, user_cfg, octave, player=None,debug=False):
+			menu_list, config, octave, player=None,debug=False):
 		Menu.__init__(self, widget_properties)
 
 		self.app_dir = app_dir
@@ -63,7 +63,7 @@ class SingScreen(Menu):
 		self.widget_properties = widget_properties
 		self.menu_list = menu_list
 		self.menu_list['singscreen'] = self
-		self.user_cfg = user_cfg
+		self.config = config
 		self.debug = debug
 
 		self.widget_properties['theme_mgr'] = theme_mgr
@@ -196,7 +196,7 @@ class SingScreen(Menu):
 		# The observer for the lyrics:
 		label = SongLabelObserver(self.widget_properties, self.debug)
 
-		use_pil = self.user_cfg.get_pil()
+		use_pil = self.config['screen']['pil']
 		# The observer for the results screen (when the song ended):
 		result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
 				use_pil, self.debug)
@@ -267,7 +267,7 @@ class SingScreen(Menu):
 		self.keyboard_event.add_connection(type = soya.sdlconst.K_s, \
 			action = self.make_screenshot)
 			
-		selected_input = self.user_cfg.get_input()
+		selected_input = self.config['sound']['input']
 		if selected_input == 'PyAudio' or selected_input == 'OSS':
 			from canta.event.input_old import Input
 		elif selected_input == 'Gstreamer':
@@ -275,7 +275,7 @@ class SingScreen(Menu):
 
 		self.input = Input(self.song, self.input_subject, \
 				self.player, self.octave, self.debug)
-		self.input.user_cfg = self.user_cfg
+		self.input.config = self.config
 		self.song_event = SongEvent(self.song, self.widget_properties,\
 				self.song_data, self.player, \
 				self.keyboard_event, self.input, self.debug)

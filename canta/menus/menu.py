@@ -27,8 +27,8 @@ class Menu:
 
 		self.parent_widget = widget_properties['root_widget']
 		self.parent_world = widget_properties['root_world']
-		self.screen_res_x = widget_properties['config'].get_res_x()
-		self.screen_res_y = widget_properties['config'].get_res_y()
+		self.screen_res_x = widget_properties['config']['screen'].as_int('resolution_x')
+		self.screen_res_y = widget_properties['config']['screen'].as_int('resolution_y')
 		self.font_p = widget_properties['font']['p']['obj']
 		self.color_p = widget_properties['font']['p']['color']
 		self.font_h = widget_properties['font']['h1']['obj']
