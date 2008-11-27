@@ -32,6 +32,8 @@ import PIL.Image as pil
 import soya.pudding.ext.slicingimage
 import soya.pudding.listbox
 from configobj import ConfigObj
+from validate import Validator
+import warnings
 
 from canta.display.style import Style
 from canta.display.properties import DisplayProperties
@@ -91,16 +93,23 @@ class CoreInit:
 		self.valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
 		self.valid_sound_inputs = ['OSS', 'PyAudio', 'Gstreamer']
 		self.check_sound_modules()
+
 		# get user config settings and store them:
 		self.config_path = os.path.join(user.home, '.canta')
 		if not os.access(self.config_path, os.F_OK):
 			os.mkdir(self.config_path)
 		self.config = ConfigObj()
+		vdt = Validator()
+		# copy default config
+		self.config = ConfigObj(configspec='configspec')
 		self.config.filename = os.path.join(self.config_path, 'config')
 		if not os.access(os.path.join(self.config_path, 'config'), os.F_OK):
-			self.init_config()
+			self.config.validate(vdt, copy=True)
+			self.config.write()
+		else:
+			self.config = ConfigObj(os.path.join(self.config_path, 'config'), configspec='configspec')
+			self.config.validate(vdt)
 
-		self.config = ConfigObj(os.path.join(self.config_path, 'config'))
 		self.locale = self.config['misc']['locale']
 		self.octave = int(self.config['misc'].as_bool('octave'))
 
@@ -213,29 +222,6 @@ class CoreInit:
 
 		# Init menus and instances:
 		self.init_menus()
-
-
-	def init_config(self):
-		self.config['screen'] = {
-			'resolution_x' : 800,
-			'resolution_y' : 600,
-			'fullscreen' : 'off',
-			'fps_label' : 'off',
-			'pil' : 'on'
-		}
-		self.config['sound'] = {
-			'player' : 'Gstreamer',
-			'input' : 'Gstreamer',
-			'preview' : 'on',
-		}
-		self.config['theme'] = {
-			'name' : 'default'
-		}
-		self.config['misc'] = {
-			'locale' : 'default',
-			'octave' : 'off'
-		}
-		self.config.write()
 
 
 	def _init_game_engine(self):

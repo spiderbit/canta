@@ -1,0 +1,15 @@
+[screen]
+fullscreen = boolean(default=off)
+resolution_y = integer(default=768, min=100)
+resolution_x = integer(default=1024, min=100)
+pil = boolean(default=off)
+fps_label = boolean(default=off)
+[sound]
+player = string(default=Gstreamer)
+preview = boolean(default=off)
+input = string(default=Gstreamer)
+[theme]
+name = string(default=default)
+[misc]
+locale = string(default=default)
+octave = boolean(default=off)
