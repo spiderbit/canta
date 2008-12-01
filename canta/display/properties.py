@@ -22,7 +22,8 @@ class DisplayProperties:
 		# default is 1024x768. applies if user wrote an invalid
 		# res into config file by hand...
 		self.selected_resolution = 2
-		self.valid_resolutions = ['320x480', '640x480', '800x600', '1024x768', \
+		self.valid_resolutions = ['300x200', '320x480', '640x400', '640x480', \
+					'800x480', '800x600', '1024x600','1024x768', \
 					'1280x720', '1280x800', '1280x1024', \
 					'1400x1050', '1440x900', '1600x1200', '1680x1050', '1920x1200']
 		self.active_resolution = self.valid_resolutions[self.selected_resolution]
