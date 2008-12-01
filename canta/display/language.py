@@ -42,7 +42,6 @@ class LocaleManager:
 		#lang = 'en_US'
 		#1. way
 		# application can set the wished language:
-		print lang
 		if lang == 'default':
 			self.install_default()
 		else:
