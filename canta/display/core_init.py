@@ -75,7 +75,7 @@ class CoreInit:
 
 	def check_sound_modules(self):
 		try:
-			 import pygame, numeric
+			 import pygame, Numeric
 		except ImportError:
 			 self.valid_sound_players.remove('PyGame')
 		try:
