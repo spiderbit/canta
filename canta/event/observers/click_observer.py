@@ -17,20 +17,19 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import pygame
+
 import os,sys
 
 
 class ClickObserver:
-	def __init__(self, click_sound):
-		pygame.mixer.pre_init(44100,-16,2, 1024 * 3)
-		pygame.mixer.init()
-		#pygame.mixer.music.set_volume(0.50)	
-		#pygame.mixer.music.load(os.path.join()
-		#self.sound = pygame.mixer.Sound(click_sound)
+	def __init__(self, player):
+		self.player = player
+		self.player.init_click()
+
 
 	def click(self):
-		self.sound.play()
+		# needs to be implemented
+		self.player.click()
 
 
 	def _next_line(self, song):	

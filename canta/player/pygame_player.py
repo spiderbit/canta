@@ -18,7 +18,7 @@
  
 import pygame
 import pygame.mixer
-import os
+import os, sys
 import time
 import random
 
@@ -118,6 +118,19 @@ class PygamePlayer(Player):
 		res = pygame.sndarray.make_sound(samples)
 		res.set_volume(1.0)
 		return res
+
+
+	def init_click(self):
+		#pygame.mixer.pre_init(44100,-16,2, 1024 * 3)
+		#pygame.mixer.init()
+		#pygame.mixer.music.set_volume(0.50)	
+		#pygame.mixer.music.load(os.path.join()
+		self.click_sound = pygame.mixer.Sound( \
+			os.path.join(os.path.dirname(sys.argv[0]), 'click.wav'))
+
+	def click(self):
+		self.click_sound.play()
+
 
 
 def main():

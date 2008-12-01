@@ -186,10 +186,9 @@ class SongEditor(soya.Body):
 				label=self.l_help_hint)
 
 		self.help_hint_cont.visible = 1
-		
-		click_observer = ClickObserver(click_sound=os.path.join(self.app_dir, 'click.wav'))
-		self.song_data2 = SongData()
-		self.song_data2.attach(click_observer)
+		# needs testing
+		#click_observer = ClickObserver(self.player)
+		#self.song_data.attach(click_observer)
 
 		self.parent_widget.on_resize()
 		self.refresh()
