@@ -9,7 +9,7 @@ player = string(default=Gstreamer)
 preview = boolean(default=off)
 input = string(default=Gstreamer)
 [theme]
-name = string(default=default)
+name = string(default=silver)
 [misc]
 locale = string(default=default)
 octave = boolean(default=off)
