@@ -31,12 +31,15 @@ Installation / Requirements
 
 3. DEPENDENCIES:
 
-	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
-	- python-wxgtk		
-	- python-numpy or python-numeric
-	- python-xdg
 	- python-soya
-	- python-pygame
+	- gstreamer > 0.10 (plugins-base)
+	- python-configobj
 	- and of course: python (2.5)
 
+3. OPTIONAL:
+
+	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
+	- python-numpy or python-numeric
+	- python-wxgtk
+	- python-pygame
 
