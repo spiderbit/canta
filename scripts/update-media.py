@@ -89,9 +89,11 @@ def download(url, directory, username=None, password=None):
         internet.download(url + MD5SUMS)
     except urllib2.URLError:
         print 'File not found or server down?'
+        Directory('..' + os.path.sep + '..').change()
         return False
     except urllib2.HTTPError:
         print 'Wrong password?'
+        Directory('..' + os.path.sep + '..').change()
         return False
 
     for line in File(MD5SUMS).readlines():
