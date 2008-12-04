@@ -157,7 +157,9 @@ class Input(Thread):
 
 				difference = self.pitch - target_pitch
 
-				if abs(difference) < 2:			# this is a help so that you only have to sing nearly right and get points
+				# this is a help so that you only
+				#have to sing nearly right and get points
+				if abs(difference) < 2:
 					self.pitch = target_pitch
 				#else:
 				#	print "bad pitches: ",self.pitch, target_pitch, difference
@@ -166,7 +168,7 @@ class Input(Thread):
 				difference = self.pitch - target_pitch
 
 			timeAfter = self.player.get_pos()
-
+			timeBefore = timeAfter -0.1
 			if timeAfter != "pause" and timeBefore != "pause" and \
 				timeBefore != "end" and timeAfter != "end":
 				self.length = timeAfter - timeBefore
