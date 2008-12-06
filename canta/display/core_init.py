@@ -101,13 +101,14 @@ class CoreInit:
 		self.config = ConfigObj()
 		vdt = Validator()
 		# copy default config
-		self.config = ConfigObj(configspec='configspec')
+		spec_file = os.path.join(self.app_dir,'configspec')
+		self.config = ConfigObj(configspec=spec_file)
 		self.config.filename = os.path.join(self.config_path, 'config')
 		if not os.access(os.path.join(self.config_path, 'config'), os.F_OK):
 			self.config.validate(vdt, copy=True)
 			self.config.write()
 		else:
-			self.config = ConfigObj(os.path.join(self.config_path, 'config'), configspec='configspec')
+			self.config = ConfigObj(os.path.join(self.config_path, 'config'), configspec=spec_file)
 			self.config.validate(vdt)
 
 		self.locale = self.config['misc']['locale']
