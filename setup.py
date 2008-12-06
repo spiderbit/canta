@@ -38,7 +38,7 @@ setup_data_files = []
 for file in data_files:
 	setup_data_files.append(('share/games/canta/'+os.path.dirname(file), [file]))
 
-setup_data_files.append(('share/games/canta/', ['ABOUT.txt', 'changelog.txt', 'HACKING.txt', 'INSTALL.txt', 'LICENSE.txt', 'main.py', 'csg.py', 'VERSION']))
+setup_data_files.append(('share/games/canta/', ['ABOUT.txt', 'changelog.txt', 'HACKING.txt', 'INSTALL.txt', 'LICENSE.txt', 'main.py', 'csg.py', 'VERSION', 'configspec']))
 setup_data_files.append(('share/pixmaps', ['media/canta.png', 'media/csg.png']))
 setup_data_files.append(('share/applications', ['media/canta.desktop', 'media/csg.desktop']))
 setup_data_files.append(('share/games/canta/media', ['media/HELP.txt']))
