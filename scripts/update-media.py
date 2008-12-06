@@ -125,7 +125,7 @@ if __name__ == '__main__':
     url = 'http://www.canta-game.org/downloads'
     download(url + '/themes/', 'themes')
 
-    for directory in ['unfree', 'free', 'tests']:
+    for directory in ['unfree', 'free']:
         download(url + '/songs/' + directory + '/', 'songs',
                  username, password)
 
