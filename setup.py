@@ -28,7 +28,7 @@ def get_files(path):
 			files.append(os.path.join(elem))
 	return files
 
-data_dirs = ('locale', 'songs/Bruder Jakob', 'songs/Frere Jacques', 'themes', 'media')
+data_dirs = ('locale', 'songs', 'themes', 'media')
 
 data_files = []
 for data_dir in data_dirs:
