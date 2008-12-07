@@ -32,14 +32,15 @@ Installation / Requirements
 3. DEPENDENCIES:
 
 	- python-soya
-	- gstreamer > 0.10 (plugins-base)
 	- python-configobj
+	- python-gst > 0.10
+	- python-mutagen
+	- python-wxgtk
 	- and of course: python (2.5)
 
 3. OPTIONAL:
 
 	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
 	- python-numpy or python-numeric
-	- python-wxgtk
 	- python-pygame
 
