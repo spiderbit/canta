@@ -19,15 +19,15 @@ Installation / Requirements
 
 	Download the deb package from the homepage and all listet other files there
 	and install it with your packetmanager
-   
+
  * Other Distries:
 	** did only try under ubuntu,
 	but should work on freebsd and other linux distries
 
- 	> make install   (in this directory)
-	
+	> make install   (in this directory)
+
 	you need the Dependencies listet under Point 3
- 
+
 
 3. DEPENDENCIES:
 
