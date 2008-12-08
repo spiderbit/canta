@@ -1,9 +1,9 @@
-include *.txt canta.desktop VERSION main.py csg.py
+include *.txt canta.desktop VERSION main.py csg.py configspec
 recursive-include themes *
-recursive-include songs/Bruder Jakob *
-recursive-include songs/Frere Jacques *
+recursive-include songs *
 recursive-include locale *
 recursive-include media *
 include starter/canta
+include starter/csg
 #prune examples/sample?/build
 
