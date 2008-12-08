@@ -1,4 +1,21 @@
-Canta 0.2-beta4 (not yet released ;)
+Canta 0.2-beta5
+
+* add some resolutions for netbooks
+* better configfile-format (cleartext readable/editable)
+* better textparser-code, canta now parses most files the right way
+* support for relative ultrastar files
+* new DummyPlayer for sound-output
+* new gstreamer (microphon-)input code
+* Adding Gstreamer player
+	- no more crashes with buggy mp3 files
+	- wider media-support (wma, ogg, flac...)
+	- no more acoustic noise one some machines
+* Gstreamer is now default player and input for canta
+* Add support for MP3, FLAC and other formats to Canta Song Generator
+* hide optional sound_modules which are not installed
+* change default theme in config to silver
+
+Canta 0.2-beta4
 * new Canta Song Generator which can make a skelet for a new song, with and
 without a midi file
 * Support for different languages
