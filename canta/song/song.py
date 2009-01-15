@@ -500,7 +500,10 @@ class Song:
 
 def main(): # main
 
-	#need some code to make a song object first...
+	class_name = "Song"
+	print "TESTCODE FOR CLASS: [%s]" % (class_name)
+
+	song = Song(title='Test title', artist='artist', mp3='test.mp3')
 
 	song.addSegment(SongSegment( "note", 19, 5, 12, "hallo"))
 	song.addSegment(SongSegment( "note", 24, 5, 33, "blub"))
@@ -510,26 +513,22 @@ def main(): # main
 	song.addSegment(SongSegment( "note", 42, 5, 12, "es"))
 	song.addSegment(SongSegment( "note", 47, 5, 6, "geht"))
 	song.addSegment(SongSegment( "note", 52, 2, 2, "fast"))
-	song.addSegment(SongSegment( "note", 54, 5, 3, "allet"))
+	song.addSegment(SongSegment( "note", 54, 5, 3, "alles"))
+
+	print
+	for k,v in song.info.iteritems():
+		print "%s:\t\t %s" % (k,v)
 	
-	print "\n\n"
-	
-	print "Title:\t\t", song.title
-	print "Artist:\t\t", song.artist
-	print "AudioFile:\t", song.audioFile
-	print "BPM:\t\t", song.bpm
-	print "GAP:\t\t", song.gap, "\n"
-	
-	
-	print "Type\t","TimeStamp\t","Duration\t","Pitch\t\t","Text\t\n\n"
+	print "\n\nType\tTimeStamp\tDuration\tPitch\t\tText"
 	
 	for segment in song.segments:
 		
-		print segment.type, "\t", segment.time_stamp, \
-			"\t\t",segment.duration, "\t\t", \
-			segment.pitch, "\t\t", segment.text
-	
-	print "\n\n"
-	song.write_to_txt('Song.txt') 
+		print "%s\t%s\t\t%s\t\t%s\t\t%s" % (segment.type, segment.time_stamp,
+			segment.duration, segment.pitch, segment.text)
+	song_file = 'Song.txt'
+	print
+	song.write_to_txt(song_file) 
+	print "wrote file %s" % (song_file)
+	print
 
 if __name__ == '__main__': main()
