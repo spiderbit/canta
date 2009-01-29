@@ -19,5 +19,5 @@
 
 class SoundManager:
 
-	def readData(count):
-		pass
+    def readData(count):
+        pass

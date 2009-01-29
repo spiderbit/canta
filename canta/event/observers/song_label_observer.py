@@ -24,36 +24,36 @@ from canta.event.observers.label_list import LabelList
 
 class SongLabelObserver(LabelList):
 
-	def __init__(self, widget_properties, debug=0):
-		LabelList.__init__(self, widget_properties, debug)
+    def __init__(self, widget_properties, debug=0):
+        LabelList.__init__(self, widget_properties, debug)
 
 
-	def input(self, data):
-		pass
+    def input(self, data):
+        pass
 #		print data.frequency, data['real_pos_time']
 
 
-	def update(self, subject):	
-		status = subject.data['type']	
-		if status == 'roundStart':
-			pass
-		elif status == 'activateNote':
-			self._activate_note(subject.data['pos'])
-		elif status == 'deActivateNote':
-			self._de_activate_note(subject.data['old_pos'])
-		elif status == 'nextLine':
-			self._delete_all()
-			self._next_line(subject.data['song'])
+    def update(self, subject):	
+        status = subject.data['type']	
+        if status == 'roundStart':
+            pass
+        elif status == 'activateNote':
+            self._activate_note(subject.data['pos'])
+        elif status == 'deActivateNote':
+            self._de_activate_note(subject.data['old_pos'])
+        elif status == 'nextLine':
+            self._delete_all()
+            self._next_line(subject.data['song'])
 
-		elif status == 'end':
-			self._end()
-		elif self.debug:
-			print "status: ", subject.data['status']
+        elif status == 'end':
+            self._end()
+        elif self.debug:
+            print "status: ", subject.data['status']
 
 
 
 def main():
-	pass
+    pass
 
 
 if __name__ == '__main__': main()

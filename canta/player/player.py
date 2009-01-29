@@ -18,21 +18,21 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Player:
-	
-	def __init__(self, path='', file='', time=0.0):
-		self.time = float(time)
-		self.path = path
-		self.file = file
-		self.paused = False
-		
-	def _load(self):
-		pass
-		
-	def _play(self):
-		self.paused = False
-		
-	def _get_pos(self):
-		pass
-		
-	def _pause(self):
-		self.paused = True
+    
+    def __init__(self, path='', file='', time=0.0):
+        self.time = float(time)
+        self.path = path
+        self.file = file
+        self.paused = False
+        
+    def _load(self):
+        pass
+        
+    def _play(self):
+        self.paused = False
+        
+    def _get_pos(self):
+        pass
+        
+    def _pause(self):
+        self.paused = True

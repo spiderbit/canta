@@ -20,73 +20,73 @@
 import soya.pudding as pudding
 
 class MenuButton(pudding.control.Button):
-	def __init__(self, label='none', function=None, args=None, \
-			widget_properties=[], pos_size=None, target = None):
+    def __init__(self, label='none', function=None, args=None, \
+            widget_properties=[], pos_size=None, target = None):
 
-		self.function = function
-		self.target = target
-		self.root = None
-		self.args = args
+        self.function = function
+        self.target = target
+        self.root = None
+        self.args = args
 
-		self.font_on = widget_properties['font']['button']['on_focus']['obj']
-		self.font_off = widget_properties['font']['button']['off_focus']['obj']
+        self.font_on = widget_properties['font']['button']['on_focus']['obj']
+        self.font_off = widget_properties['font']['button']['off_focus']['obj']
 
-		self.font_color_on = widget_properties['font']['button']['on_focus']['color']
-		self.font_color_off = widget_properties['font']['button']['off_focus']['color']
+        self.font_color_on = widget_properties['font']['button']['on_focus']['color']
+        self.font_color_off = widget_properties['font']['button']['off_focus']['color']
 
-		self.bg_color_on = widget_properties['button']['background']['on_focus']['color']
-		self.bg_color_off = widget_properties['button']['background']['off_focus']['color']
+        self.bg_color_on = widget_properties['button']['background']['on_focus']['color']
+        self.bg_color_off = widget_properties['button']['background']['off_focus']['color']
 
-		self.border_color_on = widget_properties['button']['border']['on_focus']['color']
-		self.border_color_off = widget_properties['button']['border']['off_focus']['color']
-
-
-		# When I use "if blah_thing is not None" here, everything explodes.
-		if pos_size:
-			self.width = pos_size['width']
-			self.height = pos_size['height']
-			self.top = pos_size['top']
-			self.left = pos_size['left']
-
-			pudding.control.Button.__init__(
-					self, label=label, width=self.width, \
-					height=self.height, top=self.top, \
-					left=self.left, z_index=1)
-		else:
-			pudding.control.Button.__init__(self, label=label, z_index=1)
-
-		self.border_color = self.border_color_off
-		self.background_color = self.bg_color_off
-		self.child.font = self.font_off
-		self.child.color = self.font_color_off
-		#self.old_label = self.child.label
+        self.border_color_on = widget_properties['button']['border']['on_focus']['color']
+        self.border_color_off = widget_properties['button']['border']['off_focus']['color']
 
 
-	def on_focus(self):
-		self.border_color = self.border_color_on
-		self.background_color = self.bg_color_on
-		#self.child.font = self.font_on
-		self.child.color = self.font_color_on
-		#self.child.label = '+'+self.old_label+'+'
+        # When I use "if blah_thing is not None" here, everything explodes.
+        if pos_size:
+            self.width = pos_size['width']
+            self.height = pos_size['height']
+            self.top = pos_size['top']
+            self.left = pos_size['left']
+
+            pudding.control.Button.__init__(
+                    self, label=label, width=self.width, \
+                    height=self.height, top=self.top, \
+                    left=self.left, z_index=1)
+        else:
+            pudding.control.Button.__init__(self, label=label, z_index=1)
+
+        self.border_color = self.border_color_off
+        self.background_color = self.bg_color_off
+        self.child.font = self.font_off
+        self.child.color = self.font_color_off
+        #self.old_label = self.child.label
 
 
-	def on_loose_focus(self):
-		self.border_color = self.border_color_off
-		self.background_color = self.bg_color_off
-		#self.child.font = self.font_off
-		self.child.color = self.font_color_off
-		#self.child.label = self.old_label
+    def on_focus(self):
+        self.border_color = self.border_color_on
+        self.background_color = self.bg_color_on
+        #self.child.font = self.font_on
+        self.child.color = self.font_color_on
+        #self.child.label = '+'+self.old_label+'+'
 
 
-	def on_mouse_up(self, button, x, y):
-		if self.function != None:
-			if self.args == None:
-				self.function()
-			else:
-				self.function(self.args)
-		if self.target != None:
-			self.root.hide()
-			self.target.show()
-		return True
+    def on_loose_focus(self):
+        self.border_color = self.border_color_off
+        self.background_color = self.bg_color_off
+        #self.child.font = self.font_off
+        self.child.color = self.font_color_off
+        #self.child.label = self.old_label
+
+
+    def on_mouse_up(self, button, x, y):
+        if self.function != None:
+            if self.args == None:
+                self.function()
+            else:
+                self.function(self.args)
+        if self.target != None:
+            self.root.hide()
+            self.target.show()
+        return True
 
 

@@ -33,14 +33,14 @@ from soya import Smoke, FlagSubFire, FlagFirework, Particles
 
 
 class ParticleSystem(Smoke):
-	def __init__(self,parent):
-		Particles.__init__(self,parent,nb_max_particles=50)
-		self.auto_generate_particle = 1
+    def __init__(self,parent):
+        Particles.__init__(self,parent,nb_max_particles=50)
+        self.auto_generate_particle = 1
 
-	def generate(self, index):
-		sx = (random()- 0.5) * .2
-		sy = (random())
-		sz = (random() - 0.5) * .2
-		l = (0.2 * (1.0 + random())) / sqrt(sx * sx + sy * sy + sz * sz) * 0.5
-		self.set_particle(index, random()*.5, sx * l, sy * l, sz * l, 0.,0.,0.)
+    def generate(self, index):
+        sx = (random()- 0.5) * .2
+        sy = (random())
+        sz = (random() - 0.5) * .2
+        l = (0.2 * (1.0 + random())) / sqrt(sx * sx + sy * sy + sz * sz) * 0.5
+        self.set_particle(index, random()*.5, sx * l, sy * l, sz * l, 0.,0.,0.)
 

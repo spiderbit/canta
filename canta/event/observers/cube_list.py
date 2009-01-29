@@ -24,134 +24,134 @@ from soya import Smoke, FlagSubFire, FlagFirework, Particles
 from canta.theme.rotating_body import RotatingBody
 
 class CubeList:
-	def __init__(self, parent_world, debug=0):
-		self.debug = debug
+    def __init__(self, parent_world, debug=0):
+        self.debug = debug
 
-		self.parent_world = parent_world
-		self.world = soya.World()
-		self.parent_world.add(self.world)
-
-
-	def _delete_all(self):
-		#if len(self.world.children) >0:
-		del self.world.children[0:]
-		#for child in self.world.children:
-		#	self.world.remove(child)
+        self.parent_world = parent_world
+        self.world = soya.World()
+        self.parent_world.add(self.world)
 
 
-	def draw_grid(self, words):
-		# 12 balken + 13 falschbalken = 25 einheiten, jeder balken
-		#10pixel hoch also insgesamt 250 pixel
-		#resolution_y = 768.
-		count_right_bar = self.max - self.min
-		count_wrong_bar = count_right_bar + 1.
-		#count_bar = count_right_bar + count_wrong_bar
-		size_y = 0.2
-		size_x = 0.3
-		range_x = words[-1].timeStamp + words[-1].duration - words[0].timeStamp
-
-		# create a new cube with the new coordinates:
-		for i in range(count_right_bar):
-			bar = soya.cube.Cube()
-			bar.scale(size_x * range_x, size_y/10, 0.5)
-			model = bar.to_model()
-			# 2 ist für den abstand zwischen den noten
-			position_y = ((i) - (count_right_bar / 2.) ) * size_y * 1
-			position_x =  0 #( range_x -(range_x)/2 ) * 0.3
-			if self.debug: print 'position: ', position_x
-
-			#if i == pos:
-			#	pos_z = 3
-		
-			#else:
-			pos_z = 0
-			x = soya.Body(self.world, model).set_xyz(position_x, position_y, pos_z)
+    def _delete_all(self):
+        #if len(self.world.children) >0:
+        del self.world.children[0:]
+        #for child in self.world.children:
+        #	self.world.remove(child)
 
 
-	def add(self, properties):
+    def draw_grid(self, words):
+        # 12 balken + 13 falschbalken = 25 einheiten, jeder balken
+        #10pixel hoch also insgesamt 250 pixel
+        #resolution_y = 768.
+        count_right_bar = self.max - self.min
+        count_wrong_bar = count_right_bar + 1.
+        #count_bar = count_right_bar + count_wrong_bar
+        size_y = 0.2
+        size_x = 0.3
+        range_x = words[-1].timeStamp + words[-1].duration - words[0].timeStamp
 
-		material = soya.Material()
-		if properties['diffuse']:
-			material.diffuse = properties['diffuse']
-		
-		#material.diffuse = (0.0, 0.2, 0.7, 1.0)
-		# We use here a light blue, to get metallic reflexions.
-		if properties['specular']:
-			material.specular = properties['specular']
+        # create a new cube with the new coordinates:
+        for i in range(count_right_bar):
+            bar = soya.cube.Cube()
+            bar.scale(size_x * range_x, size_y/10, 0.5)
+            model = bar.to_model()
+            # 2 ist für den abstand zwischen den noten
+            position_y = ((i) - (count_right_bar / 2.) ) * size_y * 1
+            position_x =  0 #( range_x -(range_x)/2 ) * 0.3
+            if self.debug: print 'position: ', position_x
 
-		# Activates the separate specular. This results in a brighter specular effect.
-		if properties['seperate_specular']:
-			material.separate_specular = 1
-
-
-
-		self.use_pil = False
-		self.use_shadows = False
-
-		bar = soya.cube.Cube(material=material)
-		bar.scale(self.size_x * properties['length'], self.size_y, 0.5)
-
-		if self.use_pil:
-			for face in bar.children:
-				face.material = self.material
-
-			model_builder = soya.SimpleModelBuilder()
-			if self.use_shadows:
-				model_builder.shadow = 1
-			bar.model_builder = model_builder
-
-		model = bar.to_model()
-
-		if self.use_pil:
-			self.material.environment_mapping = 1
-			self.material.texture = soya.Image.get('env_map.jpeg')
-		if properties['rotate']:
-			body = RotatingBody(self.world, model)
-		else:
-			body = soya.Body(self.world, model)
-		body.set_xyz(properties['x'], properties['y'], properties['z'])
-		#body.
-		#print "neuer balken eigentlich", len(self.world.children)
-		#for key, value in properties.items():
-		#	print key, value
+            #if i == pos:
+            #	pos_z = 3
+        
+            #else:
+            pos_z = 0
+            x = soya.Body(self.world, model).set_xyz(position_x, position_y, pos_z)
 
 
-	def _activate_note(self, pos):
-		self.world.children[pos].z = 0.6
+    def add(self, properties):
+
+        material = soya.Material()
+        if properties['diffuse']:
+            material.diffuse = properties['diffuse']
+        
+        #material.diffuse = (0.0, 0.2, 0.7, 1.0)
+        # We use here a light blue, to get metallic reflexions.
+        if properties['specular']:
+            material.specular = properties['specular']
+
+        # Activates the separate specular. This results in a brighter specular effect.
+        if properties['seperate_specular']:
+            material.separate_specular = 1
 
 
-	def _de_activate_note(self, pos):
-		self.world.children[pos].z = 0
+
+        self.use_pil = False
+        self.use_shadows = False
+
+        bar = soya.cube.Cube(material=material)
+        bar.scale(self.size_x * properties['length'], self.size_y, 0.5)
+
+        if self.use_pil:
+            for face in bar.children:
+                face.material = self.material
+
+            model_builder = soya.SimpleModelBuilder()
+            if self.use_shadows:
+                model_builder.shadow = 1
+            bar.model_builder = model_builder
+
+        model = bar.to_model()
+
+        if self.use_pil:
+            self.material.environment_mapping = 1
+            self.material.texture = soya.Image.get('env_map.jpeg')
+        if properties['rotate']:
+            body = RotatingBody(self.world, model)
+        else:
+            body = soya.Body(self.world, model)
+        body.set_xyz(properties['x'], properties['y'], properties['z'])
+        #body.
+        #print "neuer balken eigentlich", len(self.world.children)
+        #for key, value in properties.items():
+        #	print key, value
 
 
-	#def _bonus_draw(self, size_y, size_x, duration):
-		#material = soya.Material()
-		#material.diffuse = (1.0, 1.0, 1.0, 0.5)
-		# We use here a blue diffuse color.
+    def _activate_note(self, pos):
+        self.world.children[pos].z = 0.6
 
 
-		# create a new cube with the new coordinates:
-		#bar = soya.cube.Cube(material=material)
-		#size_y = size_y * 2
-
-		#fountain = FlagFirework(self.parent_world, nb_particles=4, nb_sub_particles=10)
-		#bar.scale(size_x * duration, size_y, 0.5)
-		#return bar.to_model()
-
-	#def _freestyle_draw(self, size_y, size_x, duration):
-		#material = soya.Material()
-		#material.diffuse = (1.0, 0.2, 0.7, 1.0)
-		#material.specular = (0.2, 0.0, 1.0, 1.0)
-		#material.separate_specular = 1
-
-		# create a new cube with the new coordinates:
-		#bar = soya.cube.Cube(material=material)
-		#size_y = size_y * 2
-
-		#bar.scale(size_x * duration, size_y, 0.5)
-		#return bar.to_model()
+    def _de_activate_note(self, pos):
+        self.world.children[pos].z = 0
 
 
-	def _end(self):
-		self.parent_world.remove(self.world)
+    #def _bonus_draw(self, size_y, size_x, duration):
+        #material = soya.Material()
+        #material.diffuse = (1.0, 1.0, 1.0, 0.5)
+        # We use here a blue diffuse color.
+
+
+        # create a new cube with the new coordinates:
+        #bar = soya.cube.Cube(material=material)
+        #size_y = size_y * 2
+
+        #fountain = FlagFirework(self.parent_world, nb_particles=4, nb_sub_particles=10)
+        #bar.scale(size_x * duration, size_y, 0.5)
+        #return bar.to_model()
+
+    #def _freestyle_draw(self, size_y, size_x, duration):
+        #material = soya.Material()
+        #material.diffuse = (1.0, 0.2, 0.7, 1.0)
+        #material.specular = (0.2, 0.0, 1.0, 1.0)
+        #material.separate_specular = 1
+
+        # create a new cube with the new coordinates:
+        #bar = soya.cube.Cube(material=material)
+        #size_y = size_y * 2
+
+        #bar.scale(size_x * duration, size_y, 0.5)
+        #return bar.to_model()
+
+
+    def _end(self):
+        self.parent_world.remove(self.world)
 

@@ -28,105 +28,105 @@ import getopt
 from canta.theme.theme_manager import ThemeManager
 from canta.theme.editor import Editor
 try:
-	import psyco
-	psyco.full()
+    import psyco
+    psyco.full()
 except ImportError:
-	print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
-	pass
+    print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
+    pass
 
 from canta.display.core_init import CoreInit
 
 def usage():
-	print "\n| CANTA Theme Viewer"
-	print "| USAGE: python <theme name> <res x> <res y> <fs>"
-	print "|   - theme name: the name of the directory where the theme files are stored"
-	print "|   - res x: resolution, e.g. 1024"
-	print "|   - res y: resolution, e.g. 768"
-	print "|   - fs: fullscreen 1 or 0\n|"
-	print "|   Example: python view_theme.py mozart 1024 768 0"
+    print "\n| CANTA Theme Viewer"
+    print "| USAGE: python <theme name> <res x> <res y> <fs>"
+    print "|   - theme name: the name of the directory where the theme files are stored"
+    print "|   - res x: resolution, e.g. 1024"
+    print "|   - res y: resolution, e.g. 768"
+    print "|   - fs: fullscreen 1 or 0\n|"
+    print "|   Example: python view_theme.py mozart 1024 768 0"
 
 def main():
-	if len(sys.argv) != 5:
-		usage()
-		sys.exit(2)
+    if len(sys.argv) != 5:
+        usage()
+        sys.exit(2)
 
-	# app dir:
-	app_dir = os.path.dirname(sys.argv[0])
+    # app dir:
+    app_dir = os.path.dirname(sys.argv[0])
 
-	# theme name:
-	theme_name = sys.argv[1]
+    # theme name:
+    theme_name = sys.argv[1]
 
-	# app name:
-	APP_NAME = 'Canta Theme Viewer'
+    # app name:
+    APP_NAME = 'Canta Theme Viewer'
 
-	# version:
-	VERSION = '0.1'
+    # version:
+    VERSION = '0.1'
 
-	RESIZEABLE = True
+    RESIZEABLE = True
 
-	# DEBUG flag:
-	DEBUG = False
+    # DEBUG flag:
+    DEBUG = False
 
-	# get platform info:
-	PLATFORM = sys.platform
+    # get platform info:
+    PLATFORM = sys.platform
 
-	# on Windows systems:
-	if 'win32' in PLATFORM:
-		import PIL.PngImagePlugin
-		import PIL.JpegImagePlugin
+    # on Windows systems:
+    if 'win32' in PLATFORM:
+        import PIL.PngImagePlugin
+        import PIL.JpegImagePlugin
 
-	window_title = APP_NAME + ' ' + VERSION
+    window_title = APP_NAME + ' ' + VERSION
 
-	res_x =  int(sys.argv[2])
-	res_y =  int(sys.argv[3])
-	fs = int(sys.argv[4])
+    res_x =  int(sys.argv[2])
+    res_y =  int(sys.argv[3])
+    fs = int(sys.argv[4])
 
-	soya.init(title=window_title, width=res_x, height=res_y, \
-			fullscreen=fs, resizeable=RESIZEABLE)
+    soya.init(title=window_title, width=res_x, height=res_y, \
+            fullscreen=fs, resizeable=RESIZEABLE)
 
-	# Enable/disable soya's auto (blender model) importer:
-	soya.AUTO_EXPORTERS_ENABLED = True
+    # Enable/disable soya's auto (blender model) importer:
+    soya.AUTO_EXPORTERS_ENABLED = True
 
-	theme_path = os.path.join(app_dir, 'themes', \
-			theme_name, 'media')
-	soya.path.append(theme_path)
+    theme_path = os.path.join(app_dir, 'themes', \
+            theme_name, 'media')
+    soya.path.append(theme_path)
 
-	scene = soya.World()
+    scene = soya.World()
 
-	light = soya.Light(scene)
-	light.set_xyz(0.0, 7.7, 17.0)
-	light.cast_shadow = True
+    light = soya.Light(scene)
+    light.set_xyz(0.0, 7.7, 17.0)
+    light.cast_shadow = True
 
-	camera = soya.Camera(scene)
+    camera = soya.Camera(scene)
 
-	moveable = True
-	rotating = False
-	if moveable:
-		from canta.cameras.movable_camera import MovableCamera
-		camera = MovableCamera(app_dir, scene, DEBUG)
-	if rotating:
-		from canta.cameras.spinning_camera import SpinningCamera
-		cube = soya.Body(scene, soya.cube.Cube().to_model())
-		cube.visible = True
-		camera = SpinningCamera(scene, cube)
+    moveable = True
+    rotating = False
+    if moveable:
+        from canta.cameras.movable_camera import MovableCamera
+        camera = MovableCamera(app_dir, scene, DEBUG)
+    if rotating:
+        from canta.cameras.spinning_camera import SpinningCamera
+        cube = soya.Body(scene, soya.cube.Cube().to_model())
+        cube.visible = True
+        camera = SpinningCamera(scene, cube)
 
-	#camera = soya.TravelingCamera(scene)
+    #camera = soya.TravelingCamera(scene)
 
-	camera.set_xyz(0.0, 0.0, 15.0)
+    camera.set_xyz(0.0, 0.0, 15.0)
 #	camera.fov = 90.0
 #	camera.ortho = True
 #	camera.set_xyz(-0.5, -0.5, 4.0)
 #	camera.rotate_y(-90.0)
 #	camera.set_xyz(0.0, -0.5, 7.0)
 
-	# Create the editor world.
-	world = Editor(scene, camera)
+    # Create the editor world.
+    world = Editor(scene, camera)
 
-	# load the theme config settings:
-	theme_mgr = ThemeManager(world, DEBUG)
-	theme_dir = os.path.join(app_dir, 'themes', theme_name)
-	theme_mgr.get_theme(theme_name, theme_dir)
-	theme_mgr.show_theme(theme_name)
+    # load the theme config settings:
+    theme_mgr = ThemeManager(world, DEBUG)
+    theme_dir = os.path.join(app_dir, 'themes', theme_name)
+    theme_mgr.get_theme(theme_name, theme_dir)
+    theme_mgr.show_theme(theme_name)
 
 # TEST OBJECTS
 #	wall_model = soya.World()
@@ -146,10 +146,10 @@ def main():
 #	world.filename = "theme"
 #	world.save()
 
-	soya.set_root_widget(camera)
-	soya.MainLoop(scene).main_loop()
+    soya.set_root_widget(camera)
+    soya.MainLoop(scene).main_loop()
 
-	
+    
 
 if __name__ == '__main__': main()
 

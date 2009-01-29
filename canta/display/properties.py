@@ -18,15 +18,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class DisplayProperties:
-	def __init__(self):
-		# default is 1024x768. applies if user wrote an invalid
-		# res into config file by hand...
-		self.selected_resolution = 2
-		self.valid_resolutions = ['300x200', '320x480', '640x400', '640x480', \
-					'800x480', '800x600', '1024x600','1024x768', \
-					'1280x720', '1280x800', '1280x1024', \
-					'1400x1050', '1440x900', '1600x1200', '1680x1050', '1920x1200']
-		self.active_resolution = self.valid_resolutions[self.selected_resolution]
+    def __init__(self):
+        # default is 1024x768. applies if user wrote an invalid
+        # res into config file by hand...
+        self.selected_resolution = 2
+        self.valid_resolutions = ['300x200', '320x480', '640x400', '640x480', \
+                    '800x480', '800x600', '1024x600','1024x768', \
+                    '1280x720', '1280x800', '1280x1024', \
+                    '1400x1050', '1440x900', '1600x1200', '1680x1050', '1920x1200']
+        self.active_resolution = self.valid_resolutions[self.selected_resolution]
 
 
 #	def select_next(self):
@@ -44,9 +44,9 @@ class DisplayProperties:
 
 def main():
 
-	disp = DisplayProperties()
-	print 'valid resolutions:', disp.valid_resolutions
-	print 'active resolution:', disp.active_resolution
+    disp = DisplayProperties()
+    print 'valid resolutions:', disp.valid_resolutions
+    print 'active resolution:', disp.active_resolution
 #	print
 
 #	for i in range(10):

@@ -28,90 +28,90 @@ from canta.menus.toggle_button import MenuToggle
 from canta.menus.menu import Menu
 
 class MenuGroup(Menu):
-	def __init__(self, widget_properties):
-		Menu.__init__(self, widget_properties)
+    def __init__(self, widget_properties):
+        Menu.__init__(self, widget_properties)
 
-		self.widget_properties = widget_properties
-		self.group_count = 0
-		self.heights = []
-		self.toggle_list = []
+        self.widget_properties = widget_properties
+        self.group_count = 0
+        self.heights = []
+        self.toggle_list = []
 
-		# heading and nav container inherited from Menu:
-		self.widgets.append(self.heading_cont)
-		self.widgets.append(self.nav_cont)
+        # heading and nav container inherited from Menu:
+        self.widgets.append(self.heading_cont)
+        self.widgets.append(self.nav_cont)
 
-	def add_group(self, items):
-		# TODO: find out how this works and make it dynamic.
-		#if self.group_count == 0:
-		#	top = 90
-		#elif self.group_count == 1:
-		#	top = 90 + 290
-		#elif self.group_count == 2:
-		#	top = 90 + 290 + 160
-		#elif self.group_count == 3:
-		#	top = 90 + 290 + 160 + 95
+    def add_group(self, items):
+        # TODO: find out how this works and make it dynamic.
+        #if self.group_count == 0:
+        #	top = 90
+        #elif self.group_count == 1:
+        #	top = 90 + 290
+        #elif self.group_count == 2:
+        #	top = 90 + 290 + 160
+        #elif self.group_count == 3:
+        #	top = 90 + 290 + 160 + 95
 
-		top = self.box_cont.top
+        top = self.box_cont.top
 
-		self.group_cont = pudding.container.VerticalContainer( \
-				self.parent_widget, top=top, left=30, width=100, z_index=1)
-		self.group_cont.padding = 10
-		self.group_cont.visible = 0
-		self.widgets.append(self.group_cont)
+        self.group_cont = pudding.container.VerticalContainer( \
+                self.parent_widget, top=top, left=30, width=100, z_index=1)
+        self.group_cont.padding = 10
+        self.group_cont.visible = 0
+        self.widgets.append(self.group_cont)
 
-		self.heading_label = pudding.control.SimpleLabel( \
-				self.group_cont, top=10, left=15, label=items['heading'], \
-				font=self.font_p,
-				color=self.color_h)
+        self.heading_label = pudding.control.SimpleLabel( \
+                self.group_cont, top=10, left=15, label=items['heading'], \
+                font=self.font_p,
+                color=self.color_h)
 
-		bc_top = top + 25
-		bc_left = 10
-		bc_width = 10 # any number, we ANCHOR_ALL later
-		bc_height = 10 # any number, we ANCHOR_ALL later
+        bc_top = top + 25
+        bc_left = 10
+        bc_width = 10 # any number, we ANCHOR_ALL later
+        bc_height = 10 # any number, we ANCHOR_ALL later
 
-		box_cont = pudding.container.Container( \
-				self.parent_widget, left=bc_left, top=bc_top, \
-				width=bc_width, height=bc_height, z_index=-3)
-		box_cont.right = 20
-		box_cont.bottom = 30
-		box_cont.anchors = pudding.ANCHOR_ALL
-		box_cont.padding = 5
-		box_cont.visible = 0
-		self.widgets.append(box_cont)
+        box_cont = pudding.container.Container( \
+                self.parent_widget, left=bc_left, top=bc_top, \
+                width=bc_width, height=bc_height, z_index=-3)
+        box_cont.right = 20
+        box_cont.bottom = 30
+        box_cont.anchors = pudding.ANCHOR_ALL
+        box_cont.padding = 5
+        box_cont.visible = 0
+        self.widgets.append(box_cont)
 
-		box_left = 10
-		box_width = self.screen_res_x - 40
+        box_left = 10
+        box_width = self.screen_res_x - 40
 
-		box_height = len(items['items']) * 65
-		self.bg_box = pudding.control.Box(box_cont, \
-				left=box_left, \
-				width=box_width, \
-				height=box_height, \
-				background_color=self.box_bg_color, \
-				border_color=self.box_border_color, \
-				z_index=-3)
-		self.bg_box.anchors = pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT | pudding.ANCHOR_RIGHT
-
-
-		for item in items['items']:
-			self.info_label = pudding.control.SimpleLabel(self.group_cont, \
-				label=item['info'], font=self.font_p, left=10, \
-				color=self.color_p)
-			if item['button_type'] == 'toggle':
-				selected_item = item['selected_item']
-				self.toggle_list.append(self.group_cont.add_child( \
-					MenuToggle(self.widget_properties, \
-					item['toggle_items'], selected_item)))
-			elif item['button_type'] == 'button':
-				self.group_cont.add_child(MenuButton(item['label'], \
-					item['function'], item['args'], \
-					self.widget_properties))
-		self.group_count += 1
+        box_height = len(items['items']) * 65
+        self.bg_box = pudding.control.Box(box_cont, \
+                left=box_left, \
+                width=box_width, \
+                height=box_height, \
+                background_color=self.box_bg_color, \
+                border_color=self.box_border_color, \
+                z_index=-3)
+        self.bg_box.anchors = pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT | pudding.ANCHOR_RIGHT
 
 
-	def add(self, button, align='left'):
-		self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
-		button.root=self
+        for item in items['items']:
+            self.info_label = pudding.control.SimpleLabel(self.group_cont, \
+                label=item['info'], font=self.font_p, left=10, \
+                color=self.color_p)
+            if item['button_type'] == 'toggle':
+                selected_item = item['selected_item']
+                self.toggle_list.append(self.group_cont.add_child( \
+                    MenuToggle(self.widget_properties, \
+                    item['toggle_items'], selected_item)))
+            elif item['button_type'] == 'button':
+                self.group_cont.add_child(MenuButton(item['label'], \
+                    item['function'], item['args'], \
+                    self.widget_properties))
+        self.group_count += 1
+
+
+    def add(self, button, align='left'):
+        self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
+        button.root=self
 
 
 

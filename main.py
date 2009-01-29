@@ -21,47 +21,47 @@ import sys
 import os
 
 try:
-	import psyco
-	psyco.full()
+    import psyco
+    psyco.full()
 except ImportError:
-	print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
-	pass
+    print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
+    pass
 
 from canta.display.core_init import CoreInit
 
 
 def main():
-	# app name:
-	APP_NAME = 'Canta'
+    # app name:
+    APP_NAME = 'Canta'
 
-	# app directory
-	APP_DIR = os.path.dirname(sys.argv[0])
+    # app directory
+    APP_DIR = os.path.dirname(sys.argv[0])
 
-	# version:
-	#if open(os.path.join(APP_DIR, 'VERSION')):
-	version_file = open(os.path.join(APP_DIR, 'VERSION'))
-	version = version_file.next()
-	#else:
-	#	version = '(experimental)'
+    # version:
+    #if open(os.path.join(APP_DIR, 'VERSION')):
+    version_file = open(os.path.join(APP_DIR, 'VERSION'))
+    version = version_file.next()
+    #else:
+    #	version = '(experimental)'
 
-	# debug flag:
-	DEBUG = False
+    # debug flag:
+    DEBUG = False
 
-	# get platform info:
-	PLATFORM = sys.platform
+    # get platform info:
+    PLATFORM = sys.platform
 
-	# on Darwin systems:
-	if 'darwin' in PLATFORM:
-		from Authorization import Authorization, kAuthorizationFlagDestroyRights
+    # on Darwin systems:
+    if 'darwin' in PLATFORM:
+        from Authorization import Authorization, kAuthorizationFlagDestroyRights
 
-	# on Windows systems:
-	elif 'win32' in PLATFORM:
-		import PIL.PngImagePlugin
-		import PIL.JpegImagePlugin
-	#	import win32com.client
+    # on Windows systems:
+    elif 'win32' in PLATFORM:
+        import PIL.PngImagePlugin
+        import PIL.JpegImagePlugin
+    #	import win32com.client
 
-	window_title = APP_NAME + ' ' + version
-	CoreInit(window_title, APP_DIR ,DEBUG)
+    window_title = APP_NAME + ' ' + version
+    CoreInit(window_title, APP_DIR ,DEBUG)
 
 if __name__ == '__main__': main()
 

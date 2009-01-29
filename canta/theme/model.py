@@ -18,37 +18,37 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class Model:
-	"""An (abstract) parent class for all the other model classes.
-	"""
+    """An (abstract) parent class for all the other model classes.
+    """
 
-	def __init__(self, parent_world=None, name=None, position=(0.0, 0.0, 0.0), \
-			scale=(1.0, 1.0, 1.0), rotation=(0.0, 0.0, 0.0), debug=0):
+    def __init__(self, parent_world=None, name=None, position=(0.0, 0.0, 0.0), \
+            scale=(1.0, 1.0, 1.0), rotation=(0.0, 0.0, 0.0), debug=0):
 
-		self.debug = debug
-		self.parent_world = parent_world
-		self.name = name
-		self.position = position
-		self.scale = scale
-		self.rotation = rotation
-		self.body = None
-
-
-	def set_position(self, position):
-		self.body.set_xyz(position[0], position[1], position[2])
+        self.debug = debug
+        self.parent_world = parent_world
+        self.name = name
+        self.position = position
+        self.scale = scale
+        self.rotation = rotation
+        self.body = None
 
 
-	def set_scale(self, scale):
-		self.body.scale(scale[0], scale[1], scale[2])
+    def set_position(self, position):
+        self.body.set_xyz(position[0], position[1], position[2])
 
 
-	def set_rotation(self, rotation):
-		self.body.rotate_x(rotation[0])
-		self.body.rotate_y(rotation[1])
-		self.body.rotate_z(rotation[2])
+    def set_scale(self, scale):
+        self.body.scale(scale[0], scale[1], scale[2])
+
+
+    def set_rotation(self, rotation):
+        self.body.rotate_x(rotation[0])
+        self.body.rotate_y(rotation[1])
+        self.body.rotate_z(rotation[2])
 
 
 def main():
-	pass
+    pass
 
 if __name__ == '__main__': main()
 

@@ -22,32 +22,32 @@ import os,sys
 
 
 class ClickObserver:
-	def __init__(self, player):
-		self.player = player
-		self.player.init_click()
+    def __init__(self, player):
+        self.player = player
+        self.player.init_click()
 
 
-	def click(self):
-		# needs to be implemented
-		self.player.click()
+    def click(self):
+        # needs to be implemented
+        self.player.click()
 
 
-	def _next_line(self, song):	
-		pass
-		#sound
+    def _next_line(self, song):	
+        pass
+        #sound
 
-	def update(self, subject):
-		status = subject.data['type']
-		if status == 'roundStart':
-			pass
-		elif status == 'activateNote':
-			self.click()
-		elif status == 'deActivateNote':
-			self.click()
-		elif status == 'nextLine':
-			pass
-		elif status == 'end':
-			pass
-		elif self.debug:
-			print 'status: ', status
+    def update(self, subject):
+        status = subject.data['type']
+        if status == 'roundStart':
+            pass
+        elif status == 'activateNote':
+            self.click()
+        elif status == 'deActivateNote':
+            self.click()
+        elif status == 'nextLine':
+            pass
+        elif status == 'end':
+            pass
+        elif self.debug:
+            print 'status: ', status
 

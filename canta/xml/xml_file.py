@@ -32,56 +32,56 @@ import xml.etree.ElementTree as ET # Python 2.5
 #from lib.theme.panel import Panel
 
 class XmlFile:
-	"""Parse a XML file for user config and/or theme elements.
-	"""
+    """Parse a XML file for user config and/or theme elements.
+    """
 
-	def __init__(self, xml_file, root_name, debug=0):
-		self.root_name = root_name
-		self.xml_file = xml_file
-		self.debug = debug
-
-
-	def read_config(self):
-		try:
-			self.tree = ET.parse(self.xml_file)
-			root = self.tree.getroot()
-			self.item = self.read_xml(root)
-		except:
-			self.write_xml()
-
-	def read_xml(self, elem):
-		if len(elem) > 0:
-			target = {}
-			for sub_elem in elem:
-				child = self.read_xml(sub_elem)
-				target[sub_elem.tag] = child
-		else:
-			target = elem.text
-
-		return target
-
-	def write_xml(self, ):
-		# build a tree structure
-		root = ET.Element(self.root_name)
-		self.write_loop(root, self.item)
-
-		# wrap it in an ElementTree instance, and save as XML
-		tree = ET.ElementTree(root)
-		tree.write(self.xml_file)
-
-		'''with utf_8 encoding the parse-methode dont work or i dont know how'''
-		#tree.write(self.xml_file, encoding='utf_8')
+    def __init__(self, xml_file, root_name, debug=0):
+        self.root_name = root_name
+        self.xml_file = xml_file
+        self.debug = debug
 
 
-	def write_loop(self, elem, src_dict):
-		
-		for k,v in src_dict.iteritems():
-			if type(v) == dict:
-				child_elem = ET.SubElement(elem, k)
-				self.write_loop(child_elem, v)
-			else:
-				child_elem = ET.SubElement(elem,k)
-				child_elem.text = v
-				 
+    def read_config(self):
+        try:
+            self.tree = ET.parse(self.xml_file)
+            root = self.tree.getroot()
+            self.item = self.read_xml(root)
+        except:
+            self.write_xml()
+
+    def read_xml(self, elem):
+        if len(elem) > 0:
+            target = {}
+            for sub_elem in elem:
+                child = self.read_xml(sub_elem)
+                target[sub_elem.tag] = child
+        else:
+            target = elem.text
+
+        return target
+
+    def write_xml(self, ):
+        # build a tree structure
+        root = ET.Element(self.root_name)
+        self.write_loop(root, self.item)
+
+        # wrap it in an ElementTree instance, and save as XML
+        tree = ET.ElementTree(root)
+        tree.write(self.xml_file)
+
+        '''with utf_8 encoding the parse-methode dont work or i dont know how'''
+        #tree.write(self.xml_file, encoding='utf_8')
+
+
+    def write_loop(self, elem, src_dict):
+        
+        for k,v in src_dict.iteritems():
+            if type(v) == dict:
+                child_elem = ET.SubElement(elem, k)
+                self.write_loop(child_elem, v)
+            else:
+                child_elem = ET.SubElement(elem,k)
+                child_elem.text = v
+                 
 
 

@@ -21,25 +21,25 @@
 
 
 class MainCubeObserver:
-	def __init__():
-		pass
+    def __init__():
+        pass
 
-	def _next_line(self, song):	
-		pass
-		
+    def _next_line(self, song):	
+        pass
+        
 
-	def update(self, subject):
-		status = subject.data['type']
-		if status == 'roundStart':
-			pass
-		elif status == 'activateNote':
-			self._activate_note(subject.data['pos'])
-		elif status == 'deActivateNote':
-			self._de_activate_note(subject.data['old_pos'])
-		elif status == 'nextLine':
-			self._next_line(subject.data['song'])
-		elif status == 'end':
-			self._end()
-		elif self.debug:
-			print 'status: ', status
+    def update(self, subject):
+        status = subject.data['type']
+        if status == 'roundStart':
+            pass
+        elif status == 'activateNote':
+            self._activate_note(subject.data['pos'])
+        elif status == 'deActivateNote':
+            self._de_activate_note(subject.data['old_pos'])
+        elif status == 'nextLine':
+            self._next_line(subject.data['song'])
+        elif status == 'end':
+            self._end()
+        elif self.debug:
+            print 'status: ', status
 

@@ -22,42 +22,42 @@ import soya
 import soya.pudding as pudding
 
 class DebugWidget:
-	def __init__(self, parent_widget=None, font=None, top=0, left=0, \
-			z_index=1, debug=0):
-	
-		self.parent_widget = parent_widget
-		self.font = font
-		self.top = top
-		self.left = left
-		self.z_index = z_index
-		self.debug = debug
+    def __init__(self, parent_widget=None, font=None, top=0, left=0, \
+            z_index=1, debug=0):
+    
+        self.parent_widget = parent_widget
+        self.font = font
+        self.top = top
+        self.left = left
+        self.z_index = z_index
+        self.debug = debug
 
-		self.container = pudding.container.HorizontalContainer( \
-				parent_widget, width=600, height=800, \
-				left=self.left, top=self.top, z_index=1)
+        self.container = pudding.container.HorizontalContainer( \
+                parent_widget, width=600, height=800, \
+                left=self.left, top=self.top, z_index=1)
 
-		self.container.add_child(pudding.control.SimpleLabel( \
-					parent_widget, label='', \
-					font=self.font, top=25, left=30))
-
-
-	def _end(self):
-		pass
+        self.container.add_child(pudding.control.SimpleLabel( \
+                    parent_widget, label='', \
+                    font=self.font, top=25, left=30))
 
 
-	def update(self, subject):		
-		if subject.data.status == 'roundStart':
-			self.container.children[0].label = 'size: ' \
-				+ str(len(subject.data.song.lines))
-		
-		elif subject.data.status == 'end':
-			self._end()
-		elif self.debug:
-			print 'status: ', subject.data.status
+    def _end(self):
+        pass
+
+
+    def update(self, subject):		
+        if subject.data.status == 'roundStart':
+            self.container.children[0].label = 'size: ' \
+                + str(len(subject.data.song.lines))
+        
+        elif subject.data.status == 'end':
+            self._end()
+        elif self.debug:
+            print 'status: ', subject.data.status
 
 
 def main():
-	pass
+    pass
 
 if __name__ == '__main__': main()
 

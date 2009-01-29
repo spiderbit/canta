@@ -18,12 +18,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 class SongLine:
-	
-	def __init__(self, show_time=0, segments=0):
-		self.show_time = show_time
-		self.segments = []
-		
-	
-		
-	def add_segment(self, song_segment):
-		self.segments.append(song_segment)
+    
+    def __init__(self, show_time=0, segments=0):
+        self.show_time = show_time
+        self.segments = []
+        
+    
+        
+    def add_segment(self, song_segment):
+        self.segments.append(song_segment)

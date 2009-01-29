@@ -19,14 +19,14 @@
 
 class SongSegment:
 
-	def __init__(self, type, time_stamp, duration=0, pitch=0, text="", special=False, freestyle=False):
+    def __init__(self, type, time_stamp, duration=0, pitch=0, text="", special=False, freestyle=False):
 
-		self.type = type #( note, pause, end )
-		self.time_stamp = time_stamp
-		self.duration = duration
-		self.pitch = pitch
-		self.text = text
-		self.special = special # note + special = bonus
-		self.freestyle = freestyle
+        self.type = type #( note, pause, end )
+        self.time_stamp = time_stamp
+        self.duration = duration
+        self.pitch = pitch
+        self.text = text
+        self.special = special # note + special = bonus
+        self.freestyle = freestyle
 
 

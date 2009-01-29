@@ -21,58 +21,58 @@
 from canta.event.observers.cube_observer import CubeObserver
 
 class MainCubeObserver(CubeObserver):
-	def __init__(self, parent_world, color, min_pitch=0., max_pitch=11., debug=0):
-		CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
-		self.color = color
+    def __init__(self, parent_world, color, min_pitch=0., max_pitch=11., debug=0):
+        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
+        self.color = color
 
 
 
-	def _next_line(self, song):	
-		"""Draw the whole line that is selected (song.line_nr).
-			pitch = (integer) pitch value from File
-			words = list of SongSegments
-		"""
+    def _next_line(self, song):	
+        """Draw the whole line that is selected (song.line_nr).
+            pitch = (integer) pitch value from File
+            words = list of SongSegments
+        """
 
-		properties = {}
-
-
-	
-
-		line_nr = song.line_nr
-		self.calc_start_end_size(song)
-		for word in song.lines[line_nr].segments:
-
-			properties['length']=word.duration
-
-			properties['rotate'] = False
-			if word.special:
-				properties['diffuse'] = self.color['special']
-			elif word.freestyle:
-				properties['diffuse'] = self.color['freestyle']
-			else:
-				properties['diffuse'] = self.color['normal']
+        properties = {}
 
 
-			self.draw_tone(word.time_stamp, word.pitch, word.duration, properties)
+    
+
+        line_nr = song.line_nr
+        self.calc_start_end_size(song)
+        for word in song.lines[line_nr].segments:
+
+            properties['length']=word.duration
+
+            properties['rotate'] = False
+            if word.special:
+                properties['diffuse'] = self.color['special']
+            elif word.freestyle:
+                properties['diffuse'] = self.color['freestyle']
+            else:
+                properties['diffuse'] = self.color['normal']
 
 
-	def update(self, subject):
-		status = subject.data['type']
-		if status == 'roundStart':
-			pass
-		elif status == 'activateNote':
-			#if self.debug:
-			#	print subject.data['pos']
-			self._activate_note(subject.data['pos'])
-		elif status == 'deActivateNote':
-			#if self.debug:
-			#	print subject.data['old_pos']
-			self._de_activate_note(subject.data['old_pos'])
-		elif status == 'nextLine':
-			self._delete_all()
-			self._next_line(subject.data['song'])
-		elif status == 'end':
-			self._end()
-		elif self.debug:
-			print 'status: ', status
+            self.draw_tone(word.time_stamp, word.pitch, word.duration, properties)
+
+
+    def update(self, subject):
+        status = subject.data['type']
+        if status == 'roundStart':
+            pass
+        elif status == 'activateNote':
+            #if self.debug:
+            #	print subject.data['pos']
+            self._activate_note(subject.data['pos'])
+        elif status == 'deActivateNote':
+            #if self.debug:
+            #	print subject.data['old_pos']
+            self._de_activate_note(subject.data['old_pos'])
+        elif status == 'nextLine':
+            self._delete_all()
+            self._next_line(subject.data['song'])
+        elif status == 'end':
+            self._end()
+        elif self.debug:
+            print 'status: ', status
 

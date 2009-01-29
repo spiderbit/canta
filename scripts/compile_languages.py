@@ -23,9 +23,9 @@ import os
 print 'this script will not work under windows yet'
 
 for root, dirs, files in os.walk('locale'):
-	break
+    break
 
 for dir in dirs:
-	print 'Compiling language: ' + dir + ' .. ',
-	os.system('msgfmt -o locale/' + dir + '/LC_MESSAGES/canta.mo locale/' + dir + '/LC_MESSAGES/canta.po')
-	print "DONE!"
+    print 'Compiling language: ' + dir + ' .. ',
+    os.system('msgfmt -o locale/' + dir + '/LC_MESSAGES/canta.mo locale/' + dir + '/LC_MESSAGES/canta.po')
+    print "DONE!"

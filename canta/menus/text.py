@@ -25,32 +25,32 @@ from canta.menus.button import MenuButton
 from canta.menus.menu import Menu
 
 class MenuText(Menu):
-	def __init__(self, widget_properties, top=0, left=0):
-		Menu.__init__(self, widget_properties)
+    def __init__(self, widget_properties, top=0, left=0):
+        Menu.__init__(self, widget_properties)
 
-		self.widget_properties = widget_properties
+        self.widget_properties = widget_properties
 
-		# heading and nav container inherited from Menu:
-		self.widgets.append(self.heading_cont)
-		self.widgets.append(self.nav_cont)
+        # heading and nav container inherited from Menu:
+        self.widgets.append(self.heading_cont)
+        self.widgets.append(self.nav_cont)
 
-		# The container for the text:
-		self.text_cont = pudding.container.VerticalContainer(
-				self.parent_widget,
-				top=top,
-				left=left,
-				z_index=1)
-		self.text_cont.anchors = pudding.ANCHOR_ALL
-		self.text_cont.padding = 15
-		self.text_cont.visible = 0
-		self.widgets.append(self.text_cont)
+        # The container for the text:
+        self.text_cont = pudding.container.VerticalContainer(
+                self.parent_widget,
+                top=top,
+                left=left,
+                z_index=1)
+        self.text_cont.anchors = pudding.ANCHOR_ALL
+        self.text_cont.padding = 15
+        self.text_cont.visible = 0
+        self.widgets.append(self.text_cont)
 
 
-	def add(self, button, align='left'):
-		self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
-		button.root=self
+    def add(self, button, align='left'):
+        self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
+        button.root=self
 
-	def add_text(self, text):
-		label = pudding.control.SimpleLabel(label=text, color=self.color_p)
-		self.text_cont.add_child(label, pudding.CENTER_HORIZ)
-		
+    def add_text(self, text):
+        label = pudding.control.SimpleLabel(label=text, color=self.color_p)
+        self.text_cont.add_child(label, pudding.CENTER_HORIZ)
+        

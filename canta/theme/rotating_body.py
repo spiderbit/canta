@@ -23,66 +23,66 @@ import os.path
 import soya
 
 class RotatingBody(soya.Body):
-	'''A simple soya body that rotates around y axis.'''
+    '''A simple soya body that rotates around y axis.'''
 
-	def __init__(self, parent_world=None, model=None, sens=1.0, \
-			rotation='z', debug=False):
+    def __init__(self, parent_world=None, model=None, sens=1.0, \
+            rotation='z', debug=False):
 
-		self.debug = debug
+        self.debug = debug
 
-		soya.Body.__init__(self, parent_world, model)
-		self.sens = sens
+        soya.Body.__init__(self, parent_world, model)
+        self.sens = sens
 
-		if rotation == 'x':
-			self.func = self.rotate_x
-		elif rotation == 'y':
-			self.func = self.rotate_y
-		else:
-			self.func = self.rotate_z
+        if rotation == 'x':
+            self.func = self.rotate_x
+        elif rotation == 'y':
+            self.func = self.rotate_y
+        else:
+            self.func = self.rotate_z
 
-	def advance_time(self, proportion):
-		soya.Body.advance_time(self, proportion)
-		self.func(proportion * 1.0 * self.sens)
+    def advance_time(self, proportion):
+        soya.Body.advance_time(self, proportion)
+        self.func(proportion * 1.0 * self.sens)
 
 if __name__ == '__main__':
 
-	DEBUG = 1
+    DEBUG = 1
 
-	import sys
-	import os
-	import soya.cube
+    import sys
+    import os
+    import soya.cube
 
-	# init soya in resizable window:
-	soya.init('Canta', 1024, 768, 0)
+    # init soya in resizable window:
+    soya.init('Canta', 1024, 768, 0)
 
-	# set the root scene:
-	scene = soya.World()
+    # set the root scene:
+    scene = soya.World()
 
-	# create a test cube model:
-	test_cube_world = soya.cube.Cube()
-	#test_cube_world.model_builder = soya.SolidModelBuilder()
-	test_cube = test_cube_world.to_model()
+    # create a test cube model:
+    test_cube_world = soya.cube.Cube()
+    #test_cube_world.model_builder = soya.SolidModelBuilder()
+    test_cube = test_cube_world.to_model()
 
-	rotation_speed = 2.0
-	# create an instance of the class:
-	test_rotating_body = RotatingBody(
-				parent_world = scene,
-				model = test_cube,
-				sens = rotation_speed,
-				debug = DEBUG
-				)
+    rotation_speed = 2.0
+    # create an instance of the class:
+    test_rotating_body = RotatingBody(
+                parent_world = scene,
+                model = test_cube,
+                sens = rotation_speed,
+                debug = DEBUG
+                )
 
-	# set up the light:
-	light = soya.Light(scene)
-	light.set_xyz(0.0, 0.7, 1.0)
+    # set up the light:
+    light = soya.Light(scene)
+    light.set_xyz(0.0, 0.7, 1.0)
 
-	# set up the camera:
-	camera = soya.Camera(scene)
-	camera.set_xyz(0.0, 0, 10.0)
+    # set up the camera:
+    camera = soya.Camera(scene)
+    camera.set_xyz(0.0, 0, 10.0)
 
-	# set our root widget:
-	soya.set_root_widget(camera)
+    # set our root widget:
+    soya.set_root_widget(camera)
 
-	# start soya main loop:
-	soya.MainLoop(scene).main_loop()
+    # start soya main loop:
+    soya.MainLoop(scene).main_loop()
 

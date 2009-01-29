@@ -21,18 +21,18 @@ import soya
 import math
 
 class SpinningCamera(soya.Camera):
-	def __init__(self, parent, look_at):
-		soya.Camera.__init__(self, parent)
-		self.angle = 0.0
-		self.obj_look_at = look_at
+    def __init__(self, parent, look_at):
+        soya.Camera.__init__(self, parent)
+        self.angle = 0.0
+        self.obj_look_at = look_at
 
 
-	def advance_time(self, proportion):
-		if self.angle > 359.0: self.angle = 0.0
-		else: self.angle += 0.15
+    def advance_time(self, proportion):
+        if self.angle > 359.0: self.angle = 0.0
+        else: self.angle += 0.15
 
-		degrees = self.angle * 2.0
-		radians = degrees * (math.pi / 180.0)
-		self.set_xyz(20.0 * math.cos(radians), 0, -20.0 * math.sin(radians))
-		self.look_at(self.obj_look_at)
+        degrees = self.angle * 2.0
+        radians = degrees * (math.pi / 180.0)
+        self.set_xyz(20.0 * math.cos(radians), 0, -20.0 * math.sin(radians))
+        self.look_at(self.obj_look_at)
 

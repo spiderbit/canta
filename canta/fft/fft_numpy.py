@@ -22,5 +22,5 @@ from numpy.fft import *
 
 class FFTNumPy:
 
-	def doFFT(self, inData):
-		return rfft(inData)
+    def doFFT(self, inData):
+        return rfft(inData)

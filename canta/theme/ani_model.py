@@ -21,172 +21,172 @@ import soya
 from canta.theme.model import Model
 
 class AniModel(Model):
-	'''A class for Cal3D models.'''
+    '''A class for Cal3D models.'''
 
-	def __init__(self, parent_world=None, name='', position=(0.0, 0.0, 0.0), \
-			scale=(1.0, 1.0, 1.0), rotation=(0.0, 0.0, 0.0), shadow=0, \
-			action='', debug=0):
+    def __init__(self, parent_world=None, name='', position=(0.0, 0.0, 0.0), \
+            scale=(1.0, 1.0, 1.0), rotation=(0.0, 0.0, 0.0), shadow=0, \
+            action='', debug=0):
 
-		self.debug = debug
+        self.debug = debug
 
-		# call constructor of super class:
-		Model.__init__(self, parent_world, name, position, scale, \
-				rotation, self.debug)
+        # call constructor of super class:
+        Model.__init__(self, parent_world, name, position, scale, \
+                rotation, self.debug)
 
-		# set shadow:
-		# TODO: get shadow state from config file.
-		self.shadow = shadow
+        # set shadow:
+        # TODO: get shadow state from config file.
+        self.shadow = shadow
 
-		# set action:
-		self.action = action
+        # set action:
+        self.action = action
 
-		# create an animated model:
-		animated_model = soya.AnimatedModel.get(self.name)
+        # create an animated model:
+        animated_model = soya.AnimatedModel.get(self.name)
 
-		# set shadow of the animated model:
-		animated_model.shadow = self.shadow
+        # set shadow of the animated model:
+        animated_model.shadow = self.shadow
 
-		# create a body from the animated model:
-		self.body = soya.Body(self.parent_world, animated_model)
+        # create a body from the animated model:
+        self.body = soya.Body(self.parent_world, animated_model)
 
-		# start the animation cycle:
-		self.body.animate_blend_cycle(self.action)
+        # start the animation cycle:
+        self.body.animate_blend_cycle(self.action)
 
-		# position, scale and rotate the body:
-		self.set_position(self.position)
-		self.set_scale(self.scale)
-		self.set_rotation(self.rotation)
+        # position, scale and rotate the body:
+        self.set_position(self.position)
+        self.set_scale(self.scale)
+        self.set_rotation(self.rotation)
 
-		# set name of the body:
-		self.body.name = self.name
+        # set name of the body:
+        self.body.name = self.name
 
 def main():
 
-	DEBUG = 1
+    DEBUG = 1
 
-	import sys
-	import os
-	#import MovableCamera
+    import sys
+    import os
+    #import MovableCamera
 
-	# init soya in resizable window:
-	soya.init('Canta', 1024, 768, 0)
+    # init soya in resizable window:
+    soya.init('Canta', 1024, 768, 0)
 
-	# append our data path:
-	soya.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..', 'data'))
+    # append our data path:
+    soya.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..', 'data'))
 
-	# disable soya's auto exporter:
-	soya.AUTO_EXPORTERS_ENABLED = 0
+    # disable soya's auto exporter:
+    soya.AUTO_EXPORTERS_ENABLED = 0
 
-	# set the root scene:
-	scene = soya.World()
+    # set the root scene:
+    scene = soya.World()
 
-	# set up the light:
-	light = soya.Light(scene)
-	#light.set_xyz(1.0, 0.7, 1.0)
-	light.set_xyz(0.0, 0.7, 1.0)
+    # set up the light:
+    light = soya.Light(scene)
+    #light.set_xyz(1.0, 0.7, 1.0)
+    light.set_xyz(0.0, 0.7, 1.0)
 
-	# set up the camera:
-	# (uncomment for static camera):
-	camera = soya.Camera(scene)
-	camera.set_xyz(0.0, 0, 10.0)
+    # set up the camera:
+    # (uncomment for static camera):
+    camera = soya.Camera(scene)
+    camera.set_xyz(0.0, 0, 10.0)
 
-	# (uncomment for movable camera):
-	#camera = MovableCamera.MovableCamera(scene)
+    # (uncomment for movable camera):
+    #camera = MovableCamera.MovableCamera(scene)
 
-	# create 5 animated objects (CANTA letters):
-	# Letter 'C':
-	name = 'Logo_0'
-	position = (-4.0, 0.0, 0.0)
-	scale = (4.0, 3.0, 3.0)
-	rotation = (0.0, 0.0, 0.0)
-	shadow = 1
-	action = 'Logo_0Damping'
-	test_animodel0 = AniModel(
-				parent_world = scene,
-				name = name,
-				position = position,
-				scale = scale,
-				rotation = rotation,
-				shadow = shadow,
-				action = action,
-				debug = DEBUG
-				)
-	# Letter 'A':
-	name = 'Logo_1'
-	position = (-3.0, -0.2, 0.0)
-	scale = (1.0, 1.0, 1.0)
-	rotation = (0.0, 0.0, 0.0)
-	shadow = 1
-	action = 'Logo_1Damping'
-	test_animodel1 = AniModel(
-				parent_world = scene,
-				name = name,
-				position = position,
-				scale = scale,
-				rotation = rotation,
-				shadow = shadow,
-				action = action,
-				debug = DEBUG
-				)
+    # create 5 animated objects (CANTA letters):
+    # Letter 'C':
+    name = 'Logo_0'
+    position = (-4.0, 0.0, 0.0)
+    scale = (4.0, 3.0, 3.0)
+    rotation = (0.0, 0.0, 0.0)
+    shadow = 1
+    action = 'Logo_0Damping'
+    test_animodel0 = AniModel(
+                parent_world = scene,
+                name = name,
+                position = position,
+                scale = scale,
+                rotation = rotation,
+                shadow = shadow,
+                action = action,
+                debug = DEBUG
+                )
+    # Letter 'A':
+    name = 'Logo_1'
+    position = (-3.0, -0.2, 0.0)
+    scale = (1.0, 1.0, 1.0)
+    rotation = (0.0, 0.0, 0.0)
+    shadow = 1
+    action = 'Logo_1Damping'
+    test_animodel1 = AniModel(
+                parent_world = scene,
+                name = name,
+                position = position,
+                scale = scale,
+                rotation = rotation,
+                shadow = shadow,
+                action = action,
+                debug = DEBUG
+                )
 
-	# Letter 'N':
-	name = 'Logo_2'
-	position = (-1.5, 0.9, 0.0)
-	scale = (1.0, 1.0, 1.0)
-	rotation = (0.0, 0.0, 0.0)
-	shadow = 1
-	action = 'Logo_2Damping'
-	test_animodel2 = AniModel(
-				parent_world = scene,
-				name = name,
-				position = position,
-				scale = scale,
-				rotation = rotation,
-				shadow = shadow,
-				action = action,
-				debug = DEBUG
-				)
-	# Letter 'T':
-	name = 'Logo_3'
-	position = (0.0, -0.5, 0.5)
-	scale = (1.0, 1.0, 1.0)
-	rotation = (0.0, 0.0, 0.0)
-	shadow = 1
-	action = 'Logo_3Damping'
-	test_animodel3 = AniModel(
-				parent_world = scene,
-				name = name,
-				position = position,
-				scale = scale,
-				rotation = rotation,
-				shadow = shadow,
-				action = action,
-				debug = DEBUG
-				)
+    # Letter 'N':
+    name = 'Logo_2'
+    position = (-1.5, 0.9, 0.0)
+    scale = (1.0, 1.0, 1.0)
+    rotation = (0.0, 0.0, 0.0)
+    shadow = 1
+    action = 'Logo_2Damping'
+    test_animodel2 = AniModel(
+                parent_world = scene,
+                name = name,
+                position = position,
+                scale = scale,
+                rotation = rotation,
+                shadow = shadow,
+                action = action,
+                debug = DEBUG
+                )
+    # Letter 'T':
+    name = 'Logo_3'
+    position = (0.0, -0.5, 0.5)
+    scale = (1.0, 1.0, 1.0)
+    rotation = (0.0, 0.0, 0.0)
+    shadow = 1
+    action = 'Logo_3Damping'
+    test_animodel3 = AniModel(
+                parent_world = scene,
+                name = name,
+                position = position,
+                scale = scale,
+                rotation = rotation,
+                shadow = shadow,
+                action = action,
+                debug = DEBUG
+                )
 
-	# Letter 'A':
-	name = 'Logo_4'
-	position = (2.0, 0.0, -0.3)
-	scale = (1.5, 1.5, 1.5)
-	rotation = (0.0, 0.0, 0.0)
-	shadow = 1
-	action = 'Logo_4Damping'
-	test_animodel1 = AniModel(
-				parent_world = scene,
-				name = name,
-				position = position,
-				scale = scale,
-				rotation = rotation,
-				shadow = shadow,
-				action = action,
-				debug = DEBUG
-				)
+    # Letter 'A':
+    name = 'Logo_4'
+    position = (2.0, 0.0, -0.3)
+    scale = (1.5, 1.5, 1.5)
+    rotation = (0.0, 0.0, 0.0)
+    shadow = 1
+    action = 'Logo_4Damping'
+    test_animodel1 = AniModel(
+                parent_world = scene,
+                name = name,
+                position = position,
+                scale = scale,
+                rotation = rotation,
+                shadow = shadow,
+                action = action,
+                debug = DEBUG
+                )
 
-	# set our root widget:
-	soya.set_root_widget(camera)
+    # set our root widget:
+    soya.set_root_widget(camera)
 
-	# start soya main loop:
-	soya.MainLoop(scene).main_loop()
+    # start soya main loop:
+    soya.MainLoop(scene).main_loop()
 
 if __name__ == '__main__': main()
 

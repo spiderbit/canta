@@ -27,23 +27,23 @@ channels = 1
 chunk = 1024
 
 class SoundManagerPyAudio:
-	"""Create a PyAudio object and open a stream to read from.
-	"""
-	def __init__(self, sampling_frequency=11025):
-		self.p = pyaudio.PyAudio()
-		self.sampling_frequency= 11025
+    """Create a PyAudio object and open a stream to read from.
+    """
+    def __init__(self, sampling_frequency=11025):
+        self.p = pyaudio.PyAudio()
+        self.sampling_frequency= 11025
 
-	def start(self):
-		self.stream = self.p.open(format=format, channels=channels, \
-				rate=self.sampling_frequency, input=True, \
-				frames_per_buffer=chunk)
-
-
-	def readData(self, number_of_samples=1024):
-		return self.stream.read(number_of_samples)
+    def start(self):
+        self.stream = self.p.open(format=format, channels=channels, \
+                rate=self.sampling_frequency, input=True, \
+                frames_per_buffer=chunk)
 
 
-	def stop(self):
-		self.stream.close()
+    def readData(self, number_of_samples=1024):
+        return self.stream.read(number_of_samples)
+
+
+    def stop(self):
+        self.stream.close()
 
 

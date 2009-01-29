@@ -26,55 +26,55 @@ import canta.metadata as metadata
 
 class DummyPlayer(Player):
 
-	def __init__(self, path=None, file=None, time=0.0):
-		Player.__init__(self, path, file, time=0.0)
-		self.loaded = False
-		self.pos = 0.0
+    def __init__(self, path=None, file=None, time=0.0):
+        Player.__init__(self, path, file, time=0.0)
+        self.loaded = False
+        self.pos = 0.0
 
-	def load(self, path=None, file=None):
-		self.loaded = True
-		if path:
-			self.path=path
-		if file:
-			self.file=file
-		f = metadata.get_format(os.path.join(self.path, self.file))
-		if f is None:
-			print "format not supported"
-		else:
-			self.length = f.get_length()
+    def load(self, path=None, file=None):
+        self.loaded = True
+        if path:
+            self.path=path
+        if file:
+            self.file=file
+        f = metadata.get_format(os.path.join(self.path, self.file))
+        if f is None:
+            print "format not supported"
+        else:
+            self.length = f.get_length()
 
-	def play(self, start=0):
-		if self.paused and start == 0:
-			self.paused = False
-			self.start_time = time()
+    def play(self, start=0):
+        if self.paused and start == 0:
+            self.paused = False
+            self.start_time = time()
 
-		elif self.loaded:
-			self.start_time = time()
-		self._play()
-		print "play"
+        elif self.loaded:
+            self.start_time = time()
+        self._play()
+        print "play"
 
-	def get_pos(self):
-		if self.paused:
-			return "pause"
-		elif self.length > self.pos + (time() - self.start_time):
-			return self.pos + (time() - self.start_time)
-		else:
-			self.pos = 0.0
-			return "end"
+    def get_pos(self):
+        if self.paused:
+            return "pause"
+        elif self.length > self.pos + (time() - self.start_time):
+            return self.pos + (time() - self.start_time)
+        else:
+            self.pos = 0.0
+            return "end"
 
-	def pause(self):
-		self.pos += time() - self.start_time
-		self._pause()
-		print "pause"
+    def pause(self):
+        self.pos += time() - self.start_time
+        self._pause()
+        print "pause"
 
-	def play_freq(self, freq):
-		print "BEEP, you choose the dummy player so will hear nothing!"
+    def play_freq(self, freq):
+        print "BEEP, you choose the dummy player so will hear nothing!"
 
-	def stop_freq(self):
-		print "<stop> BEEP"
+    def stop_freq(self):
+        print "<stop> BEEP"
 
-	def stop(self):
-		self.running = False
-		self.pos = 0.0
-		print "stop"
+    def stop(self):
+        self.running = False
+        self.pos = 0.0
+        print "stop"
 

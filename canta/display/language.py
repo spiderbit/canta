@@ -27,42 +27,42 @@ import gettext
 
 class LocaleManager:
 
-	def __init__(self, app_dir = os.path.dirname(sys.argv[0])):
-		self.app_dir = app_dir
-		self.locale_path = os.path.join( self.app_dir, 'locale')
-		self.langs = []
-		
-	def get_langs(self):
-		self.load_langs()
-		self.langs.insert(0,'default')
-		return self.langs
+    def __init__(self, app_dir = os.path.dirname(sys.argv[0])):
+        self.app_dir = app_dir
+        self.locale_path = os.path.join( self.app_dir, 'locale')
+        self.langs = []
+        
+    def get_langs(self):
+        self.load_langs()
+        self.langs.insert(0,'default')
+        return self.langs
 
 
-	def install(self, lang):
-		#lang = 'en_US'
-		#1. way
-		# application can set the wished language:
-		if lang == 'default':
-			self.install_default()
-		else:
-			print "FIND:", gettext.find('canta', self.locale_path, [lang], all=1)
-			lang = gettext.translation( 'canta', self.locale_path, languages=[lang])
-			lang.install(unicode=1)
+    def install(self, lang):
+        #lang = 'en_US'
+        #1. way
+        # application can set the wished language:
+        if lang == 'default':
+            self.install_default()
+        else:
+            print "FIND:", gettext.find('canta', self.locale_path, [lang], all=1)
+            lang = gettext.translation( 'canta', self.locale_path, languages=[lang])
+            lang.install(unicode=1)
 
 
-	def install_default(self):
+    def install_default(self):
 
 
-		# if you choose this way gettext looks what language ist set in env
-		# you can choose that with: export LANG=de_DE
-		gettext.install('canta', self.locale_path, unicode=1)
+        # if you choose this way gettext looks what language ist set in env
+        # you can choose that with: export LANG=de_DE
+        gettext.install('canta', self.locale_path, unicode=1)
 
-	def load_langs(self):
+    def load_langs(self):
 
-		#Get the local directory since we are not installing anything
-		locale = os.listdir(self.locale_path)
-		for lang in locale:
-			self.langs.append(lang[0:2])
+        #Get the local directory since we are not installing anything
+        locale = os.listdir(self.locale_path)
+        for lang in locale:
+            self.langs.append(lang[0:2])
 
 
 

@@ -23,56 +23,56 @@ import soya
 import soya.pudding as pudding
 
 class TimeLabel:
-	"""Draw a label that displays the song play time.
-	"""
-	def __init__(self, widget_properties, debug=0):
+    """Draw a label that displays the song play time.
+    """
+    def __init__(self, widget_properties, debug=0):
 
-		self.debug = debug
-		self.parent_widget = widget_properties['root_widget']
-		self.font_p = widget_properties['font']['p']['obj']
-		self.color_p = widget_properties['font']['p']['color']
-		self.top = 10
-		self.left = 20
-		height = 200
-		self.z_index = 4
+        self.debug = debug
+        self.parent_widget = widget_properties['root_widget']
+        self.font_p = widget_properties['font']['p']['obj']
+        self.color_p = widget_properties['font']['p']['color']
+        self.top = 10
+        self.left = 20
+        height = 200
+        self.z_index = 4
 
-		self.time_word = _(u'Time: ')
-		self.time_pos = '00:00'
-		
-		self.container = pudding.container.HorizontalContainer( \
-				self.parent_widget, height=height, \
-				left=self.left, top=self.top)
-		self.container.anchors = pudding.ANCHOR_RIGHT \
-				 | pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT
-		self.container.add_child(pudding.control.SimpleLabel(
-					label=self.time_word + self.time_pos,
-					font=self.font_p,
-					color=self.color_p))
-		self.container.on_resize()
-
-
-	def _end(self):
-		del self.container.children[0:]
+        self.time_word = _(u'Time: ')
+        self.time_pos = '00:00'
+        
+        self.container = pudding.container.HorizontalContainer( \
+                self.parent_widget, height=height, \
+                left=self.left, top=self.top)
+        self.container.anchors = pudding.ANCHOR_RIGHT \
+                 | pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT
+        self.container.add_child(pudding.control.SimpleLabel(
+                    label=self.time_word + self.time_pos,
+                    font=self.font_p,
+                    color=self.color_p))
+        self.container.on_resize()
 
 
-	def _set_time(self, real_pos_time, gap):
-		pos = int(real_pos_time + gap / 1000.)
-		self.time_pos = time.strftime("%M:%S",time.gmtime(pos))
-		self.container.children[0].label = self.time_word + self.time_pos
+    def _end(self):
+        del self.container.children[0:]
 
-	def update(self, subject):
-		status = subject.data['type']
-		if status == 'roundStart':
-			self._set_time(subject.data['real_pos_time'], subject.data['song'].info['gap'])
-		elif status == 'end':
-			self._end()
-		elif self.debug:
-			print 'status: ', status
+
+    def _set_time(self, real_pos_time, gap):
+        pos = int(real_pos_time + gap / 1000.)
+        self.time_pos = time.strftime("%M:%S",time.gmtime(pos))
+        self.container.children[0].label = self.time_word + self.time_pos
+
+    def update(self, subject):
+        status = subject.data['type']
+        if status == 'roundStart':
+            self._set_time(subject.data['real_pos_time'], subject.data['song'].info['gap'])
+        elif status == 'end':
+            self._end()
+        elif self.debug:
+            print 'status: ', status
 
 
 
 def main():
-	pass
+    pass
 
 if __name__ == '__main__': main()
 

@@ -21,16 +21,16 @@ from subject import Subject
 
 class SongData(Subject):
 
-	def __init__(self, name=''):
-		Subject.__init__(self)
-		self.name = name
-		self.data = None
+    def __init__(self, name=''):
+        Subject.__init__(self)
+        self.name = name
+        self.data = None
 
-	def set_data(self, data):
-		self.data = data
-		#print "subject data/msg: ", self.data
-		self.notify()
+    def set_data(self, data):
+        self.data = data
+        #print "subject data/msg: ", self.data
+        self.notify()
 
-	def get_data(self):
-		return self.data
+    def get_data(self):
+        return self.data
 

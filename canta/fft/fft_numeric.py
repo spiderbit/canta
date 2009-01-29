@@ -23,5 +23,5 @@ from FFT import *
 
 class FFTNumeric:
 
-	def doFFT(self, inData):
-		return real_fft(inData)
+    def doFFT(self, inData):
+        return real_fft(inData)

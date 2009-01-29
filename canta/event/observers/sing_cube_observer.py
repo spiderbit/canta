@@ -23,51 +23,50 @@ import soya
 from canta.event.observers.cube_observer import CubeObserver
 
 class SingCubeObserver(CubeObserver):
-	def __init__(self, parent_world, color, color_formula, min_pitch=0., max_pitch=11., debug=0,):
-		CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
-		self.color = color
-		self.color_formula = color_formula
+    def __init__(self, parent_world, color, color_formula, min_pitch=0., max_pitch=11., debug=0,):
+        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
+        self.color = color
+        self.color_formula = color_formula
 
-	def input(self, data):
-		if not self.calc_start_end_size(data['song']):
-			return False
-		
-		time_stamp = data['real_pos_time']/data['beat_time']
-		duration = data['length_in_beats']
+    def input(self, data):
+        if not self.calc_start_end_size(data['song']):
+            return False
 
-		properties = {}
-		properties['length']=duration
-		properties['rotate'] = False
+        time_stamp = data['real_pos_time']/data['beat_time']
+        duration = data['length_in_beats']
 
-		col = []
-		for x in range(len(self.color)):
-			diff = (self.color_formula[x] / 100.) * data['difference']
-			tmp = self.color[x] +  diff
-		       	if tmp < 0:
-				tmp = 0
-			elif tmp > 1:
-				tmp = 1
-			col.append(tmp)
-				
-		properties['diffuse'] = col
-		self.draw_tone(time_stamp, data['pitch'], duration, properties)
+        properties = {}
+        properties['length']=duration
+        properties['rotate'] = False
+
+        col = []
+        for x in range(len(self.color)):
+            diff = (self.color_formula[x] / 100.) * data['difference']
+            tmp = self.color[x] +  diff
+            if tmp < 0:
+                tmp = 0
+            elif tmp > 1:
+                tmp = 1
+            col.append(tmp)
+
+        properties['diffuse'] = col
+        self.draw_tone(time_stamp, data['pitch'], duration, properties)
 
 
-	def update(self, subject):
-		#print "BUG:", subject.data
-		status = subject.data['type']
-		if status == 'roundStart':
-			pass
-		elif status == 'activateNote':
-			pass
-		elif status == 'deActivateNote':
-			pass
-		elif status == 'nextLine':
-			self._delete_all()
-		elif status == 'end':
-			self._end()
-		elif status == 'input':
-			self.input(subject.data)
-		elif self.debug:
-			print 'status: ', status
-
+    def update(self, subject):
+        #print "BUG:", subject.data
+        status = subject.data['type']
+        if status == 'roundStart':
+            pass
+        elif status == 'activateNote':
+            pass
+        elif status == 'deActivateNote':
+            pass
+        elif status == 'nextLine':
+            self._delete_all()
+        elif status == 'end':
+            self._end()
+        elif status == 'input':
+            self.input(subject.data)
+        elif self.debug:
+            print 'status: ', status

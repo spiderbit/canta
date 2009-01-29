@@ -21,25 +21,25 @@ from sound_manager import SoundManager
 from ossaudiodev import *
 
 class SoundManagerOSS:
-	"""TODO.
-	"""
-	def __init__(self, sampling_frequency):
-		# Open Soundcard.
-		# open([device, ]mode): if device is not specified, environment
-		# variable AUDIODEV is used.
-		# Falls back to /dev/dsp if not defined. mode can be 'r', 'w', 'rw'.
-		self.dsp = open('r')
-		format = AFMT_S16_LE
-		channels = 1
-		self.sampling_frequency = sampling_frequency
-		self.dsp.setparameters(format, channels, self.sampling_frequency)
+    """TODO.
+    """
+    def __init__(self, sampling_frequency):
+        # Open Soundcard.
+        # open([device, ]mode): if device is not specified, environment
+        # variable AUDIODEV is used.
+        # Falls back to /dev/dsp if not defined. mode can be 'r', 'w', 'rw'.
+        self.dsp = open('r')
+        format = AFMT_S16_LE
+        channels = 1
+        self.sampling_frequency = sampling_frequency
+        self.dsp.setparameters(format, channels, self.sampling_frequency)
 
-	def readData(self, number_of_samples=1024):
-		return self.dsp.read(number_of_samples)
+    def readData(self, number_of_samples=1024):
+        return self.dsp.read(number_of_samples)
 
 
-	def start(self):
-		print "not implemented yet"
+    def start(self):
+        print "not implemented yet"
 
-	def stop(self):
-		print "not implemented yet"
+    def stop(self):
+        print "not implemented yet"
