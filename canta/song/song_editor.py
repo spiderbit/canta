@@ -91,7 +91,7 @@ class SongEditor(soya.Body):
         self.tone_txt_input.label.visible = 0
 
         self.player = player
-        self.connect_keys()
+        self.__connect_keys__()
         self.msg = dict()
 
 
@@ -234,7 +234,7 @@ class SongEditor(soya.Body):
         self.line_number_label.visible = 1
         self.bpm_number_label.visible = 1
         self.keyboard_event.reset()
-        self.connect_keys()
+        self.__connect_keys__()
         self.help_hint.label = self.l_help_hint_0
         self.help_menu.text_cont.visible = 0
         self.help_menu.box_cont.visible = 0
@@ -473,70 +473,49 @@ class SongEditor(soya.Body):
 
 
 
-    def connect_keys(self):
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_q, \
-            action = self.back)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_PAGEDOWN, \
-            action = self.prev)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_PAGEUP, \
-            action = self.next)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_LEFT, \
-            action = self.select_note, args = 'prev')
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_RIGHT, \
-            action = self.select_note, args = 'next')
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_PLUS, \
-            action = self.increase)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_MINUS, \
-            action = self.minimize)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_KP_PLUS, \
-            action = self.increase)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_KP_MINUS, \
-            action = self.minimize)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_s, \
-            action = self.save)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_y, \
-            action = self.move_le)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_x, \
-            action = self.move_ri)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_UP, \
-            action = self.pitch_up)
-        self.keyboard_event.add_connection(type = soya.sdlconst.KEYUP, \
-            action = self.pitch_up)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_DOWN, \
-            action = self.pitch_down)
-        self.keyboard_event.add_connection(type = soya.sdlconst.KEYDOWN, \
-            action = self.pitch_down)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_h, \
-            action = self.help)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_ESCAPE, \
-            action = self.back)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_SPACE, \
-            action = self.play_tone_wave)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_l, \
-            action = self.play_line_wave)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_m, \
-            action = self.play_tone_freq)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_n, \
-            action = self.play_line_freq)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_v, \
-            action = self.play_tone_both)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_b, \
-            action = self.play_line_both)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_d, \
-            action = self.bpm_up)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_c, \
-            action = self.bpm_min)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_u, \
-            action = self.split_line)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_i, \
-            action = self.merge_lines)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_a, \
-            action = self.add_tone)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_r, \
-            action = self.rem_tone)
-        self.keyboard_event.add_connection(type = soya.sdlconst.K_t, \
-            action = self.change_text)
+    def __connect_keys__(self):
+        """Map soya keyboard events to methods."""
+        # Maybe we better should move this in a
+        # xml/config-file and parse it from there
 
+        key = soya.sdlconst
+        connections = []
+        connections.append((key.K_q, self.back))
+        connections.append((key.K_PAGEDOWN, self.prev))
+        connections.append((key.K_PAGEUP, self.next))
+        connections.append((key.K_LEFT, self.select_note, 'prev'))
+        connections.append((key.K_RIGHT, self.select_note, 'next'))
+        connections.append((key.K_PLUS, self.increase))
+        connections.append((key.K_MINUS, self.minimize))
+        connections.append((key.K_KP_PLUS, self.increase))
+        connections.append((key.K_KP_MINUS, self.minimize))
+        connections.append((key.K_s, self.save))
+        connections.append((key.K_y, self.move_le))
+        connections.append((key.K_x, self.move_ri))
+        connections.append((key.K_UP, self.pitch_up))
+        connections.append((key.KEYUP, self.pitch_up))
+        connections.append((key.K_UP, self.pitch_up))
+        connections.append((key.KEYUP, self.pitch_up))
+        connections.append((key.K_DOWN, self.pitch_down))
+        connections.append((key.KEYDOWN, self.pitch_down))
+        connections.append((key.K_h, self.help))
+        connections.append((key.K_ESCAPE, self.back))
+        connections.append((key.K_SPACE, self.play_tone_wave))
+        connections.append((key.K_l, self.play_line_wave))
+        connections.append((key.K_m, self.play_tone_freq))
+        connections.append((key.K_n, self.play_line_freq))
+        connections.append((key.K_v, self.play_tone_both))
+        connections.append((key.K_b, self.play_line_both))
+        connections.append((key.K_d, self.bpm_up))
+        connections.append((key.K_c, self.bpm_min))
+        connections.append((key.K_u, self.split_line))
+        connections.append((key.K_i, self.merge_lines))
+        connections.append((key.K_a, self.add_tone))
+        connections.append((key.K_r, self.rem_tone))
+        connections.append((key.K_t, self.change_text))
+
+        for connection in connections:
+            self.keyboard_event.add_connection(*connection)
 
 
 
