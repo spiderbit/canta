@@ -1,4 +1,4 @@
-#! /usr/bin/python -O
+#!/usr/bin/python -O
 # -*- coding: utf-8 -*-
 #
 #    CANTA - A free entertaining educational software for singing
@@ -17,13 +17,27 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""Module song_line
+
+Classes: SongLine
+"""
+
+
 class SongLine:
-    
-    def __init__(self, show_time=0, segments=0):
+    """SongLine consist of:
+
+    - show_time     the time when the line should be displayed
+    - segments[]    the notes type: SongSegment
+    """
+    def __init__(self, show_time=0):
+        """Constructor"""
         self.show_time = show_time
         self.segments = []
-        
-    
-        
+
     def add_segment(self, song_segment):
+        """Add a segment"""
         self.segments.append(song_segment)
+
+    def remove_segment(self, pos):
+        """Remove segment <pos>"""
+        del self.segments[pos]
