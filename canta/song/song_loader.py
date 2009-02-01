@@ -41,53 +41,84 @@ def search_songs(songs_path):
     songs = []
     covers = 0
     mp3s = 0
-    for root, dir_names, file_names in os.walk(songs_path):
-        if ".svn" in dir_names:
-            dir_names.remove(".svn")
-        dir_names.sort()
-        for dir_name in dir_names:
-            absolute_path = os.path.join(songs_path, dir_name)
-            for root, dir_names, file_names in os.walk(absolute_path):
-                for file_name in file_names:
-                    file_name = file_name.decode('utf-8')
-                    valid_picture_formats = ['jpg', 'jpeg', 'png']
-                    valid_sound_formats = ['ogg', 'mp3']
-                    lower_file = file_name.lower()
-                    if lower_file == "desc.txt":
-                        pass
-                    elif lower_file.endswith('.txt'):
-                        # The song:
-                        song = Song(path = root, file=file_name)
-                        song.read_from_us(type="headers")
+    for entry in os.walk(songs_path):
+        for file_name in entry[2]:
+            file_name = file_name.decode('utf-8')
+            valid_picture_formats = ['jpg', 'jpeg', 'png']
+            valid_sound_formats = ['ogg', 'mp3']
+            lower_file = file_name.lower()
+            if lower_file == "desc.txt":
+                pass
+            elif lower_file.endswith('.txt'):
+                # The song:
+                song = Song(path = entry[0], file=file_name)
+                song.read_from_us(type="headers")
 
-                        #print "Scanning Directory:\t<" + song.path + ">\n"
-                        file_names = unicode_encode_list(file_names)
-                        __validate_items__(valid_picture_formats, \
-                            song, file_names, 'cover')
+                #print "Scanning Directory:\t<" + song.path + ">\n"
+                file_names = unicode_encode_list(entry[2])
+                __validate_item__(valid_picture_formats, \
+                    song, file_names, 'cover')
 
-                        if 'cover' in song.info:
-                            #print "FOUND Cover <%s>" % (song.info['cover'])
-                            covers += 1
-                        __validate_items__(valid_sound_formats, \
-                            song, file_names, 'mp3')
+                if 'cover' in song.info:
+                    #print "FOUND Cover <%s>" % (song.info['cover'])
+                    covers += 1
 
-                        if 'mp3' in song.info and song.info != None:
-                            mp3s += 1
-                            songs.append(song)
+                __validate_item__(valid_sound_formats, \
+                    song, file_names, 'mp3')
 
-    #print mp3s, " Songs with ", covers, " valid Covers found!"
-    return songs
+                if 'mp3' in song.info:
+                    mp3s += 1
+                    songs.append(song)
+
+    print mp3s, " Songs with ", covers, " valid Covers found!"
+    return __sort_songs_by_path__(songs)
 
 
-def __validate_items__(valid_formats, song, file_names, check_item):
+def __sort_songs_by_path__(songs):
+    """Sort song-list by the pathnames"""
+    tmp_dict = {}
+    new_songs = []
+    find_double_songs(songs)
+    for song in songs:
+        tmp_dict[os.path.join(song.path, song.info['mp3'])] = song
+    keys = tmp_dict.keys()
+    print len(songs)
+    keys.sort()
+    for key in keys:
+        new_songs.append(tmp_dict[key])
+    find_double_songs(new_songs)
+    return new_songs
+
+
+def find_double_songs(songs):
+    """find song objects with the same path"""
+    # known bug all hits are double (x:y) and (y:x)
+    for song_x in songs:
+        for song_y in songs:
+            if song_x.path == song_y.path and song_x != song_y:
+                print "x:", song_x.path, song_x.info['mp3']
+                print "y:", song_y.path, song_y.info['mp3']
+
+
+def __last_path_part__(path):
+    """Return the last part of a path"""
+    # unused at the moment
+    return path.split(os.path.sep)[-1]
+
+
+def __item_exist__(song, item):
+    """Check for existence of item on filesystem"""
+    return os.path.exists(song.path + song.info[item])
+
+
+def __validate_item__(valid_formats, song, file_names, check_item):
     found = False
     files_with_right_format = []
     search = False
     if check_item in song.info and \
         song.info[check_item] != None and \
-            song.info[check_item] in file_names:
-        #file in txt file is right
-        return True
+            __item_exist__(song, check_item):
+       return True
     elif check_item in song.info:
         if song.info[check_item] != None:
             search = True
@@ -115,12 +146,12 @@ def __validate_items__(valid_formats, song, file_names, check_item):
         if found:
             break
     else:
-        __search_item_with_bogus__(
+        __search_item_by_format__(
             files_with_right_format, song, check_item)
 
 
 
-def __search_item_with_bogus__(files_with_right_format, song, check_item):
+def __search_item_by_format__(files_with_right_format, song, check_item):
     ''' i take it if its more i think i better dont take it
     because its to dangerous that its not the right file.'''
 
