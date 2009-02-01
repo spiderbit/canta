@@ -39,10 +39,10 @@ def search_songs(songs_path):
     # if you want to change stuff look here:
     # http://docs.python.org/lib/os-file-dir.html
     songs = []
-    covers = 0
-    mp3s = 0
     for entry in os.walk(songs_path):
-        for file_name in entry[2]:
+        root = entry[0]
+        file_names = entry[2]
+        for file_name in file_names:
             file_name = file_name.decode('utf-8')
             valid_picture_formats = ['jpg', 'jpeg', 'png']
             valid_sound_formats = ['ogg', 'mp3']
@@ -51,44 +51,93 @@ def search_songs(songs_path):
                 pass
             elif lower_file.endswith('.txt'):
                 # The song:
-                song = Song(path = entry[0], file=file_name)
+                song = Song(path = root, file=file_name)
                 song.read_from_us(type="headers")
-
-                #print "Scanning Directory:\t<" + song.path + ">\n"
-                file_names = unicode_encode_list(entry[2])
-                __validate_item__(valid_picture_formats, \
-                    song, file_names, 'cover')
-
-                if 'cover' in song.info:
-                    #print "FOUND Cover <%s>" % (song.info['cover'])
-                    covers += 1
-
-                __validate_item__(valid_sound_formats, \
-                    song, file_names, 'mp3')
-
-                if 'mp3' in song.info:
-                    mp3s += 1
+                file_names = unicode_encode_list(file_names)
+                __verify_stuff__(song, 'cover', \
+                    valid_picture_formats, file_names)
+                __verify_stuff__(song, 'mp3', valid_sound_formats, file_names)
+                if __item_exist__(song, 'mp3'):
                     songs.append(song)
 
-    print mp3s, " Songs with ", covers, " valid Covers found!"
-    return __sort_songs_by_path__(songs)
+    #mp3s = __count_songs_with_attrib__(songs, 'mp3')
+    #covers = __count_songs_with_attrib__(songs, 'cover')
+    #print mp3s, " Songs with ", covers, " valid Covers found!"
+    return __sort_songs_by_path_and_mp3__(songs)
 
 
-def __sort_songs_by_path__(songs):
-    """Sort song-list by the pathnames"""
-    tmp_dict = {}
-    new_songs = []
-    find_double_songs(songs)
+def __verify_stuff__(song, item, valid_formats, file_names):
+    '''Trys to verify/find the item with all availible magic'''
+    tmp_file = False
+    if not (__item_exist__(song, item) \
+        and __item_exist_on_fs__(song, item)):
+        files = __files_with_right_format__(\
+            valid_formats, song, file_names, item)
+        files_count = len(files)
+        if files_count > 1:
+            tmp_file = __search_file_by_bogos__(files, item)
+        elif files_count == 1:
+            tmp_file = files[0]
+    if tmp_file:
+        song.info[item] = tmp_file
+        tmp_file = False
+
+
+
+def __item_exist__(song, check_item):
+    """Check for existence of element in song.info and on the filesystem"""
+    if check_item in song.info and \
+        song.info[check_item] != None:
+        return True
+
+
+def __files_with_right_format__(valid_formats, song, file_names, check_item):
+    """Returns a list of files with the right format in the directory"""
+    found = False
+    files_with_right_format = []
+    for format in valid_formats:
+        if __item_exist__(song, check_item):
+            item = remove_extention(song.info[check_item]) \
+                + "." + format
+        for file_name in file_names:
+            if __item_exist__(song, check_item) \
+                and item.lower() == file_name.lower():
+                found = True
+                files_with_right_format.append(file_name)
+                break
+            elif file_name.lower().endswith(format):
+                files_with_right_format.append(file_name)
+        if found:
+            break
+    return files_with_right_format
+
+
+def __search_file_by_bogos__(files_with_right_format, check_item):
+    """Try to find file with co string
+    ! many covers have this in the filename !
+    """
+    for file_name in files_with_right_format:
+        # bad hack but the covers have often a substring [CO]
+        if (file_name.lower().find(check_item)) != -1 \
+                or (file_name.lower()).find("co") != -1:
+            return file_name
+    else:
+        return False
+
+
+def __count_songs_with_attrib__(songs, attr):
+    """Counts songs which have the attr"""
+    count = 0
     for song in songs:
-        tmp_dict[os.path.join(song.path, song.info['mp3'])] = song
-    keys = tmp_dict.keys()
-    print len(songs)
-    keys.sort()
-    for key in keys:
-        new_songs.append(tmp_dict[key])
-    find_double_songs(new_songs)
-    return new_songs
+        if attr in song.info:
+            count += 1
+    return count
 
+
+def __sort_songs_by_path_and_mp3__(songs):
+    """Sort song-list by the pathnames"""
+    songs.sort(key=lambda obj: obj.path + obj.info['mp3'])
+    return songs
 
 def find_double_songs(songs):
     """find song objects with the same path"""
@@ -106,75 +155,9 @@ def __last_path_part__(path):
     return path.split(os.path.sep)[-1]
 
 
-def __item_exist__(song, item):
+def __item_exist_on_fs__(song, item):
     """Check for existence of item on filesystem"""
     return os.path.exists(song.path + song.info[item])
-
-
-def __validate_item__(valid_formats, song, file_names, check_item):
-    found = False
-    files_with_right_format = []
-    search = False
-    if check_item in song.info and \
-        song.info[check_item] != None and \
-            __item_exist__(song, check_item):
-       return True
-    elif check_item in song.info:
-        if song.info[check_item] != None:
-            search = True
-    for format in valid_formats:
-        # if something about that stands in the file
-        # when not searching only files with right extention
-        if search:
-            item = remove_extention(song.info[check_item]) \
-                + "." + format
-
-        for file_name in file_names:
-            #print " ", item, file
-            if search and item.lower() == file_name.lower():
-                #print "exact file"
-                found = True
-                song.info[check_item] = file_name
-                break
-                # search for the right endings
-                # if thats the wrong file i cant detect it,
-                # but better we find sometimes a wrong file,
-                # instead of no file found
-            elif file_name.lower().endswith(format):
-                #print "found a file with right ending", file
-                files_with_right_format.append(file_name)
-        if found:
-            break
-    else:
-        __search_item_by_format__(
-            files_with_right_format, song, check_item)
-
-
-
-def __search_item_by_format__(files_with_right_format, song, check_item):
-    ''' i take it if its more i think i better dont take it
-    because its to dangerous that its not the right file.'''
-
-    if len(files_with_right_format) == 1:
-        #print "FOUND 1 file with right ending but wrong name
-        #i take what i get: files_with_right_format[0]
-        song.info[check_item] = files_with_right_format[0]
-    else:
-        #print "found some files with right ending for
-        # + check_item + ": ", len (files_with_right_format)
-        for file_name in files_with_right_format:
-            # bad hack but the covers have often a substring [CO]
-            if (file_name.lower().find(check_item)) != -1 \
-                    or (file_name.lower()).find("co") != -1:
-                song.info[check_item] = file_name
-                break
-#					else:
-#						print file, ": ",file.lower().find(check_item), \
-#						    (file.lower()).find("co")
-        else:
-            #print "\t\t\t<<<<<<<<<<<<<not Found>>>>>>>>>>>>>>>>>"
-            if check_item in song.info:
-                del song.info[check_item]
 
 
 
