@@ -44,7 +44,7 @@ Help to use this Programm:\tpython %s <-h|--help>
 
 unsupported_format_msg = '''
 Format: not supported!
-Supported formats are: 
+Supported formats are:
 %s
 ''' % ('\n'.join(supported_formats()))
 # + how_to_get_help_msg
@@ -58,17 +58,17 @@ ERROR:	A Directory with the Songname you picked is already there!!!
 
     1. Somebody else did this song before you and you downloaded
        and saved it to your home-song directory.
-        
+
     Solution: You dont need to make it again so you are Done!
 
     2. You did run this script before or made the song_directory
        manually but used bad midi file and you will make it new.
-    
+
     Solution: You have to delete the Song-directory:
             %s
         and then start this script again\n
     3. You mistacly called this script a second time but first time
-        
+
     Solution: All is right just start canta and edit your song
           with the Songeditor!
 """ % (song_path)
@@ -90,7 +90,7 @@ Usage:  %s [OPTION]... [FILE]
    -A, --ask\t\t\tcsg ask you all values
    -m, --midi-file=FILE\t\tmidi file (except all other opts)
    -t, --title=NAME\t\ttitle name (default=filename without extention)
-   -a, --artist=NAME\t\tartist name (default=UNKNOWN) 
+   -a, --artist=NAME\t\tartist name (default=UNKNOWN)
    -e, --entries=NUMBER\t\tentrys per line (default=5)
    -s, --spacing=LENGTH\t\tspacing between entries in line (default=8)
    -d, --duration=LENGTH\tduration of each entry (default=5)
@@ -116,7 +116,7 @@ QUICK MODE (without need of a midi):
 \t> %s example.ogg\t\t\t<allowed options: -tAaesd>
 
 supported formats: <%s>
-    
+
 """ % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0], (', '.join(supported_formats())))
 
 
@@ -167,10 +167,10 @@ def check_file(file):
         print "Error:",file, "seems to be a path!"
         sys.exit(1)
 
-            
+
 def create_song(title, src_path, song_file, song_path, song):
     '''
-        parameters: 
+        parameters:
             title:		SongTitle
             artist:		ArtistName
             src_path:	path of src-file
@@ -181,7 +181,7 @@ def create_song(title, src_path, song_file, song_path, song):
     '''
 
     config_path, songs_path = get_paths()
-    shutil.copy(os.path.join(src_path, song_file), song_path)	
+    shutil.copy(os.path.join(src_path, song_file), song_path)
     song.write_to_txt(os.path.join(song_path, title+'.txt'))
 
 
@@ -223,7 +223,7 @@ def fill_song_object(song, length, entries_per_line = 5, tone_distance = 8, tone
                     tone_duration, 12, "-"
                     )
                 )
-        
+
     song.addSegment(SongSegment( "end", 0))
 
 
@@ -277,12 +277,12 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
     else:
         print "Error: You need a music file!!"
         sys.exit(1)
-    
+
     if ask:
         midi_file = do_ask('Midi file', midi_file_absolute)
     if midi_file != None:
         check_file(midi_file)
-    
+
     head, tail = os.path.split(music_file_absolute)
     music_file = tail
     src_path = head
@@ -296,7 +296,7 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
         title = get_song_name(music_file)
     if ask:
         title = do_ask('Song title', title)
-    
+
 
     if artist == None:
         artist = 'UNKNOWN'
@@ -316,7 +316,7 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
     spacing = get_time(spacing)
     duration = get_time(duration)
     entries = int(entries)
-    
+
 
     song_path = get_song_path(get_long_song_name(artist, title))
 
@@ -363,7 +363,7 @@ class MainWindow(wx.Frame):
         lc.bottom.SameAs(self,wx.Bottom)
 
         self.panel.SetConstraints(lc)
-        
+
         self.panel.SetAutoLayout(True)
 
         self.filename = filename
@@ -423,7 +423,7 @@ class MainWindow(wx.Frame):
 
         if self.artist_ctl.GetValue() == '':
             self.artist_ctl.SetValue('UNKNOWN')
-            
+
         format = metadata.get_format(file_name_absolute)
 
         if not format:
@@ -434,7 +434,7 @@ class MainWindow(wx.Frame):
         if not create_path(song_name):
             msg = get_error_msg(song_path)
             self.error_Msg(msg)
-            return	
+            return
         song_path = get_song_path(song_name)
 
         song = Song(self.title_ctl.GetValue(), self.artist_ctl.GetValue(), self.filename, debug = 0)
@@ -443,10 +443,10 @@ class MainWindow(wx.Frame):
         fill_song_object(song, length)
 
         create_song(song_name, self.dirname, self.filename, song_path, song)
-        
-            dlg = wx.MessageDialog(self, 'Done, song created', 'Message', wx.OK|wx.ICON_INFORMATION)
-            dlg.ShowModal()
-            dlg.Destroy()
+
+        dlg = wx.MessageDialog(self, 'Done, song created', 'Message', wx.OK|wx.ICON_INFORMATION)
+        dlg.ShowModal()
+        dlg.Destroy()
 
     def EvtText(self, event):
         pass
@@ -494,19 +494,19 @@ class MainWindow(wx.Frame):
 
 
 def main():
-             
+
     try:
         opts, args = getopt.gnu_getopt(sys.argv[1:], "hAm:t:a:e:s:d:", \
                                ["help", "ask", "midi-file", "title=", "artist=", \
                                 "entries=", "spacing=", "duration="])
 
     except getopt.GetoptError, err:
-        
+
          # print help information and exit:
          print str(err) # will print something like "option -a not recognized"
          print usage
          sys.exit(2)
-    
+
     music_file = None
     midi_file = None
     title = None
@@ -532,7 +532,7 @@ def main():
         print sys.argv[0], 'requires a audio file '
         print usage
         sys.exit(2)
-        
+
 
     for o, a in opts:
         if o in ('-m', '--midi-file'):
@@ -558,7 +558,7 @@ def main():
             assert False, "unhandled option"
 
     cli_client(music_file, ask, midi_file, title, artist, \
-               entries_per_line, spacing, duration)				
+               entries_per_line, spacing, duration)
 
 
 
@@ -589,9 +589,8 @@ def get_time(x):
                 print usage
                 sys.exit(2)
 
-                    
+
 
 
 
 if __name__ == '__main__': main()
-
