@@ -28,27 +28,22 @@ x2 = 'tmp/new_file.pkl'
 
 def dump_songs(dump_file_name, verbose=False):
     output_file = open(dump_file_name, 'wb')
-    songs = song_loader.search_songs('songs')
     if verbose:
         print "Testdump from %s songs" % len(songs)
     pickle.dump(songs, output_file, -1)
     output_file.close()
 
-def load_songs():
-    input_file = open(dump_file_name, 'rb')
-    #songs = song_loader.search_songs('songs')
+def pickle_songs(file_name):
+    input_file = open(file_name, 'rb')
     songs = pickle.load(input_file)
     input_file.close()
     return songs
 
 def test_compare():
-    #dumped_songs = load_songs()
-    #songs = song_loader.search_songs('songs')
-    dump_songs('tmp/new_file.pkl', verbose=True)
-    import md5
-    sum1 = md5.md5(open(x1,'rb').read()).digest()
-    sum2 = md5.md5(open(x2,'rb').read()).digest()
-    assert sum1 == sum2, "something went wrong"
+    songs = song_loader.search_songs('songs')
+    testdata_songs = pickle_songs(x1)
+    assert songs == testdata_songs
+
 
 usage="""
 Usage:  %s [init]

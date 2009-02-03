@@ -23,36 +23,33 @@ functions to find the ultrastar song-directorys
 """
 
 import os
-from canta.song.song import Song
+from canta.song.song import Song, UltraStarFile
 
 
 def search_songs(songs_path):
     """Searches recursive for valid ultrastar songs
+        and returns it in a list
 
     A valid ultrastar-song is a Directory with at least:
         - one textfile in the ultrastar format
         - one ogg/mp3 music file
     """
-    # create Song objects for every directory in the
-    # songs directory and add them to the song list:
-
-    # if you want to change stuff look here:
-    # http://docs.python.org/lib/os-file-dir.html
     songs = []
     for entry in os.walk(songs_path):
         root = entry[0]
         file_names = entry[2]
+
         for file_name in file_names:
-            file_name = file_name.decode('utf-8')
+            #file_name = file_name.decode('utf-8')
             valid_picture_formats = ['jpg', 'jpeg', 'png']
             valid_sound_formats = ['ogg', 'mp3']
             lower_file = file_name.lower()
             if lower_file == "desc.txt":
                 pass
             elif lower_file.endswith('.txt'):
-                # The song:
-                song = Song(path = root, file=file_name)
-                song.read_from_us(type="headers")
+                reader = UltraStarFile(root, file_name)
+                song = Song(path = root, reader=reader)
+                song.read(mode="headers")
                 file_names = unicode_encode_list(file_names)
                 __verify_stuff__(song, 'cover', \
                     valid_picture_formats, file_names)
@@ -63,14 +60,18 @@ def search_songs(songs_path):
     #mp3s = __count_songs_with_attrib__(songs, 'mp3')
     #covers = __count_songs_with_attrib__(songs, 'cover')
     #print mp3s, " Songs with ", covers, " valid Covers found!"
-    return __sort_songs_by_path_and_mp3__(songs)
+    songs = __sort_songs_by_path_and_mp3__(songs)
+    return songs
 
 
 def __verify_stuff__(song, item, valid_formats, file_names):
     '''Trys to verify/find the item with all availible magic'''
+    # should be refactored
     tmp_file = False
-    if not (__item_exist__(song, item) \
-        and __item_exist_on_fs__(song, item)):
+    if __item_exist__(song, item) \
+        and __item_exist_on_fs__(song, item):
+        pass
+    else:
         files = __files_with_right_format__(\
             valid_formats, song, file_names, item)
         files_count = len(files)
@@ -83,7 +84,6 @@ def __verify_stuff__(song, item, valid_formats, file_names):
         tmp_file = False
 
 
-
 def __item_exist__(song, check_item):
     """Check for existence of element in song.info and on the filesystem"""
     if check_item in song.info and \
@@ -93,6 +93,7 @@ def __item_exist__(song, check_item):
 
 def __files_with_right_format__(valid_formats, song, file_names, check_item):
     """Returns a list of files with the right format in the directory"""
+    # should be refactored
     found = False
     files_with_right_format = []
     for format in valid_formats:
@@ -148,18 +149,14 @@ def find_double_songs(songs):
                 print "x:", song_x.path, song_x.info['mp3']
                 print "y:", song_y.path, song_y.info['mp3']
 
-
 def __last_path_part__(path):
     """Return the last part of a path"""
     # unused at the moment
     return path.split(os.path.sep)[-1]
 
-
 def __item_exist_on_fs__(song, item):
     """Check for existence of item on filesystem"""
     return os.path.exists(song.path + song.info[item])
-
-
 
 def remove_extention(file_name):
     """Remove last extention from a filename-string"""
@@ -172,7 +169,7 @@ def unicode_encode_list(elements):
     new_list = []
     for elem in elements:
         try:
-            new_list.append(elem.decode('utf-8'))
+            new_list.append(elem.decode('utf-8', 'replace'))
         except UnicodeEncodeError:
             new_list.append(elem.decode('iso-8859-1'))
     return new_list

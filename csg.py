@@ -17,7 +17,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from canta.song.song import Song
+from canta.song.song import Song, MidiFile_, UltraStarFile
 from canta.song.song_segment import SongSegment
 import canta.metadata as metadata
 
@@ -168,21 +168,18 @@ def check_file(file):
         sys.exit(1)
 
 
-def create_song(title, src_path, song_file, song_path, song):
+def create_song(src_path, song_file, song_path, song):
     '''
         parameters:
-            title:		SongTitle
-            artist:		ArtistName
             src_path:	path of src-file
             song_file:	name of the ogg file without path
             song_path:	target_path (path of the song in canta)
-            mode:		midi and nomidi allowed if you want to use a midi for song-generation
             midi_file:	the midifile you want to use
     '''
 
     config_path, songs_path = get_paths()
     shutil.copy(os.path.join(src_path, song_file), song_path)
-    song.write_to_txt(os.path.join(song_path, title+'.txt'))
+    song.write()
 
 
 def create_song_object(song_path, song_file, midi_file = None):
@@ -317,13 +314,14 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
     duration = get_time(duration)
     entries = int(entries)
 
-
     song_path = get_song_path(get_long_song_name(artist, title))
-
-    song = Song(  title=title, artist=artist, mp3 = music_file, debug = 0)
+    writer = UltraStarFile(song_path, title+'.txt')
+    song = Song(title=title, artist=artist, mp3 = music_file, writer=writer, debug = 0)
 
     if midi_file != None:
-        song.read_from_midi(midi_file)
+        reader = MidiFile_(src_path, midi_file)
+        song.reader = reader
+        song.read()
         shutil.copy(midi_file, song_path)
     else:
         length = format.get_length()
@@ -332,7 +330,7 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
             sys.exit()
         fill_song_object(song, length, entries, spacing, duration)
 
-    create_song(title, src_path, music_file, song_path, song)
+    create_song(src_path, music_file, song_path, song)
 
     print "\n\tDone now start canta to edit the song\n"
 
@@ -437,12 +435,14 @@ class MainWindow(wx.Frame):
             return
         song_path = get_song_path(song_name)
 
-        song = Song(self.title_ctl.GetValue(), self.artist_ctl.GetValue(), self.filename, debug = 0)
+        #reader = MidiFile_(self.filename)
+        writer = UltraStarFile(song_path, song_name+'.txt')
+        song = Song(self.title_ctl.GetValue(), self.artist_ctl.GetValue(), writer=writer, debug = 0)
 
         length = get_length(file_name_absolute)
         fill_song_object(song, length)
 
-        create_song(song_name, self.dirname, self.filename, song_path, song)
+        create_song(self.dirname, self.filename, song_path, song)
 
         dlg = wx.MessageDialog(self, 'Done, song created', 'Message', wx.OK|wx.ICON_INFORMATION)
         dlg.ShowModal()

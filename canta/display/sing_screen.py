@@ -71,7 +71,7 @@ class SingScreen(Menu):
         #self.parent_world = self.widget_properties['root_world']
 
 
-    def show(self, args): 
+    def show(self, args):
         h1_pause = _(u'Pause')
         h1_results = _(u'Results')
 
@@ -90,7 +90,7 @@ class SingScreen(Menu):
 
         self.song = args[0]
         self.song.reset()
-        self.song.read_from_us()
+        self.song.read()
         real_path = self.song.path
         self.song.split_in_lines()
 
@@ -266,7 +266,7 @@ class SingScreen(Menu):
             action = soya.toggle_wireframe)
         self.keyboard_event.add_connection(type = soya.sdlconst.K_s, \
             action = self.make_screenshot)
-            
+
         selected_input = self.config['sound']['input']
         if selected_input == 'PyAudio' or selected_input == 'OSS':
             from canta.event.input_old import Input
@@ -338,4 +338,3 @@ class SingScreen(Menu):
 
 if __name__ == '__main__':
     pass
-

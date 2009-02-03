@@ -41,3 +41,14 @@ class SongLine:
     def remove_segment(self, pos):
         """Remove segment <pos>"""
         del self.segments[pos]
+
+
+    def __cmp__(self, other):
+        """Returns True if other and self have identical attributes"""
+
+        attr_list = ['show_time', 'segments']
+        for attr in attr_list:
+            if getattr(self, attr) == getattr(other, attr):
+                return False
+        else:
+            return True

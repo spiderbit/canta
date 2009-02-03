@@ -31,10 +31,9 @@ from song_line import SongLine
 
 class Song:
 
-    def __init__(self, title='', artist='', mp3 = None, path='', file='', bpm=0, gap=0, \
-            start=0, line_nr=0, octave=False, debug=0):
-        self.path = unicode(path, 'utf-8', errors='replace')		# only need this because i dont want break the api of coreinit and songmenu(browser) 
-        self.file = file #unicode(file, 'utf-8', errors='replace')
+    def __init__(self, title='', artist='', mp3 = None, path='', bpm=0, gap=0, \
+            start=0, line_nr=0, octave=False, reader=None, writer=None, debug=0):
+        self.path = unicode(path, 'utf-8', errors='replace')		# only need this because i dont want break the api of coreinit and songmenu(browser)
         self.splitted = False
         self.debug = debug
         self.info = {}
@@ -50,7 +49,33 @@ class Song:
         self.segments = []
         self.lines = []
         self.octave = octave
-        
+        self.reader = reader
+        self.writer = writer
+
+
+    def __cmp__(self, other):
+        """Returns True if other and self have identical attributes"""
+
+        attr_list = ['splitted', 'info', 'line_nr', 'pos', \
+            'end', 'segments', 'lines', 'octave', 'reader', 'writer']
+        for attr in attr_list:
+            if getattr(self, attr) == getattr(other, attr):
+                return False
+        else:
+            return True
+
+
+    def read(self, reader=None, mode='segments'):
+        if reader:
+            self.reader = reader
+        self.reader.read(self, mode)
+
+
+    def write(self, writer=None):
+        if writer:
+            self.writer = writer
+        self.writer.write(self)
+
 
     def reset(self):
         self.line_nr = 0
@@ -77,7 +102,7 @@ class Song:
         self.lines = []
         self.i = 0
         self.lines.append(SongLine(self.segments[0].time_stamp))
-            
+
         for pos, segment in enumerate(self.segments):
             if segment.type == 'note':	# normal/special note
                 self.lines[self.i].add_segment(segment)
@@ -86,14 +111,14 @@ class Song:
                 self.lines.append(SongLine(segment.time_stamp))
             elif segment.type == 'end':
                 pass
-                    
+
         if self.debug:
             print "found ", len(self.lines), " lines"
             self.print_all_lines()
 
         self.splitted = True
 
-        
+
     def print_all_lines(self):
         for i, line in enumerate(self.lines):
             print "<line nr=", i, " showTime=", line.show_time, " >"
@@ -104,7 +129,7 @@ class Song:
     def getMinPitch(self):
         """searches note with lowest pitch and returns it"""
         min = 100
-        
+
         for segment in self.segments:
             if segment.type == 'note' and segment.pitch < min:
                 min = segment.pitch
@@ -119,110 +144,6 @@ class Song:
                 max = segment.pitch
         return max
 
-    
-    
-    def read_from_us(self, us_file ='', type='segments'):	
-        """Parse a ultrastar-txt file and add header and segments to this object.
-
-        Keyword arguments:
-        us_file -- the Ultrastar file to parse
-        type -- 'segments' | 'headers' | 'full' full is headers + segments  (default 'segments')
-
-        """
-
-        if us_file == '':
-            us_file = os.path.join(self.path, self.file)
-
-
-
-        f = open(us_file,'r')
-        sample = f.read(4)
-        #if sample.startswith(codecs.BOM_UTF8):
-        try:
-            song_file = codecs.open(us_file, encoding="utf-8")
-            song_lines = song_file.readlines()
-        except UnicodeDecodeError:
-            try:
-                song_file = codecs.open(us_file, encoding="iso-8859-1")
-                song_lines = song_file.readlines()
-            except:
-                song_file = codecs.open(us_file, encoding="cp437")
-                song_lines = song_file.readlines()	
-        
-        for line in song_lines:
-            line = line.replace('\r', '')
-            line = line.replace('\n', '')
-
-            if (type == "headers" or type == "full") and line.startswith('#'):
-                words = line.strip('#').split(':')
-                if len(words) == 2:
-                    if words[0] == 'BPM' \
-                        or words[0] == 'GAP' \
-                        or words[0] == 'START':
-
-                        self.info[words[0].lower()] \
-                            = float(words[1].strip().replace(',', '.'))
-                    elif words[0] == 'MP3':
-                        self.info[words[0].lower()] \
-                            = words[1].strip()
-                    else:
-                        self.info[words[0].lower()] \
-                            = words[1].strip()
-                else:
-                    print 'error: something wrong in the songfile:'\
-                        + us_file, words
-            elif type=="headers":       # that must accellerate header-parsing for song-browser on startup
-                return
-
-            elif type=="full" or type == "segments":
-                self.parse_segment(line)
-        self.convert_to_absolute()		
-
-    def parse_segment(self, line):
-        if line.startswith('-'):
-            words = line.split(' ')
-            if len(words) == 2:
-                self.addSegment(SongSegment( "pause", \
-                    float(words[1]), '', '', ''))
-            elif len(words) == 3:
-                self.addSegment(SongSegment( "pause", \
-                    float(words[2]), '', '', ''))
-            else:
-                print 'Song - readFile()-error: something wrong in the songfile:'\
-                    + txtFile + words[0] + "blub" + words + line + line[1:]
-                sys.exit()
-
-        # Find out if the note is a
-        #   : <- normal note
-        #   * <- special note
-        #   F <- freestyle note
-        elif line.startswith(':') or line.startswith('*') or line.startswith('F'):
-            words = line.split(' ', 4)
-            special = freestyle = False
-            if line.startswith('*'):
-                special = True
-            elif line.startswith('F'):
-                freestype = True    
-            time_stamp = int(words[1])
-            duration = int(words[2])
-            pitch = int(words[3])
-            if not self.octave:
-                pitch = pitch
-            text = words[4]
-            
-            self.addSegment(SongSegment("note", \
-                        time_stamp, \
-                        duration, \
-                        pitch, \
-                        text, special, freestyle))
-
-        elif line.startswith('E'):
-            print line
-            self.addSegment(SongSegment("end", \
-                float(self.segments[-1].time_stamp), '', '', ''))
-
-
-
 
     def convert_to_absolute(self):
         if 'relative' in self.info and self.info['relative'].lower() == 'yes':
@@ -236,64 +157,6 @@ class Song:
                 else:
                     segment.time_stamp = abs_line_start + segment.time_stamp
 
-                    
-
-
-
-
-
-
-    def read_from_midi(self, midi_file):
-        """Parse a midi file and fill with that data the SongSegment list.
-
-        Keyword arguments:
-        midi_file -- the midi file to parse
-        
-        """
-        
-        f = open(midi_file, 'rb')
-
-        # do parsing
-        x = MidiToText(self)
-        midiIn = MidiInFile(x, f)
-        midiIn.read()
-        f.close()
-
-        
-
-    def write_to_txt(self, txtFile = None):
-        if txtFile == None:
-            txtFile = os.path.join(self.path, self.file) 
-        songFile = codecs.open(txtFile, encoding='utf-8', mode='w+')
-
-        for key,value in self.info.iteritems():
-            songFile.write(
-                u'#' + \
-                    key.upper() + u':' \
-                    + unicode(value) + u'\n'
-                )
-                    
-
-        
-        for segment in self.segments:
-
-            if segment.type == 'note':
-                if segment.special:
-                    tmp = '*'
-                else:
-                    tmp = ':'
-                songFile.write(
-                    tmp + ' ' \
-                        + str(segment.time_stamp) + ' ' \
-                        + str(segment.duration) + ' ' \
-                        + str(segment.pitch) + ' ' \
-                        + segment.text + '\n'
-                    )
-            elif segment.type == 'pause':
-                songFile.write('- ' + str(segment.time_stamp) \
-                    + '\n')
-            elif segment.type == 'end':
-                songFile.write('E')
 
     def addSegment(self, songSegment):
         self.segments.append(songSegment)
@@ -304,7 +167,7 @@ class Song:
 
         Keyword arguments:
         beats -- amount of beats  (default 1)
-        
+
         """
         duration_of_one_beat = 1. /self.info['bpm'] *60# in seconds
         return (beats * duration_of_one_beat /  4) + (self.info['gap'] /1000.)
@@ -316,7 +179,7 @@ class Song:
         Keyword arguments:
         time -- time in song in seconds
         old_line_nr -- optional last line-nr, a bit faster (experimental)
-        
+
         """
         end_line = len(self.lines)
         start_line = 0
@@ -326,14 +189,14 @@ class Song:
             start_line = old_line_nr
         else:
             end_line = old_line_nr
-        
+
         for i,line in enumerate(self.lines[start_line:end_line]):
             last_segment = line.segments[len(line.segments)-1]
             if i+1 == end_line:
                 if time > self.get_real_time(line.show_time):
                     line_nr = i
                     break
-            
+
             elif i == 0 and time < self.get_real_time(self.lines[i+1].show_time):
                 line_nr = 0
                 break
@@ -353,9 +216,9 @@ class Song:
         time -- time in song in seconds
         old_line_nr -- optional last line-nr, a bit faster (experimental)
         old_tone_nr -- optional last tone-nr, a bit faster (experimental)
-        
+
         """
-    
+
         tone_nr = None
         if old_line_nr == None:		# if i could not find a line i cannot find a tone_nr
             pos = None
@@ -364,7 +227,7 @@ class Song:
             pos = None				# both None must be end of line or before gap was happend
         else:
             line = self.lines[line_nr]
-            
+
             start_tone = 0
             end_tone = len(line.segments)
             if old_tone_nr == None:
@@ -373,7 +236,7 @@ class Song:
                 start_tone = old_tone_nr
             else:
                 end_tone = old_tone_nr
-            
+
             for i,segment in enumerate(line.segments[start_tone:end_tone]):
                 start = self.get_real_time(segment.time_stamp)
                 end = self.get_real_time(segment.time_stamp + segment.duration)
@@ -388,18 +251,42 @@ class Song:
         return line_nr, tone_nr
 
 
+class MidiFile_:
+
+    def __init__(self, path=None, file_name=None):
+        self.path = path
+        self.file_name = file_name
+
+
+    def read(self, song, mode='full'):
+        """Parse a midi file and fill with that data the SongSegment list.
+
+        Keyword arguments:
+        midi_file -- the midi file to parse
+
+        """
+
+        file_name = os.path.join(self.path, self.file_name)
+        f = open(file_name, 'rb')
+
+        # do parsing
+        x = MidiToText(song)
+        midiIn = MidiInFile(x, f)
+        midiIn.read()
+        f.close()
+
     def get_midi(self, line_nr, tone_nr):
         midi_tone = self.lines[line_nr].segments[tone_nr].pitch + 60 #72
         return midi_tone
 
     def get_freq(self, line_nr, tone_nr):
-        
+
         midi_tone = self.get_midi(line_nr, tone_nr)
         freq = 440 * 2**(float(midi_tone-69)/12.)
         return freq
-    
-    
-    # unused at the moment, but maybe we could use 
+
+
+    # unused at the moment, but maybe we could use
     # midi output of song or songparts so i let it stay for now
     def write_tone_to_midi(self, line_nr, tone_nr, out_file = 'midiout.mid'):
         """Creates a midi file and write one tone to it
@@ -408,8 +295,8 @@ class Song:
         line_nr  -- line_nr of the tone
         tone_nr  -- tone_nr in line
         out_file -- output midi file
-        
-        """	
+
+        """
         midi = MidiOutFile(out_file)
 
         #format: 0, nTracks: 1, division: 480
@@ -425,9 +312,7 @@ class Song:
         #
         #End of file
 
-
         midi.header(0, 1, 480)
-        
         midi.start_of_track()
         midi.sequence_name('Type 0')
         midi.tempo(int(60000000. / self.info['bpm']))
@@ -438,22 +323,16 @@ class Song:
         midi.update_time(96*self.lines[line_nr].segments[tone_nr].duration)
         midi.note_off(ch, self.lines[line_nr].segments[tone_nr].pitch+60, 0x40)
         midi.update_time(0)
-        
         midi.update_time(0)
         midi.end_of_track()
-        
         midi.eof() # currently optional, should it do the write instead of write??
-
-
         midi.write()
 
 
-
-
-    # unused at the moment, but maybe we could use 
+    # unused at the moment, but maybe we could use
     # midi output of song or songparts so i let it stay for now
     def write_line_to_midi(self, out_file = 'midiout.mid'):
-        """Creates a midi file and write current line to it"""	
+        """Creates a midi file and write current line to it"""
         midi = MidiOutFile(out_file)
 
         #format: 0, nTracks: 1, division: 480
@@ -471,7 +350,7 @@ class Song:
 
 
         midi.header(0, 1, 480)
-        
+
         midi.start_of_track()
         midi.sequence_name('Type 0')
         midi.tempo(int(60000000. / self.info['bpm']))
@@ -479,13 +358,14 @@ class Song:
         ch = 0
         i = 0
         line = self.lines[self.line_nr]
-        for i, segment in enumerate(line.segments[:-1]):	
+        for i, segment in enumerate(line.segments[:-1]):
             midi.note_on(ch, segment.pitch+60, 0x64)
             #96 is 4x midi clock which is one hole note
             midi.update_time(96 * segment.duration)
             midi.note_off(ch, segment.pitch+60, 0x40)
-            midi.update_time(96	 * (line.segments[i+1].time_stamp - segment.time_stamp - segment.duration))
-        
+            midi.update_time(96	 * (line.segments[i+1].time_stamp \
+                            - segment.time_stamp - segment.duration))
+
         midi.note_on(ch, line.segments[-1].pitch+60, 0x64)
         midi.update_time(96 * line.segments[-1].duration)
         midi.note_off(ch, line.segments[-1].pitch+60, 0x40)
@@ -495,7 +375,151 @@ class Song:
         midi.write()
 
 
-                    
+
+class UltraStarFile:
+
+    def __init__(self, path=None, file_name=None):
+        self.file_name = file_name
+        self.path = path
+
+    def read(self, song, mode='segments'):
+        """Parse a ultrastar-txt file and add header and segments to this object.
+
+        Keyword arguments:
+        file_name -- the Ultrastar file to parse
+        mode -- 'segments' | 'headers' | 'full' full is headers + segments  (default 'segments')
+
+        """
+
+        us_file = os.path.join(self.path, self.file_name)
+        f = open(us_file, 'r')
+        sample = f.read(4)
+        #if sample.startswith(codecs.BOM_UTF8):
+        try:
+            song_file = codecs.open(us_file, encoding="utf-8")
+            song_lines = song_file.readlines()
+        except UnicodeDecodeError:
+            try:
+                song_file = codecs.open(us_file, encoding="iso-8859-1")
+                song_lines = song_file.readlines()
+            except:
+                song_file = codecs.open(us_file, encoding="cp437")
+                song_lines = song_file.readlines()
+
+        for line in song_lines:
+            line = line.replace('\r', '')
+            line = line.replace('\n', '')
+
+            if (mode == "headers" or mode == "full") and line.startswith('#'):
+                words = line.strip('#').split(':')
+                if len(words) == 2:
+                    if words[0] == 'BPM' \
+                        or words[0] == 'GAP' \
+                        or words[0] == 'START':
+
+                        song.info[words[0].lower()] \
+                            = float(words[1].strip().replace(',', '.'))
+                    elif words[0] == 'MP3':
+                        song.info[words[0].lower()] \
+                            = words[1].strip()
+                    else:
+                        song.info[words[0].lower()] \
+                            = words[1].strip()
+                else:
+                    print 'error: something wrong in the songfile:'\
+                        + us_file, words
+            elif mode=="headers":
+                # that must accellerate header-parsing for song-browser on startup
+                return
+
+            elif mode=="full" or mode == "segments":
+                self.parse_segment(song, line)
+        song.convert_to_absolute()
+
+
+    def parse_segment(self, song, line):
+        if line.startswith('-'):
+            words = line.split(' ')
+            if len(words) == 2:
+                song.addSegment(SongSegment( "pause", \
+                    float(words[1]), '', '', ''))
+            elif len(words) == 3:
+                song.addSegment(SongSegment( "pause", \
+                    float(words[2]), '', '', ''))
+            else:
+                print 'Song - readFile()-error: something wrong in the songfile'
+                sys.exit()
+
+        # Find out if the note is a
+        #   : <- normal note
+        #   * <- special note
+        #   F <- freestyle note
+        elif line.startswith(':') or line.startswith('*') or line.startswith('F'):
+            words = line.split(' ', 4)
+            special = freestyle = False
+            if line.startswith('*'):
+                special = True
+            elif line.startswith('F'):
+                freestype = True
+            time_stamp = int(words[1])
+            duration = int(words[2])
+            pitch = int(words[3])
+            if not song.octave:
+                pitch = pitch
+            text = words[4]
+
+            song.addSegment(SongSegment("note", \
+                        time_stamp, \
+                        duration, \
+                        pitch, \
+                        text, special, freestyle))
+
+        elif line.startswith('E'):
+            song.addSegment(SongSegment("end", \
+                float(song.segments[-1].time_stamp), '', '', ''))
+
+
+
+
+
+
+    def write(self, song):
+        file_name = os.path.join(self.path, self.file_name)
+        songFile = codecs.open(file_name, encoding='utf-8', mode='w+')
+
+        for key,value in song.info.iteritems():
+            songFile.write(
+                u'#' + \
+                    key.upper() + u':' \
+                    + unicode(value) + u'\n'
+                )
+
+
+
+        for segment in song.segments:
+
+            if segment.type == 'note':
+                if segment.special:
+                    tmp = '*'
+                else:
+                    tmp = ':'
+                songFile.write(
+                    tmp + ' ' \
+                        + str(segment.time_stamp) + ' ' \
+                        + str(segment.duration) + ' ' \
+                        + str(segment.pitch) + ' ' \
+                        + segment.text + '\n'
+                    )
+            elif segment.type == 'pause':
+                songFile.write('- ' + str(segment.time_stamp) \
+                    + '\n')
+            elif segment.type == 'end':
+                songFile.write('E')
+
+
+
+
+
 
 
 def main(): # main
@@ -518,16 +542,16 @@ def main(): # main
     print
     for k,v in song.info.iteritems():
         print "%s:\t\t %s" % (k,v)
-    
+
     print "\n\nType\tTimeStamp\tDuration\tPitch\t\tText"
-    
+
     for segment in song.segments:
-        
+
         print "%s\t%s\t\t%s\t\t%s\t\t%s" % (segment.type, segment.time_stamp,
             segment.duration, segment.pitch, segment.text)
     song_file = 'Song.txt'
     print
-    song.write_to_txt(song_file) 
+    song.write_to_txt(song_file)
     print "wrote file %s" % (song_file)
     print
 
