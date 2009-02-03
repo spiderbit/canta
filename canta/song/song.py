@@ -440,7 +440,10 @@ class UltraStarFile:
     def parse_segment(self, song, line):
         if line.startswith('-'):
             words = line.split(' ')
-            if len(words) == 2:
+            if len(words) == 1:
+                song.addSegment(SongSegment( "pause", \
+                    float(words[0][1:]), '', '', ''))
+            elif len(words) == 2:
                 song.addSegment(SongSegment( "pause", \
                     float(words[1]), '', '', ''))
             elif len(words) == 3:
