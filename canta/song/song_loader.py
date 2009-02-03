@@ -77,12 +77,21 @@ def __verify_stuff__(song, item, valid_formats, file_names):
         files_count = len(files)
         if files_count > 1:
             tmp_file = __search_file_by_bogos__(files, item)
+            if not tmp_file:
+                tmp_file = __search_file_by_name__(
+                    song.reader.file_name, files, valid_formats)
         elif files_count == 1:
             tmp_file = files[0]
     if tmp_file:
         song.info[item] = tmp_file
         tmp_file = False
 
+def __search_file_by_name__(file_name, files, valid_formats):
+    name = remove_extention(file_name)
+    for format in valid_formats:
+        for file_name in files:
+            if (name + '.' + format).upper() == file_name.upper():
+                return file_name
 
 def __item_exist__(song, check_item):
     """Check for existence of element in song.info and on the filesystem"""
