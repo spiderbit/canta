@@ -28,6 +28,7 @@ x2 = 'tmp/new_file.pkl'
 
 def dump_songs(dump_file_name, verbose=False):
     output_file = open(dump_file_name, 'wb')
+    songs = song_loader.search_songs('songs')
     if verbose:
         print "Testdump from %s songs" % len(songs)
     pickle.dump(songs, output_file, -1)
