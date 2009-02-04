@@ -87,6 +87,7 @@ def __verify_stuff__(song, item, valid_formats, file_names):
         tmp_file = False
 
 def __search_file_by_name__(file_name, files, valid_formats):
+    """Search file with name=file_name but extention from valid_formats list"""
     name = remove_extention(file_name)
     for format in valid_formats:
         for file_name in files:

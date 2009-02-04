@@ -33,10 +33,7 @@ class SongSegment:
     def __cmp__(self, other):
         """Returns True if other and self have identical attributes"""
 
-        attr_list = ['type', 'time_stamp', 'duration', 'pitch', \
-            'text', 'special', 'freestyle']
-        for attr in attr_list:
-            if getattr(self, attr) == getattr(other, attr):
-                return False
-        else:
+        if self.__dict__ == other.__dict__:
             return True
+        else:
+            return False

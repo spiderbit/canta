@@ -56,13 +56,11 @@ class Song:
     def __cmp__(self, other):
         """Returns True if other and self have identical attributes"""
 
-        attr_list = ['splitted', 'info', 'line_nr', 'pos', \
-            'end', 'segments', 'lines', 'octave', 'reader', 'writer']
-        for attr in attr_list:
-            if getattr(self, attr) == getattr(other, attr):
-                return False
-        else:
+        if self.__dict__ == other.__dict__:
             return True
+        else:
+            return False
+
 
 
     def read(self, reader=None, mode='segments'):
@@ -381,6 +379,16 @@ class UltraStarFile:
     def __init__(self, path=None, file_name=None):
         self.file_name = file_name
         self.path = path
+
+
+
+    def __cmp__(self, other):
+        """Returns True if other and self have identical attributes"""
+
+        if self.__dict__ == other.__dict__:
+            return True
+        else:
+            return False
 
     def read(self, song, mode='segments'):
         """Parse a ultrastar-txt file and add header and segments to this object.
