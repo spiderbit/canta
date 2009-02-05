@@ -35,14 +35,15 @@ def search_songs(songs_path):
         - one ogg/mp3 music file
     """
     songs = []
+    valid_picture_formats = ['jpg', 'jpeg', 'png']
+    valid_sound_formats = ['ogg', 'mp3']
+    cover_search_pattern = ['co']
+    song_search_pattern = []
     for entry in os.walk(songs_path):
         root = entry[0]
         file_names = entry[2]
-
         for file_name in file_names:
             #file_name = file_name.decode('utf-8')
-            valid_picture_formats = ['jpg', 'jpeg', 'png']
-            valid_sound_formats = ['ogg', 'mp3']
             lower_file = file_name.lower()
             if lower_file == "desc.txt":
                 pass
@@ -52,8 +53,9 @@ def search_songs(songs_path):
                 song.read(mode="headers")
                 file_names = unicode_encode_list(file_names)
                 __verify_stuff__(song, 'cover', \
-                    valid_picture_formats, file_names)
-                __verify_stuff__(song, 'mp3', valid_sound_formats, file_names)
+                    valid_picture_formats, file_names, cover_search_pattern)
+                __verify_stuff__(song, 'mp3', valid_sound_formats,\
+                    file_names, song_search_pattern)
                 if __item_exist__(song, 'mp3'):
                     songs.append(song)
 
@@ -64,7 +66,7 @@ def search_songs(songs_path):
     return songs
 
 
-def __verify_stuff__(song, item, valid_formats, file_names):
+def __verify_stuff__(song, item, valid_formats, file_names, patterns):
     '''Trys to verify/find the item with all availible magic'''
     # should be refactored
     tmp_file = False
@@ -76,7 +78,8 @@ def __verify_stuff__(song, item, valid_formats, file_names):
             valid_formats, song, file_names, item)
         files_count = len(files)
         if files_count > 1:
-            tmp_file = __search_file_by_bogos__(files, item)
+            for pattern in patterns:
+                tmp_file = __search_file_with_substring__(files, pattern)
             if not tmp_file:
                 tmp_file = __search_file_by_name__(
                     song.reader.file_name, files, valid_formats)
@@ -123,14 +126,10 @@ def __files_with_right_format__(valid_formats, song, file_names, check_item):
     return files_with_right_format
 
 
-def __search_file_by_bogos__(files_with_right_format, check_item):
-    """Try to find file with co string
-    ! many covers have this in the filename !
-    """
+def __search_file_with_substring__(files_with_right_format, substring):
+    """Try to find a file with substring in name"""
     for file_name in files_with_right_format:
-        # bad hack but the covers have often a substring [CO]
-        if (file_name.lower().find(check_item)) != -1 \
-                or (file_name.lower()).find("co") != -1:
+        if (file_name.lower()).find(substring.lower()) != -1:
             return file_name
     else:
         return False
