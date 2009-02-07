@@ -21,14 +21,17 @@
 import getopt
 import pickle
 import os, sys
-from canta.song import song_loader
+from canta.song.song_manager import SongManager
 
 x1 = os.path.join('tmp', 'song_compare.pkl')
 x2 = 'tmp/new_file.pkl'
 
 def dump_songs(dump_file_name, verbose=False):
     output_file = open(dump_file_name, 'wb')
-    songs = song_loader.search_songs('songs')
+    song_manager = SongManager('songs')
+    song_manager.search_songs('songs')
+    song_manager.verify_songs()
+    songs = song_manager.songs
     if verbose:
         print "Testdump from %s songs" % len(songs)
     pickle.dump(songs, output_file, -1)
@@ -41,10 +44,24 @@ def pickle_songs(file_name):
     return songs
 
 def test_compare():
-    songs = song_loader.search_songs('songs')
+    song_manager = SongManager('songs')
+    song_manager.search()
+    song_manager.verify()
+    song_manager.sort()
+    print "Songs found:"
+    print_song_stats(song_manager)
+    songs = song_manager.songs
     testdata_songs = pickle_songs(x1)
+    sm2 = SongManager('songs')
+    sm2.songs = testdata_songs
+    print "Songs from compare-dump:"
+    print_song_stats(sm2)
     assert songs == testdata_songs
 
+def print_song_stats(song_manager):
+    mp3s = song_manager.count_songs_with_attrib( 'mp3')
+    covers = song_manager.count_songs_with_attrib( 'cover')
+    print mp3s, " Songs with ", covers, " valid Covers found!"
 
 usage="""
 Usage:  %s [init]

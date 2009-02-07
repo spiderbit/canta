@@ -49,7 +49,7 @@ from canta.song.song_editor import SongEditor
 from canta.display.sing_screen import SingScreen
 
 from canta.song.midi_editor import MidiEditor
-from canta.song import song_loader
+from canta.song.song_manager import SongManager
 
 from canta.theme.particle_system import ParticleSystem
 from canta.display.language import LocaleManager
@@ -413,8 +413,16 @@ class CoreInit:
         about_menu.add_text(license)
 
         # Song browser:
-        song_objects = song_loader.search_songs(os.path.join(self.app_dir, 'songs'))
-        song_objects_home = song_loader.search_songs(os.path.join(self.config_path, 'songs'))
+        song_manager = SongManager(os.path.join(self.app_dir, 'songs'))
+        song_manager.search()
+        song_manager.verify()
+        song_manager.sort()
+        song_objects = song_manager.songs
+        song_manager_home = SongManager(os.path.join(self.config_path, 'songs'))
+        song_manager_home.search()
+        song_manager_home.verify()
+        song_manager_home.sort()
+        song_objects_home = song_manager_home.songs
         song_objects.extend(song_objects_home)
 
         self.load_player()

@@ -17,77 +17,103 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Module song_loader
+"""Module song_manager
 
-functions to find the ultrastar song-directorys
+a class and a few functions to find ultrastar songs and store it in a list
 """
 
 import os
 from canta.song.song import Song, UltraStarFile
 
-
-def search_songs(songs_path):
-    """Searches recursive for valid ultrastar songs
-        and returns it in a list
-
-    A valid ultrastar-song is a Directory with at least:
-        - one textfile in the ultrastar format
-        - one ogg/mp3 music file
-    """
+class SongManager:
+    """Class to recursivly search, validate and sort a list of songs """
     songs = []
-    valid_picture_formats = ['jpg', 'jpeg', 'png']
-    valid_sound_formats = ['ogg', 'mp3']
-    cover_search_pattern = ['co']
-    song_search_pattern = []
-    for entry in os.walk(songs_path):
-        root = entry[0]
-        file_names = entry[2]
-        for file_name in file_names:
-            #file_name = file_name.decode('utf-8')
-            lower_file = file_name.lower()
-            if lower_file == "desc.txt":
-                pass
-            elif lower_file.endswith('.txt'):
-                reader = UltraStarFile(root, file_name)
-                song = Song(path = root, reader=reader)
-                song.read(mode="headers")
-                file_names = unicode_encode_list(file_names)
-                __verify_stuff__(song, 'cover', \
-                    valid_picture_formats, file_names, cover_search_pattern)
-                __verify_stuff__(song, 'mp3', valid_sound_formats,\
-                    file_names, song_search_pattern)
-                if __item_exist__(song, 'mp3'):
-                    songs.append(song)
-
-    #mp3s = __count_songs_with_attrib__(songs, 'mp3')
-    #covers = __count_songs_with_attrib__(songs, 'cover')
-    #print mp3s, " Songs with ", covers, " valid Covers found!"
-    songs = __sort_songs_by_path_and_mp3__(songs)
-    return songs
+    def __init__(self, path):
+        self.path = path
 
 
-def __verify_stuff__(song, item, valid_formats, file_names, patterns):
-    '''Trys to verify/find the item with all availible magic'''
-    # should be refactored
-    tmp_file = False
-    if __item_exist__(song, item) \
-        and __item_exist_on_fs__(song, item):
-        pass
-    else:
-        files = __files_with_right_format__(\
-            valid_formats, song, file_names, item)
-        files_count = len(files)
-        if files_count > 1:
-            for pattern in patterns:
-                tmp_file = __search_file_with_substring__(files, pattern)
-            if not tmp_file:
-                tmp_file = __search_file_by_name__(
-                    song.reader.file_name, files, valid_formats)
-        elif files_count == 1:
-            tmp_file = files[0]
-    if tmp_file:
-        song.info[item] = tmp_file
+    def search(self):
+        """Searches recursive ultrastar songs"""
+
+        for entry in os.walk(self.path):
+            root = entry[0]
+            file_names = entry[2]
+            for file_name in file_names:
+                #file_name = file_name.decode('utf-8')
+                lower_file = file_name.lower()
+                if lower_file == "desc.txt":
+                    pass
+                elif lower_file.endswith('.txt'):
+                    reader = UltraStarFile(root, file_name)
+                    song = Song(path = root, reader=reader)
+                    song.read(mode="headers")
+                    file_names = unicode_encode_list(file_names)
+                    self.songs.append(song)
+
+
+    def verify(self):
+        """Verify the songs-list"""
+        valid_picture_formats = ['jpg', 'jpeg', 'png']
+        valid_sound_formats = ['ogg', 'mp3']
+        cover_search_pattern = ['co']
+        song_search_pattern = []
+        remove_list = []
+        for i in range(len(self.songs)):
+            song = self.songs[i]
+            file_names = []
+            for entry in os.listdir(song.path):
+                if os.path.isfile(os.path.join(song.path, entry)):
+                    file_names.append(entry)
+            self.__verify_song_item__(song, 'cover', \
+                valid_picture_formats, file_names, cover_search_pattern)
+            self.__verify_song_item__(song, 'mp3', valid_sound_formats, \
+                file_names, song_search_pattern)
+            if not __item_exist__(song, 'mp3'):
+                remove_list.append(i)
+        x = 0
+        for i in remove_list:
+            del self.songs[i - x]
+            x += 1
+
+
+    def __verify_song_item__(self, song, item, \
+                valid_formats, file_names, patterns):
+        '''Trys to verify/find the item with all availible magic'''
+        # should be refactored
         tmp_file = False
+        if __item_exist__(song, item) \
+            and __item_exist_on_fs__(song, item):
+            pass
+        else:
+            files = __files_with_right_format__(\
+                valid_formats, song, file_names, item)
+            files_count = len(files)
+            if files_count > 1:
+                for pattern in patterns:
+                    tmp_file = __search_file_with_substring__(files, pattern)
+                if not tmp_file:
+                    tmp_file = __search_file_by_name__(
+                        song.reader.file_name, files, valid_formats)
+            elif files_count == 1:
+                tmp_file = files[0]
+            if tmp_file:
+                song.info[item] = tmp_file
+
+
+    def sort(self):
+        """Sort songs by the pathnames"""
+        self.songs.sort(key=lambda obj: obj.path + obj.info['mp3'])
+
+
+
+    def count_songs_with_attrib(self, attr):
+        """Counts songs which have the attr"""
+        count = 0
+        for song in self.songs:
+            if attr in song.info:
+                count += 1
+        return count
+
 
 def __search_file_by_name__(file_name, files, valid_formats):
     """Search file with name=file_name but extention from valid_formats list"""
@@ -102,7 +128,8 @@ def __item_exist__(song, check_item):
     if check_item in song.info and \
         song.info[check_item] != None:
         return True
-
+    else:
+        return False
 
 def __files_with_right_format__(valid_formats, song, file_names, check_item):
     """Returns a list of files with the right format in the directory"""
@@ -134,20 +161,6 @@ def __search_file_with_substring__(files_with_right_format, substring):
     else:
         return False
 
-
-def __count_songs_with_attrib__(songs, attr):
-    """Counts songs which have the attr"""
-    count = 0
-    for song in songs:
-        if attr in song.info:
-            count += 1
-    return count
-
-
-def __sort_songs_by_path_and_mp3__(songs):
-    """Sort song-list by the pathnames"""
-    songs.sort(key=lambda obj: obj.path + obj.info['mp3'])
-    return songs
 
 def find_double_songs(songs):
     """find song objects with the same path"""
