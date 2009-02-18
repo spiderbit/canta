@@ -1,3 +1,7 @@
+NEXT VERSION
+
+* remove rpm/deb build system from the project repository
+
 Canta 0.2-beta5
 
 * add some resolutions for netbooks
