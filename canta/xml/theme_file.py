@@ -44,7 +44,7 @@ class ThemeFile(XmlFile):
         self.models = []
         self.animodels = []
         self.panels = []
-    
+
 
     def store_atmosphere(self, xml_node):
         """Get XML element attributes for the <atmosphere> tag and append
@@ -275,16 +275,16 @@ class ThemeFile(XmlFile):
         """Let minidom parse the XML file.
         """
         self.xml_file = path
-        
-        
+
+
     #try:
         self.tree = etree.parse(self.xml_file)
         root = self.tree.getroot()
         #for node in root:
-        #	if node.tag = 
+        #	if node.tag =
         print self.tree.findtext('sky_color')
         #print type(self.tree)#,len(self.tree)
-    
+
         self.xml_doc = minidom.parse(path)
         self.xml_root_node = self.xml_doc.documentElement
         return True
@@ -384,13 +384,13 @@ class ThemeFile(XmlFile):
 def main():
 
     xml_file = ThemeFile(debug=0)
-    xml_file.store_theme('../../themes/default/theme_cfg.xml')
+    xml_file.store_theme('../../media/themes/default/theme_cfg.xml')
 
     print '\nMAIN:\nTheme - theme_items:', xml_file.theme_items
     print 'xml_file.fonts'
     for item in xml_file.fonts:
         print item
-    
+
     print 'xml_file.box'
     print xml_file.box
 
@@ -402,5 +402,3 @@ def main():
 
 
 if __name__ == '__main__': main()
-
-

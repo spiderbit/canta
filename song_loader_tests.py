@@ -28,9 +28,9 @@ x2 = 'tmp/new_file.pkl'
 
 def dump_songs(dump_file_name, verbose=False):
     output_file = open(dump_file_name, 'wb')
-    song_manager = SongManager('songs')
-    song_manager.search_songs('songs')
-    song_manager.verify_songs()
+    song_manager = SongManager(os.path.join('media', 'songs'))
+    song_manager.search()
+    song_manager.verify()
     songs = song_manager.songs
     if verbose:
         print "Testdump from %s songs" % len(songs)
@@ -44,7 +44,7 @@ def pickle_songs(file_name):
     return songs
 
 def test_compare():
-    song_manager = SongManager('songs')
+    song_manager = SongManager(os.path.join('media', 'songs'))
     song_manager.search()
     song_manager.verify()
     song_manager.sort()
@@ -52,7 +52,7 @@ def test_compare():
     print_song_stats(song_manager)
     songs = song_manager.songs
     testdata_songs = pickle_songs(x1)
-    sm2 = SongManager('songs')
+    sm2 = SongManager(os.path.join('media', 'songs'))
     sm2.songs = testdata_songs
     print "Songs from compare-dump:"
     print_song_stats(sm2)

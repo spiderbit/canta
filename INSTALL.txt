@@ -4,10 +4,8 @@ Installation / Requirements
 1. RUN DIRECTLY
 
 	> python main.py			starts canta
-	> python csg.py 			starts canta song generator 
+	> python csg.py 			starts canta song generator
 						(--help for more)
-	> python scripts/update-media.py	loads/updates all our songs/themes
-						from the canta-website
 
 	you need all the Dependencies listet under Point 3
 
@@ -45,4 +43,3 @@ Installation / Requirements
 	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
 	- python-numpy or python-numeric
 	- python-pygame
-

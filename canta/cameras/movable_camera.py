@@ -128,7 +128,7 @@ class MovableCamera(soya.Camera):
             #	self.prev_coords = self.coord2d_to_3d(event[1], event[2])
             #	coords = self.coord2d_to_3d(event[1], event[2], event[3])
             #	print coords
-                
+
 
     def advance_time(self, proportion):
         self.add_mul_vector(proportion, self.speed)
@@ -151,7 +151,7 @@ def main():
 
     # init soya in resizable window:
     soya.init('MovableCamera Module', 1024, 768, 0)
-    soya.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..', '..', 'themes', 'kiddy', 'media'))
+    soya.path.append(os.path.join(os.path.dirname(sys.argv[0]), '..', '..', 'media', 'themes', 'kiddy', 'media'))
     # set the root scene:
     scene = soya.World()
 
@@ -185,4 +185,3 @@ def main():
     soya.MainLoop(scene).main_loop()
 
 if __name__ == '__main__': main()
-

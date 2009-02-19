@@ -87,7 +87,7 @@ def main():
     # Enable/disable soya's auto (blender model) importer:
     soya.AUTO_EXPORTERS_ENABLED = True
 
-    theme_path = os.path.join(app_dir, 'themes', \
+    theme_path = os.path.join(app_dir, 'media', 'themes', \
             theme_name, 'media')
     soya.path.append(theme_path)
 
@@ -124,7 +124,7 @@ def main():
 
     # load the theme config settings:
     theme_mgr = ThemeManager(world, DEBUG)
-    theme_dir = os.path.join(app_dir, 'themes', theme_name)
+    theme_dir = os.path.join(app_dir, 'media', 'themes', theme_name)
     theme_mgr.get_theme(theme_name, theme_dir)
     theme_mgr.show_theme(theme_name)
 
@@ -149,7 +149,6 @@ def main():
     soya.set_root_widget(camera)
     soya.MainLoop(scene).main_loop()
 
-    
+
 
 if __name__ == '__main__': main()
-

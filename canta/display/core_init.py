@@ -152,7 +152,7 @@ class CoreInit:
 
         # load the theme config settings:
         self.theme_mgr = ThemeManager(self.root_world, self.debug)
-        self.theme_dir = os.path.join(self.app_dir, 'themes', self.theme_name)
+        self.theme_dir = os.path.join(self.app_dir, 'media', 'themes', self.theme_name)
         self.theme_mgr.get_theme(self.theme_name, self.theme_dir)
 
         self.widget_properties['font'] = {}
@@ -247,10 +247,10 @@ class CoreInit:
         #	TODO: append paths for all themes in themes/,
         #	so we can change the theme at runtime (?)...
         #	* songs/[song name]/media
-        default_path = os.path.join(self.app_dir, 'themes', \
+        default_path = os.path.join(self.app_dir, 'media', 'themes', \
             'default', 'media')
         soya.path.append(default_path)
-        theme_path = os.path.join(self.app_dir, 'themes', \
+        theme_path = os.path.join(self.app_dir, 'media', 'themes', \
             self.widget_properties['theme']['main'], 'media')
         soya.path.append(theme_path)
 
@@ -413,7 +413,7 @@ class CoreInit:
         about_menu.add_text(license)
 
         # Song browser:
-        song_manager = SongManager(os.path.join(self.app_dir, 'songs'))
+        song_manager = SongManager(os.path.join(self.app_dir, 'media', 'songs'))
         song_manager.search()
         song_manager.verify()
         song_manager.sort()
@@ -604,7 +604,7 @@ class CoreInit:
         sound_group = {'heading' : h2_settings_sound, 'items' : sound_items}
         self.options_menu_sound.add_group(sound_group)
 
-        available_themes = self.theme_mgr.get_theme_names(os.path.join(self.app_dir, 'themes'))
+        available_themes = self.theme_mgr.get_theme_names(os.path.join(self.app_dir, 'media', 'themes'))
 
         if self.theme_name in available_themes:
             selected_theme = available_themes.index(self.theme_name)
