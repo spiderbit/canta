@@ -54,7 +54,7 @@ class SongEditor(soya.Body):
         self.l_line_no = _(u'Line: ')
         self.separator = u' - '
         self.h_help = _(u'Help')
-        self.help_file_path = os.path.join(app_dir, 'media', 'HELP.txt')
+        self.help_file_path = os.path.join(app_dir, 'misc', 'HELP.txt')
         self.debug = debug
         self.widget_properties = widget_properties
         self.app_dir = app_dir

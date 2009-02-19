@@ -28,7 +28,7 @@ def get_files(path):
             files.append(os.path.join(elem))
     return files
 
-data_dirs = ('locale', 'songs', 'themes', 'media')
+data_dirs = ('locale', 'songs', 'themes', 'misc')
 
 data_files = []
 for data_dir in data_dirs:
@@ -39,9 +39,9 @@ for file in data_files:
     setup_data_files.append(('share/games/canta/'+os.path.dirname(file), [file]))
 
 setup_data_files.append(('share/games/canta/', ['ABOUT.txt', 'changelog.txt', 'HACKING.txt', 'INSTALL.txt', 'LICENSE.txt', 'main.py', 'csg.py', 'VERSION', 'configspec']))
-setup_data_files.append(('share/pixmaps', ['media/canta.png', 'media/csg.png']))
-setup_data_files.append(('share/applications', ['media/canta.desktop', 'media/csg.desktop']))
-setup_data_files.append(('share/games/canta/media', ['media/HELP.txt']))
+setup_data_files.append(('share/pixmaps', ['misc/canta.png', 'misc/csg.png']))
+setup_data_files.append(('share/applications', ['misc/canta.desktop', 'misc/csg.desktop']))
+setup_data_files.append(('share/games/canta/misc', ['misc/HELP.txt']))
 
 
 dirs = []
