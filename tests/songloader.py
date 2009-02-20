@@ -1,8 +1,8 @@
-#! /usr/bin/python
+#! /usr/bin/python -O
 # -*- coding: utf-8 -*-
 #
 #    CANTA - A free entertaining educational software for singing
-#    Copyright (C) 2007  S. Huchler, A. Kattner, F. Lopez
+#    Copyright (C) 2007, 2008, 2009  S. Huchler, A. Kattner, F. Lopez
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,11 +20,26 @@
 
 import getopt
 import pickle
-import os, sys
+import os
+import sys
 from canta.song.song_manager import SongManager
 
-x1 = os.path.join('tmp', 'song_compare.pkl')
-x2 = 'tmp/new_file.pkl'
+x1 = os.path.join('tests', 'song_compare.pkl')
+
+
+def setup():
+    if not os.path.exists(x1):
+        print "WARNING no test-data-found:"
+        print " IF YOU WANT TEST A NEW FEATURE"
+        print " CREATE THE SAMPLES WITHOUT THE CHANGES FIRST!"
+        print " AND THEN TEST AGAINST THIS DATA"
+        print " !!! USE MUCH SONGS FOR BETTER TEST !!!"
+        dump_songs(x1)
+        print "XXXX done"
+
+def teardown():
+    pass
+    #os.path.
 
 def dump_songs(dump_file_name, verbose=False):
     output_file = open(dump_file_name, 'wb')
@@ -69,6 +84,8 @@ Usage:  %s [init]
     - without parameter run the test
     """
 
+test_compare.setUp = setup
+test_compare.tearDown = teardown
 
 if __name__ == '__main__':
 

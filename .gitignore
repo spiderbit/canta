@@ -1,5 +1,4 @@
-songs/*
-themes/*
+tests/song_compare.pkl
 #.gitignore
 tmp
 *.mo
