@@ -38,11 +38,11 @@ def main():
     APP_DIR = os.path.dirname(sys.argv[0])
 
     # version:
-    #if open(os.path.join(APP_DIR, 'VERSION')):
-    version_file = open(os.path.join(APP_DIR, 'VERSION'))
-    version = version_file.next()
-    #else:
-    #	version = '(experimental)'
+    if os.path.exists(os.path.join(APP_DIR, 'VERSION')):
+        version_file = open(os.path.join(APP_DIR, 'VERSION'))
+        version = version_file.next()
+    else:
+        version = '(experimental)'
 
     # debug flag:
     DEBUG = False
@@ -64,4 +64,3 @@ def main():
     CoreInit(window_title, APP_DIR ,DEBUG)
 
 if __name__ == '__main__': main()
-
