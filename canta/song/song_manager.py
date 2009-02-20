@@ -27,10 +27,10 @@ from canta.song.song import Song, UltraStarFile
 
 class SongManager:
     """Class to recursivly search, validate and sort a list of songs """
-    songs = []
+
     def __init__(self, path):
         self.path = path
-
+        self.songs = []
 
     def search(self):
         """Searches recursive ultrastar songs"""
