@@ -1,4 +1,4 @@
-include *.txt main.py csg.py
+include *.txt run_canta run_song_generator
 recursive-include media *
 recursive-include locale *
 recursive-include misc *

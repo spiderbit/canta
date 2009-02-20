@@ -3,8 +3,8 @@ Installation / Requirements
 
 1. RUN DIRECTLY
 
-	> python main.py			starts canta
-	> python csg.py 			starts canta song generator
+	> sh run_canta				starts canta
+	> sh run_song_generator			starts canta song generator
 						(--help for more)
 
 	you need all the Dependencies listet under Point 3

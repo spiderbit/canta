@@ -16,14 +16,14 @@ from glob import glob
 
 version_file = open('VERSION')
 version = version_file.next()
-  
+
 
 def get_files(path):
     files = []
     elements = glob(path + '/*')
     for elem in elements:
         if os.path.isdir(elem):
-            files.extend(get_files(os.path.join(elem)))	
+            files.extend(get_files(os.path.join(elem)))
         else:
             files.append(os.path.join(elem))
     return files
@@ -38,7 +38,7 @@ setup_data_files = []
 for file in data_files:
     setup_data_files.append(('share/games/canta/'+os.path.dirname(file), [file]))
 
-setup_data_files.append(('share/games/canta/', ['ABOUT.txt', 'changelog.txt', 'HACKING.txt', 'INSTALL.txt', 'LICENSE.txt', 'main.py', 'csg.py', 'VERSION', 'configspec']))
+setup_data_files.append(('share/games/canta/', ['ABOUT.txt', 'changelog.txt', 'HACKING.txt', 'INSTALL.txt', 'LICENSE.txt', 'run_canta', 'run_song_generator', 'configspec']))
 setup_data_files.append(('share/pixmaps', ['misc/canta.png', 'misc/csg.png']))
 setup_data_files.append(('share/applications', ['misc/canta.desktop', 'misc/csg.desktop']))
 setup_data_files.append(('share/games/canta/misc', ['misc/HELP.txt']))
@@ -71,6 +71,3 @@ setup(	name = 'canta',
         version = version,
     data_files = setup_data_files,
 )
-
-
-

@@ -11,7 +11,7 @@ function bla {
 
 if test -n "$1"
 then
-  xgettext main.py --language=Python -o locale/canta.pot --force-po;
+  xgettext run_canta --language=Python -o locale/canta.pot --force-po;
   find . -iname "*.py" -exec xgettext --language=Python -j -o locale/canta.pot --keyword=_ {} \;
   if test -d locale/$1
   then
@@ -35,5 +35,3 @@ else
   echo "Usage example for german language:"
   echo "> $0 de_DE "
 fi
-
-
