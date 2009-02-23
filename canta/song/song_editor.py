@@ -144,7 +144,7 @@ class SongEditor(soya.Body):
 
         # The paths to the song:
         self.msg['song'] = self.song
-        self.song.read_from_us()
+        self.song.read()
         self.song.split_in_lines()
         self.msg['type'] = 'nextLine'
         self.song_data.set_data(self.msg)
