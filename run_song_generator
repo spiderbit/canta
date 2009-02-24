@@ -276,7 +276,7 @@ def cli_client(music_file_absolute, ask, midi_file, title, artist, entries, spac
         sys.exit(1)
 
     if ask:
-        midi_file = do_ask('Midi file', midi_file_absolute)
+        midi_file = do_ask('Midi file', midi_file)
     if midi_file != None:
         check_file(midi_file)
 
