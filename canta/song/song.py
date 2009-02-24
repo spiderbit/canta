@@ -256,6 +256,9 @@ class MidiFile_:
         self.file_name = file_name
 
 
+
+
+
     def read(self, song, mode='full'):
         """Parse a midi file and fill with that data the SongSegment list.
 
@@ -272,6 +275,48 @@ class MidiFile_:
         midiIn = MidiInFile(x, f)
         midiIn.read()
         f.close()
+
+    '''
+    TODO: replace our old midi code with this
+          when mingus midi-code gives correct position data
+          probaply with version 0.5 see bugtracker
+
+    def read(self, song, mode='full'):
+        """Parse a midi file and fill with that data the SongSegment list.
+
+        Keyword arguments:
+        midi_file -- the midi file to parse
+
+        """
+
+        file_name = os.path.join(self.path, self.file_name)
+
+        # do parsing
+        from mingus.midi import MidiFileIn
+        composition, bpm = MidiFileIn.MIDI_to_Composition(file_name)
+        print bpm
+        if len(composition.tracks) == 1:
+            track = composition.tracks[0]
+        #print track
+        for bar in track.bars:
+            line = SongLine()
+            print "length:", bar.meter
+            for note_cont in bar:
+                if len(note_cont[2]) > 0:
+                    note = note_cont[2][0]      # normaly a notecontainer should only have 1 note
+                    print note_cont, int(note)-48  # us-values are 4 octaves lower than midi
+                    print note.dynamics
+                else:
+                    print note_cont
+#                SongSegment('note', time_stamp, duration=0, pitch=0, text="", special=False, freestyle=False):
+              #  line.segments.append(
+        import sys
+        sys.exit(0)
+
+    '''
+
+
+
 
     def get_midi(self, line_nr, tone_nr):
         midi_tone = self.lines[line_nr].segments[tone_nr].pitch + 60 #72
