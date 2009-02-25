@@ -170,7 +170,7 @@ class SingScreen(Menu):
                 textures = []
                 # Texture file names must begin with text file name.
                 # Not very nice but a quick hack bugfix.
-                file_name = self.song.file[:-4]
+                file_name = self.song.reader.file_name[:-4]
                 for file_ in os.listdir(tex_path):
                     if file_.startswith(file_name):
                         textures.append(file_)
