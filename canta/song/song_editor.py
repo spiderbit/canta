@@ -30,6 +30,7 @@ from canta.event.observers.click_observer import ClickObserver
 from canta.event.observers.lyrics_bg_box import LyricsBgBox
 from canta.event.subjects.song_data import SongData
 from canta.song.song import Song
+from canta.song.song import MingusSong
 from canta.menus.menu import Menu
 from canta.menus.button import MenuButton
 from canta.menus.text import MenuText
@@ -471,7 +472,10 @@ class SongEditor(soya.Body):
     def pitch_down(self):
         self.change_pitch(-1)
 
-
+    def make_line_pictures(self):
+        ming = MingusSong()
+        ming.load_from_song(self.song)
+        ming.generate_pictures()
 
     def __connect_keys__(self):
         """Map soya keyboard events to methods."""
@@ -513,6 +517,7 @@ class SongEditor(soya.Body):
         connections.append((key.K_a, self.add_tone))
         connections.append((key.K_r, self.rem_tone))
         connections.append((key.K_t, self.change_text))
+        connections.append((key.K_g, self.make_line_pictures))
 
         for connection in connections:
             self.keyboard_event.add_connection(*connection)

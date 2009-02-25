@@ -249,14 +249,96 @@ class Song:
         return line_nr, tone_nr
 
 
+
+from mingus.containers import Bar, Note, Track, Composition
+import mingus.extra.LilyPond as LilyPond
+
+
+li_header = """
+\paper{
+  %annotate-spacing = ##t
+  paper-width = 15\cm
+  left-margin = 0\cm
+  right-margin = 0\cm
+  top-margin = 0\cm
+  %ragged-last-bottom = ##t
+  %between-system-space = 0\cm
+  %between-system-padding = 0\cm
+  indent = #0
+  head-separation = 2\mm
+  %page-spacing-weight = 0
+  %between-title-space = 0
+  %before-title-space = 0
+  %ragged-right=##t
+  page-top-space = 0\cm
+  force-assignment = #""
+  line-width = #(- line-width (* mm  0.000000))
+}
+"""
+
+
+
+class MingusSong:
+
+    def __init__(self):
+        self.composition = Composition()
+        self.path = ''
+        self.song_name = ''
+
+    def load_from_song(self, song):
+        ''' Fills a mingus-composition object with the data of a Song object '''
+        # should work for 4/4 bar (and maybe only for 120bpm songs?)
+        # but a cracy hack
+        bar_length = song.info['bpm'] / 7.5
+        for line in song.lines:
+            track = Track()
+            bar = Bar()
+            for segment in line.segments:
+                if segment.type == 'pause':
+                    int_val = None
+                elif segment.type == 'note':
+                    int_val = segment.pitch
+                n = Note().from_int(int_val + 48 - 7)
+                note_length = int(bar_length / segment.duration)
+                if not bar.place_notes(n, note_length):
+                    track.add_bar(bar)
+                    bar = Bar()
+                    bar.place_notes(n, note_length)
+            track.add_bar(bar)
+            self.composition.add_track(track)
+        self.path = song.path
+        self.song_name = song.reader.file_name[:-4]
+
+
+    def generate_pictures(self):
+        ''' Generates pictures of the lines of notes '''
+
+        img_path = os.path.join(self.path, 'media', 'images')
+        if not os.path.exists(img_path):
+            os.makedirs(img_path)
+        import tempfile
+        tmp_dir = tempfile.mkdtemp()
+        for k, track in enumerate(self.composition.tracks):
+            ltrack = LilyPond.from_Track(track)
+            tmp_file = os.path.join(tmp_dir, 'tmp_file')
+            lily_str = li_header + ltrack
+            LilyPond.save_string_and_execute_LilyPond(lily_str, tmp_file, '-fps')
+            img_file = os.path.join(img_path, self.song_name + str(k) + '.png')
+            gs_cmd = 'gs -dBATCH -dNOPAUSE -g2048x256 -q -r273.5 ' \
+                    +'-sDEVICE=pngalpha -sOutputFile="%s" "%s"' \
+                    % (img_file, tmp_file + '.ps')
+            from subprocess import Popen
+            p = Popen(gs_cmd, shell=True)
+            sts = os.waitpid(p.pid, 0)
+            os.unlink(tmp_file + '.ps')
+        os.rmdir(tmp_dir)
+
+
 class MidiFile_:
 
     def __init__(self, path=None, file_name=None):
         self.path = path
         self.file_name = file_name
-
-
-
 
 
     def read(self, song, mode='full'):

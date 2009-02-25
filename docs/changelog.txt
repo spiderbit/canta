@@ -1,6 +1,7 @@
 NEXT VERSION
 
 * remove rpm/deb build system from the project repository
+* easy automatic generation of note-textures for the songs inside the songeditor (experimental)
 
 Canta 0.2-beta5
 
@@ -25,7 +26,7 @@ without a midi file
 * Support for different languages
 * accepting all options without manual restart of canta
 * faster config file parsing/generation -> faster start of canta
-* script for generating and managing po-files (language-files) 
+* script for generating and managing po-files (language-files)
 * removed pyxml dependency (now canta works now also in windows with python 2.5)
 * Bugfix: You can now add musical notes textures to a song, without needing a theme_cfg.xml file.
 * Font sizes now use dynamic sizes.
@@ -45,5 +46,3 @@ Canta 0.2-beta2
 
 Canta 0.2-beta1
 * Initial version.
-
-
