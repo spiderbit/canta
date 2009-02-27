@@ -4,7 +4,6 @@ Keyboard Shortcuts for Song Editor:
 
 [d/c] increase/decrease BPM
 
-
 === LINE ===
 
 [l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
@@ -20,12 +19,11 @@ Keyboard Shortcuts for Song Editor:
 [x/y] move to the right/left              [m] play (Frequencies)
 [+/-] increase/decrease duration         [v] play (both)
 
-[t] change Text
+[t] change Text                       [z] change length of the bars (in beats)
 [g] generate Note Textures
 
 === FILE ===
 
 [s] Save changes                       [q] Quit to main menu
-
 
 P.S: try, error and enjoy!! ;-)

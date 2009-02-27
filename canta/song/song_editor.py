@@ -88,8 +88,8 @@ class SongEditor(soya.Body):
         self.keyboard_event = KeyboardEvent(self.widget_properties, \
                  self.debug, theme_mgr)
 
-        self.tone_txt_input = InputField(self.widget_properties, '')
-        self.tone_txt_input.label.visible = 0
+        self.txt_input = InputField(self.widget_properties, '')
+        self.txt_input.label.visible = 0
 
         self.player = player
         self.__connect_keys__()
@@ -243,22 +243,28 @@ class SongEditor(soya.Body):
 
 
     def init_text_field(self):
-        self.tone_txt_input.label.value = self.song.lines[self.song.line_nr].segments[self.pos].text
-        self.tone_txt_input.label.visible = 1
-        self.tone_txt_input.post_method = self.end_change_text
+        if self.edit_value == 'text':
+            self.txt_input.label.value = self.song.lines[self.song.line_nr].segments[self.pos].text
+        elif self.edit_value == 'bar':
+            self.txt_input.label.value = self.song.info['bar_length']
 
-    def change_text(self):
+        self.txt_input.label.visible = 1
+        self.txt_input.post_method = self.end_change_text
+
+    def change_text(self, obj):
+        self.edit_value = obj
         self.init_text_field()
         self.parent_world.remove(self.keyboard_event)
-
-        self.parent_world.add(self.tone_txt_input)
-
+        self.parent_world.add(self.txt_input)
 
     def end_change_text(self):
-        if self.tone_txt_input.done:
-            self.song.lines[self.song.line_nr].segments[self.pos].text = self.tone_txt_input.label.value
-        self.tone_txt_input.label.visible = 0
-        self.parent_world.remove(self.tone_txt_input)
+        if self.txt_input.done:
+            if self.edit_value == 'text':
+                self.song.lines[self.song.line_nr].segments[self.pos].text = self.txt_input.label.value
+            elif self.edit_value == 'bar':
+                self.song.info['bar_length'] = self.txt_input.label.value
+        self.txt_input.label.visible = 0
+        self.parent_world.remove(self.txt_input)
         self.parent_world.add(self.keyboard_event)
         self.refresh()
 
@@ -516,7 +522,8 @@ class SongEditor(soya.Body):
         connections.append((key.K_i, self.merge_lines))
         connections.append((key.K_a, self.add_tone))
         connections.append((key.K_r, self.rem_tone))
-        connections.append((key.K_t, self.change_text))
+        connections.append((key.K_t, self.change_text, 'text'))
+        connections.append((key.K_z, self.change_text, 'bar'))
         connections.append((key.K_g, self.make_line_pictures))
 
         for connection in connections:

@@ -43,6 +43,7 @@ class Song:
         self.info['bpm'] = bpm
         self.info['gap'] = gap
         self.info['start'] = start
+        self.info['bar_length'] = '16'
         self.line_nr = line_nr
         self.pos = None
         self.end = False
@@ -278,18 +279,23 @@ li_header = """
 
 
 
+
 class MingusSong:
 
     def __init__(self):
         self.composition = Composition()
         self.path = ''
         self.song_name = ''
+        self.bar_length = 16
 
     def load_from_song(self, song):
         ''' Fills a mingus-composition object with the data of a Song object '''
-        # should work for 4/4 bar (and maybe only for 120bpm songs?)
-        # but a cracy hack
-        bar_length = song.info['bpm'] / 7.5
+
+        if 'bar_length' in song.info:
+            try:
+                self.bar_length = int(song.info['bar_length'])
+            except:
+                print "bar length should be integer value"
         for line in song.lines:
             track = Track()
             bar = Bar()
@@ -297,9 +303,18 @@ class MingusSong:
                 if segment.type == 'pause':
                     int_val = None
                 elif segment.type == 'note':
-                    int_val = segment.pitch
+                    # +144 is that the tone is sure positive
+                    int_val = segment.pitch % 12
+                    if int_val < 6:
+                        int_val += 12
                 n = Note().from_int(int_val + 48 - 7)
-                note_length = int(bar_length / segment.duration)
+                note_length = int(round(self.bar_length / segment.duration))
+                if note_length == 0:
+                    note_length = 1
+
+                if self.bar_length / segment.duration != note_length:
+                    print "DEBUG:", int_val, self.bar_length, segment.duration, \
+                        note_length, 'float', self.bar_length / segment.duration
                 if not bar.place_notes(n, note_length):
                     track.add_bar(bar)
                     bar = Bar()
@@ -308,6 +323,8 @@ class MingusSong:
             self.composition.add_track(track)
         self.path = song.path
         self.song_name = song.reader.file_name[:-4]
+
+
 
 
     def generate_pictures(self):
