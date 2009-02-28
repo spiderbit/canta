@@ -31,6 +31,7 @@ from canta.event.observers.lyrics_bg_box import LyricsBgBox
 from canta.event.subjects.song_data import SongData
 from canta.song.song import Song
 from canta.song.song import MingusSong
+from canta.song.song import UltraStarFile
 from canta.menus.menu import Menu
 from canta.menus.button import MenuButton
 from canta.menus.text import MenuText
@@ -101,8 +102,9 @@ class SongEditor(soya.Body):
             item.visible = 0
 
         # get name of the selected song name from args:
-        self.selected_song = args[0].info['mp3']
         self.song = args[0]
+        self.selected_song = self.song.info['mp3']
+        self.song.writer = self.song.reader
         self.v_cont.visible = 1
         self.setup()
 
@@ -436,7 +438,7 @@ class SongEditor(soya.Body):
             self.refresh()
 
     def save(self):
-        self.song.write_to_txt()
+        self.song.write()
 
 
     def move(self, dif):
