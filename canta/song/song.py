@@ -303,18 +303,9 @@ class MingusSong:
                 if segment.type == 'pause':
                     int_val = None
                 elif segment.type == 'note':
-                    # +144 is that the tone is sure positive
-                    int_val = segment.pitch % 12
-                    if int_val < 6:
-                        int_val += 12
-                n = Note().from_int(int_val + 48 - 7)
-                note_length = int(round(self.bar_length / segment.duration))
-                if note_length == 0:
-                    note_length = 1
-
-                if self.bar_length / segment.duration != note_length:
-                    print "DEBUG:", int_val, self.bar_length, segment.duration, \
-                        note_length, 'float', self.bar_length / segment.duration
+                    int_val = segment.pitch
+                n = Note().from_int(int_val + 48)
+                note_length = self.bar_length / segment.duration
                 if not bar.place_notes(n, note_length):
                     track.add_bar(bar)
                     bar = Bar()
@@ -323,8 +314,6 @@ class MingusSong:
             self.composition.add_track(track)
         self.path = song.path
         self.song_name = song.reader.file_name[:-4]
-
-
 
 
     def generate_pictures(self):
