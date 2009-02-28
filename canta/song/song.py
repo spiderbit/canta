@@ -621,7 +621,10 @@ class UltraStarFile:
             pitch = int(words[3])
             if not song.octave:
                 pitch = pitch
-            text = words[4]
+            if len(words) == 5:
+                text = words[4]
+            else:
+                text = ""
 
             song.addSegment(SongSegment("note", \
                         time_stamp, \
