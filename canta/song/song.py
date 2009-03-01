@@ -250,6 +250,17 @@ class Song:
         return line_nr, tone_nr
 
 
+    def get_midi(self, line_nr, tone_nr):
+        midi_tone = self.lines[line_nr].segments[tone_nr].pitch + 60 #72
+        return midi_tone
+
+
+    def get_freq(self, line_nr, tone_nr):
+
+        midi_tone = self.get_midi(line_nr, tone_nr)
+        freq = 440 * 2**(float(midi_tone-69)/12.)
+        return freq
+
 
 from mingus.containers import Bar, Note, Track, Composition
 import mingus.extra.LilyPond as LilyPond
@@ -402,19 +413,6 @@ class MidiFile_:
         sys.exit(0)
 
     '''
-
-
-
-
-    def get_midi(self, line_nr, tone_nr):
-        midi_tone = self.lines[line_nr].segments[tone_nr].pitch + 60 #72
-        return midi_tone
-
-    def get_freq(self, line_nr, tone_nr):
-
-        midi_tone = self.get_midi(line_nr, tone_nr)
-        freq = 440 * 2**(float(midi_tone-69)/12.)
-        return freq
 
 
     # unused at the moment, but maybe we could use
