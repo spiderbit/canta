@@ -48,7 +48,6 @@ from canta.menus.text import MenuText
 from canta.song.song_editor import SongEditor
 from canta.display.sing_screen import SingScreen
 
-from canta.song.midi_editor import MidiEditor
 from canta.song.song_manager import SongManager
 
 from canta.theme.particle_system import ParticleSystem
@@ -344,7 +343,6 @@ class CoreInit:
         # Button labels:
         l_start = _(u"Sing")#_(u'Party Mode')
         l_song_editor = _(u'Song Editor')
-        #l_midi_editor = _(u'MIDI Editor')
         l_settings_main = _(u'Settings')
         l_settings_screen = _(u'Screen')
         l_settings_sound = _(u'Sound')
