@@ -33,7 +33,7 @@ class SongSegment:
     def __cmp__(self, other):
         """Returns True if other and self have identical attributes"""
 
-        if other and self.__dict__ == other.__dict__:
+        if isinstance(other, SongSegment) and self.__dict__ == other.__dict__:
             return True
         else:
             return False
