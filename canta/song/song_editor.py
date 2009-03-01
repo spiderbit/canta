@@ -331,7 +331,7 @@ class SongEditor(soya.Body):
 
     def play_wave(self, start_tone, end_tone = None):
         duration_of_one_beat = 1. /self.song.info['bpm'] * 60
-        if end_tone == None:
+        if not end_tone:
             end_tone = start_tone
         beats = end_tone.duration + end_tone.time_stamp - start_tone.time_stamp
         length = beats * duration_of_one_beat / 4

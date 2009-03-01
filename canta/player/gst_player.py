@@ -25,7 +25,7 @@ import gst
 from player import Player
 
 class GSTPlayer(Player):
-    
+
     def __init__(self, path=None, file=None, time=0.0):
         Player.__init__(self, path, file, time)
         self.playbin = gst.element_factory_make("playbin", "player")
@@ -46,7 +46,7 @@ class GSTPlayer(Player):
         if file != None:
             self.file=file
         filepath = os.path.abspath(os.path.join(self.path, self.file))
-        self.playbin.set_state(gst.STATE_NULL)       
+        self.playbin.set_state(gst.STATE_NULL)
         self.playbin.set_property("uri", "file://" + filepath)
         self.clock = self.playbin.get_clock()
 
@@ -73,12 +73,12 @@ class GSTPlayer(Player):
             Returns the raw GStreamer state
         """
         return self.playbin.get_state(timeout=50*gst.MSECOND)[1]
-               
+
     def get_pos(self):
         state = self.playbin.get_state(timeout=50*gst.MSECOND)[1]
         if self.is_paused():
             return "pause"
-        elif state == gst.STATE_PLAYING:         
+        elif state == gst.STATE_PLAYING:
             try:
                 duration, format = self.playbin.query_duration(gst.FORMAT_TIME)
                 pos = self.playbin.query_position(gst.FORMAT_TIME)[0]
@@ -91,7 +91,7 @@ class GSTPlayer(Player):
         else:
             # catch some states like READY (others?)
             return None
-        
+
     def pause(self):
         self.playbin.set_state(gst.STATE_PAUSED)
         self._pause()
@@ -102,11 +102,11 @@ class GSTPlayer(Player):
 
     def stop_freq(self):
         self.pipeline.set_state(gst.STATE_NULL)
-        
+
     def fadeout(self):
         print "not implemented yet"
 
- 
+
 
 def main():
     x = GSTPlayer()
@@ -124,7 +124,5 @@ def main():
     x.play()
     raw_input('hit a key to stop')
     x.stop()
-    
+
 if __name__ == '__main__': main()
-
-
