@@ -304,9 +304,9 @@ class MingusSong:
 
         if 'bar_length' in song.info:
             try:
-                self.bar_length = int(song.info['bar_length'])
+                self.bar_length = song.info['bar_length']
             except:
-                print "bar length should be integer value"
+                print "You need to specify length of a Bar first before you can do this"
         for line in song.lines:
             track = Track()
             bar = Bar()
@@ -316,7 +316,7 @@ class MingusSong:
                 elif segment.type == 'note':
                     int_val = segment.pitch
                 n = Note().from_int(int_val + 48)
-                note_length = self.bar_length / segment.duration
+                note_length = float(self.bar_length) / segment.duration
                 if not bar.place_notes(n, note_length):
                     track.add_bar(bar)
                     bar = Bar()

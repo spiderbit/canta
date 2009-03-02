@@ -36,6 +36,7 @@ Installation / Requirements
 	- python-gst > 0.10
 	- python-mutagen
 	- python-wxgtk
+	- python-mingus >= 0.4.0.1
 	- and of course: python (2.5)
 
 3. OPTIONAL:
