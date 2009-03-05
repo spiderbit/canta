@@ -163,26 +163,9 @@ class SingScreen(Menu):
         song_theme_path = os.path.join(real_path, 'theme_cfg.xml')
         media_path = os.path.join(real_path, 'media')
 
-        if os.path.exists(media_path):
-            soya.path.append(media_path)
-            tex_path = os.path.join(media_path, 'images')
-            if os.path.exists(tex_path):
-                textures = []
-                # Texture file names must begin with text file name.
-                # Not very nice but a quick hack bugfix.
-                file_name = self.song.reader.file_name[:-4]
-                for file_ in os.listdir(tex_path):
-                    if file_.startswith(file_name):
-                        textures.append(file_)
-                if len(textures) > 0:
-                    img_observer = True
-                    textures.sort()
-                    position = (0., 5., 2.0)
-                    scale = (9.6, 1.2, 1.2)
-                    # The observer for the musical notes:
-                    music_notes = MusicNotes(self.parent_world,
-                            position=position, scale=scale, \
-                            textures=textures, debug=self.debug)
+
+        # The observer for the musical notes:
+        music_notes = MusicNotes(self.parent_world, self.song)
 
         # Sizes and positions for the labels:
         pos_size = {}
@@ -294,9 +277,7 @@ class SingScreen(Menu):
         self.song_data.attach(pause)
         self.song_data.attach(result_view)
         self.song_data.attach(input_bar)
-
-        if img_observer:
-            self.song_data.attach(music_notes)
+        self.song_data.attach(music_notes)
         self.song_data.attach(l_bg_box)
 
         self.parent_world.add(self.keyboard_event)
