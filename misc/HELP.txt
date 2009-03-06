@@ -2,13 +2,13 @@ Keyboard Shortcuts for Song Editor:
 
 === SONG ===
 
-[d/c] increase/decrease BPM
+[d/c] increase/decrease BPM             [g] generate Music Sheets
 
 === LINE ===
 
 [l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
-[n] play (Frequencies)
-[b] play (both)                   [u/i] split/merge
+[n] play (Frequencies)                  [e] generate Music Sheets
+[b] play (both)                         [u/i] split/merge
 
 === TONE ===
 
@@ -18,9 +18,7 @@ Keyboard Shortcuts for Song Editor:
 [a/r] Add/Remove                      [SPACE] play (Waveform)
 [x/y] move to the right/left              [m] play (Frequencies)
 [+/-] increase/decrease duration         [v] play (both)
-
 [t] change Text                       [z] change length of the bars (in beats)
-[g] generate Note Textures
 
 === FILE ===
 

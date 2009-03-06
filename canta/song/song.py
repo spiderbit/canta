@@ -329,25 +329,30 @@ class MingusSong:
 
     def generate_pictures(self):
         ''' Generates pictures of the lines of notes '''
+        for k, track in enumerate(self.composition.tracks):
+            self.generate_picture(k)
 
+
+    def generate_picture(self, k):
+        ''' Generates picture of the lines k '''
         img_path = os.path.join(self.path, 'media', 'images')
         if not os.path.exists(img_path):
             os.makedirs(img_path)
         import tempfile
         tmp_dir = tempfile.mkdtemp()
-        for k, track in enumerate(self.composition.tracks):
-            ltrack = LilyPond.from_Track(track)
-            tmp_file = os.path.join(tmp_dir, 'tmp_file')
-            lily_str = li_header + ltrack
-            LilyPond.save_string_and_execute_LilyPond(lily_str, tmp_file, '-fps')
-            img_file = os.path.join(img_path, self.song_name + str(k) + '.png')
-            gs_cmd = 'gs -dBATCH -dNOPAUSE -g2048x256 -q -r273.5 ' \
-                    +'-sDEVICE=pngalpha -sOutputFile="%s" "%s"' \
-                    % (img_file, tmp_file + '.ps')
-            from subprocess import Popen
-            p = Popen(gs_cmd, shell=True)
-            sts = os.waitpid(p.pid, 0)
-            os.unlink(tmp_file + '.ps')
+        track = self.composition.tracks[k]
+        ltrack = LilyPond.from_Track(track)
+        tmp_file = os.path.join(tmp_dir, 'tmp_file')
+        lily_str = li_header + ltrack
+        LilyPond.save_string_and_execute_LilyPond(lily_str, tmp_file, '-fps')
+        img_file = os.path.join(img_path, self.song_name + str(k) + '.png')
+        gs_cmd = 'gs -dBATCH -dNOPAUSE -g2048x256 -q -r273.5 ' \
+                +'-sDEVICE=pngalpha -sOutputFile="%s" "%s"' \
+                % (img_file, tmp_file + '.ps')
+        from subprocess import Popen
+        p = Popen(gs_cmd, shell=True)
+        sts = os.waitpid(p.pid, 0)
+        os.unlink(tmp_file + '.ps')
         os.rmdir(tmp_dir)
 
 

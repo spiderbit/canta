@@ -165,7 +165,7 @@ class SingScreen(Menu):
 
 
         # The observer for the musical notes:
-        music_notes = MusicNotes(self.parent_world, self.song)
+        music_notes = MusicNotes(self.parent_world)
 
         # Sizes and positions for the labels:
         pos_size = {}

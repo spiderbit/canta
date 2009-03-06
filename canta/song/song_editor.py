@@ -28,6 +28,7 @@ from canta.event.observers.song_label_observer import SongLabelObserver
 from canta.event.observers.main_cube_observer import MainCubeObserver
 from canta.event.observers.click_observer import ClickObserver
 from canta.event.observers.lyrics_bg_box import LyricsBgBox
+from canta.event.observers.music_notes import MusicNotes
 from canta.event.subjects.song_data import SongData
 from canta.song.song import Song
 from canta.song.song import MingusSong
@@ -136,14 +137,19 @@ class SongEditor(soya.Body):
 
         cube = MainCubeObserver(self.widget_properties['root_world'], \
                         song_bar_color, self.debug)
+
+        self.music_notes = MusicNotes(self.parent_world)
         # The observer for the background box (lyrics):
         l_bg_box = LyricsBgBox(self.widget_properties, self.debug)
+
+
 
         self.pos = 0
         self.song_data = SongData()
         self.song_data.attach(lyrics)
         self.song_data.attach(l_bg_box)
         self.song_data.attach(cube)
+        self.song_data.attach(self.music_notes)
 
         # The paths to the song:
         self.msg['song'] = self.song
@@ -398,6 +404,7 @@ class SongEditor(soya.Body):
     def refresh(self):
         self.song.split_in_lines()
         self.msg['type'] = 'nextLine'
+        self.msg['song'] = self.song
         self.song_data.set_data(self.msg)
         self.msg['pos'] = self.pos
         self.msg['type'] = 'activateNote'
@@ -481,9 +488,16 @@ class SongEditor(soya.Body):
         self.change_pitch(-1)
 
     def make_line_pictures(self):
+        self.make_line_picture(all=True)
+
+    def make_line_picture(self, all=False):
         ming = MingusSong()
         ming.load_from_song(self.song)
-        ming.generate_pictures()
+        if all:
+            ming.generate_pictures()
+        else:
+            ming.generate_picture(self.song.line_nr)
+        self.refresh()
 
     def __connect_keys__(self):
         """Map soya keyboard events to methods."""
@@ -527,6 +541,7 @@ class SongEditor(soya.Body):
         connections.append((key.K_t, self.change_text, 'text'))
         connections.append((key.K_z, self.change_text, 'bar'))
         connections.append((key.K_g, self.make_line_pictures))
+        connections.append((key.K_e, self.make_line_picture))
 
         for connection in connections:
             self.keyboard_event.add_connection(*connection)

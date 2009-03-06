@@ -1,5 +1,7 @@
-NEXT VERSION
+Canta 0.2_beta6
 
+* faster generation of sheet music of only the current line (on-the-fly) 
+with change in the songeditor
 * remove rpm/deb build system from the project repository
 * easy automatic generation of note-textures for the songs inside the songeditor (experimental)
 

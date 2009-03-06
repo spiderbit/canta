@@ -26,45 +26,43 @@ from canta.event.observers.cube_list import CubeList
 from canta.theme.panel import Panel
 
 class MusicNotes:
-    def __init__(self, parent_world, song, position=(0., 5., 2.0), scale=(9.6, 1.2, 1.2)):
+    def __init__(self, parent_world, position=(0., 5., 2.0), scale=(9.6, 1.2, 1.2)):
         self.parent_world = parent_world
-        self.song = song
         self.world = soya.World()
         self.parent_world.add(self.world)
-        self.textures = []
-        self.load_textures()
         self.scale = scale
         self.position = position
         self.panel = None
 
 
-    def load_textures(self):
+    def load_texture(self, nr):
+        '''loads the texture of sheet music of one line'''
         media_path = os.path.join(self.song.path, 'media')
-        if os.path.exists(media_path):
+        tex_path = os.path.join(media_path, 'images')
+        if os.path.exists(tex_path):
             soya.path.append(media_path)
-            tex_path = os.path.join(media_path, 'images')
-            if os.path.exists(tex_path):
-                # Texture file names must begin with text file name.
-                # Not very nice but a quick hack bugfix.
-                file_name = self.song.reader.file_name[:-4]
-                for file_ in os.listdir(tex_path):
-                    if file_.startswith(file_name):
-                        self.textures.append(file_)
-                if len(self.textures) > 0:
-                    self.textures.sort()
+            # Texture file names must begin with text file name.
+            # Not very nice but a quick hack bugfix.
+            file_name = "%s%s.png" % \
+                    (self.song.reader.file_name[:-4] , nr)
+            file_name_abs = os.path.abspath( \
+                    os.path.join(tex_path, file_name))
+            if os.path.isfile(file_name_abs):
+                return file_name_abs
 
 
     def _end(self):
         self.parent_world.remove(self.world)
 
 
-    def _draw_next_line(self, line_nr):
-        if line_nr < len(self.textures):
+    def _draw_line(self, line_nr):
+        texture = self.load_texture(line_nr)
+        if texture:
             if not self.panel:
                 self.panel = Panel(self.world, scale=self.scale, \
-                    position=self.position, texture=self.textures[line_nr])
+                    position=self.position, texture=texture)
             else:
-                self.panel.update_texture(self.textures[line_nr])
+                self.panel.update_texture(texture)
 
 
     def update(self, subject):
@@ -76,6 +74,7 @@ class MusicNotes:
         elif status == 'deActivateNote':
             pass
         elif status == 'nextLine':
-            self._draw_next_line(subject.data['song'].line_nr)
+            self.song = subject.data['song']
+            self._draw_line(subject.data['song'].line_nr)
         elif status == 'end':
             self._end()

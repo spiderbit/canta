@@ -94,6 +94,7 @@ class Panel(Model):
         self.body.name = self.name
 
     def update_texture(self, texture):
+        self.material.texture = None
         self.material.texture = soya.Image.get(texture)
 
 if __name__ == '__main__':
@@ -159,4 +160,3 @@ if __name__ == '__main__':
 
     # start soya main loop:
     soya.MainLoop(scene).main_loop()
-
