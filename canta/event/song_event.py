@@ -32,7 +32,7 @@ class SongEvent(soya.Body):
     """
     def __init__(self, song=Song(), widget_properties=None, song_data=0, \
             player=None, keyboard_event=None, input=None, debug=0):
-    
+
         self.debug = debug
         self.song_data = song_data
 
@@ -43,17 +43,17 @@ class SongEvent(soya.Body):
         self.paused = False # is the Song paused
         self.song = song # song data (class song)
         self.song.line_nr = -1
-        self.parent_world = widget_properties['root_world']			
-        
+        self.parent_world = widget_properties['root_world']
+
         self.msg = dict()
         self.msg['song'] = self.song
-        
+
         # if its true i dont check for new song.events
         self.end_sended = False
-        
+
         # i think the 4 is the resolution in the file but
         # i am not sure and 4 is default if nothing is given
-        self.beat_time = 60. / song.info['bpm'] / 4 
+        self.beat_time = 60. / song.info['bpm'] / 4
         self.status = None
         if self.debug: print "BUG:", (self.song.info['start']*1000)
 
@@ -66,8 +66,8 @@ class SongEvent(soya.Body):
         self.last_note = None
         self.status = ""
         self.old_line_nr = None
-        
-        
+
+
 
     # that must in a big loop for events from the file from
     # the keyboard and from the microphone
@@ -91,17 +91,16 @@ class SongEvent(soya.Body):
         else:
             self.parent_world.remove(self)
             self.input.stop()
-            self.input.join(0.1)
+            self.input.join(0.1)
 
-    def _check_for_next_line(self, pos): # check for next Line		
-        
-        
+    def _check_for_next_line(self, pos): # check for next Line
+
+
         if pos != "pause":
-                
+
             self.song.line_nr, self.current_note = self.song.get_pos(pos)#old_line_nr=self.old_line_nr, old_tone_nr=self.last_note)
-            
+
             if pos == 'end':
-                print "ende"
                 self.parent_world.remove(self.keyboard_event)
                 self.msg['type'] = "end"
                 self.song_data.set_data(self.msg) # end Event
@@ -110,39 +109,31 @@ class SongEvent(soya.Body):
 
             elif self.song.line_nr != None:
                 if self.song.line_nr != self.old_line_nr:
-                
-                
+
+
                     self.msg['type'] = "nextLine"
                     #subject.data['song'].line_nr
                     self.song_data.set_data(self.msg)
                     self.old_line_nr = self.song.line_nr
                     self.last_note = None
-                    
-                    
+
+
 
                 elif self.current_note != self.last_note and self.old_line_nr == self.song.line_nr:	# geänderte aktuelle note
 
                     if  self.last_note != None and 1 == 1: # überprüfen wegen deaktivieren von der letzten note
                         #print "deactivate note:", self.last_note, " aktual-note:", self.current_note, self.song.lines[self.song.line_nr].segments[self.last_note].text
-                    
+
                         self.msg['type'] = "deActivateNote"
                         self.msg['old_pos'] = self.last_note
                         self.song_data.set_data(self.msg) # deactivate event
-                        
+
                     if self.current_note != None and 1 == 1: # überprüfen wegen aktivierung einer note
                         #print "  activate note:", self.current_note, " aktual-note:", self.current_note, self.song.lines[self.song.line_nr].segments[self.current_note].text
-                    
+
                         self.msg['type'] = "activateNote"
-            
+
                         self.msg['pos'] = self.current_note
                         self.song_data.set_data(self.msg)
-                    
+
                     self.last_note = self.current_note
-
-                
-
-
-
-
-
-
