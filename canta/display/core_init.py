@@ -385,7 +385,7 @@ class CoreInit:
         i_octave = _(u'Octave correctness:')
 
         # File paths:
-        about_file = os.path.join('docs', 'ABOUT.txt')
+        about_file = os.path.join('misc', 'ABOUT.txt')
         logo_path = 'logo.png'
         show_logo = False
 
