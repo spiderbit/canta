@@ -1,9 +1,15 @@
-Canta 0.2_beta6
+Canta 0.2-beta6
 
-* faster generation of sheet music of only the current line (on-the-fly) 
+* easy automatic generation of note-textures for the songs inside the songeditor
+* generation of sheet music of only the current line (on-the-fly), thats 
+faster than always for the hole song 
 with change in the songeditor
+* code improvements
 * remove rpm/deb build system from the project repository
-* easy automatic generation of note-textures for the songs inside the songeditor (experimental)
+* small utrastar parse fixes
+* songs/themes can be downloaded all in one archive
+* songs/themes are now seperated in another repository
+
 
 Canta 0.2-beta5
 
