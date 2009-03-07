@@ -38,11 +38,13 @@ def main():
     APP_DIR = os.path.dirname(sys.argv[0])
 
     # version:
-    if os.path.exists(os.path.join(APP_DIR, 'VERSION')):
-        version_file = open(os.path.join(APP_DIR, 'VERSION'))
-        version = version_file.next()
-    else:
-        version = '(experimental)'
+    #if os.path.exists(os.path.join(APP_DIR, 'VERSION')):
+    #    version_file = open(os.path.join(APP_DIR, 'VERSION'))
+    #    version = version_file.next()
+    #else:
+    #    version = '(experimental)'
+
+    version = '0.2-beta6'
 
     # debug flag:
     DEBUG = False
