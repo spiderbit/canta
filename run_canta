@@ -44,7 +44,7 @@ def main():
     #else:
     #    version = '(experimental)'
 
-    version = '0.2-beta6'
+    version = '(experimental)'
 
     # debug flag:
     DEBUG = False
