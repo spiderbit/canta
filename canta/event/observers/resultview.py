@@ -29,8 +29,8 @@ import soya.pudding.ext.meter
 from PIL import Image
 
 class ResultView(Menu):
-    def __init__(self, widget_properties, menu_list, song='', \
-            use_pil=False, debug=False):
+    def __init__(self, widget_properties, menu_list, song=None, player=None,\
+            use_pil=False, debug=False, octave=False):
 
         self.l_main_menu = _(u'main menu')
         self.l_choose = _(u'choose another song')
@@ -59,12 +59,11 @@ class ResultView(Menu):
 
         self.main_theme_name = self.widget_properties['theme']['main']
         self.song_theme_name = self.widget_properties['theme']['song']
-    
-        self.results = {}
-        self.results['difference'] = []
-        self.results['song_pitch'] = []
-        self.results['pitch'] = []
 
+        self.results = []
+        self.pos = None
+        self.player = player
+        self.octave = octave
 
     def _end(self):
         # If the played song had its own theme, we overwrite
@@ -158,7 +157,7 @@ class ResultView(Menu):
                 size_x = pil_pic.size[0] / factor
                 size_y = pil_pic.size[1] / factor
                 size = (int(size_x), int(size_y))
-            
+
                 pil_pic = pil_pic.resize(size, Image.ANTIALIAS)
                 self.cover_image = pudding.ext.slicingimage.SlicingImage( \
                     parent=self.results_cont, \
@@ -210,17 +209,22 @@ class ResultView(Menu):
         wrong_values = 0
         allowed_difference = 1.
 
-        for difference in self.results['difference']:
-            if difference < allowed_difference:
-                right_values += 1
+        for data in self.results:
+            target_pitch = self.get_target_pitch(data)
+            if data['pitch'] and target_pitch:
+                difference = target_pitch - data['pitch']
+                if difference < allowed_difference:
+                    right_values += 1
+                else:
+                    wrong_values += 1
             else:
                 wrong_values += 1
 
-        if len(self.results['difference']) == 0:
+        if len(self.results) == 0:
             per_cent_right = float(0)
         else:
             per_cent_right =   (float(right_values) \
-                / len(self.results['difference'])) * 100.
+                / len(self.results)) * 100.
 
         #per_cent_right = 89.9
         rv = self.l_right_values + str(right_values)
@@ -272,18 +276,53 @@ class ResultView(Menu):
             "end sendet"
             self._end()
         elif status == 'input':
-            self.add_value(subject.data)
-
+            if 'pitch' in subject.data:
+                self.set_value(subject.data)
+        #elif status == 'activateNote':
+        #    self.results.append({})
 
     def add(self, button, align = 'left'):
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
+    """----"""
+
+    def get_target_pitch(self, data):
+        line_nr, tone_nr = data['song'].get_pos(self.player.get_pos())
+        if not tone_nr:
+            line_nr, tone_nr = data['song'].get_pos(data['start_time'])
+        if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
+            target_pitch = data['song'].lines[line_nr].segments[tone_nr].pitch
+        else:
+            target_pitch = None
+        return target_pitch
 
 
-    def add_value(self, data):
-        self.results['difference'].append(data['difference'])
-        self.results['song_pitch'].append(data['song_pitch'])
-        self.results['pitch'].append(data['pitch'])
+    def octave_correction(self, data, target_pitch):
+        if not self.octave:
+            same_octave = False
+            while not same_octave:			# that code do all tones display on same octave
+                difference = data['pitch'] - target_pitch
+                if difference > 6:
+                    data['pitch'] -= 12
+                elif difference < -6:
+                    data['pitch'] += 12
+                else:
+                    same_octave = True
+
+            difference = data['pitch'] - target_pitch
+
+            # this is a help so that you only
+            #have to sing nearly right and get points
+            if abs(difference) < 2:
+                data['pitch'] = target_pitch
+
+    """----"""
+
+    def set_value(self, data):
+        target_pitch = self.get_target_pitch(data)
+        if not target_pitch:
+            return
+        self.results.append(data)
 
 
     def quit(self, args=None):

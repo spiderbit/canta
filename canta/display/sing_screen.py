@@ -182,7 +182,7 @@ class SingScreen(Menu):
         use_pil = self.config['screen']['pil']
         # The observer for the results screen (when the song ended):
         result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
-                use_pil, self.debug)
+                self.player, use_pil, debug=self.debug)
         result_view.set_heading(h1_results)
 
         #(r, g, b, a)
@@ -218,6 +218,7 @@ class SingScreen(Menu):
                          sing_bar_color, sing_bar_formula,
                          self.song.getMinPitch(),
                          self.song.getMaxPitch(),
+                         player=self.player,
                          debug=self.debug)
 
         # The observer for the song position cube:
@@ -319,3 +320,4 @@ class SingScreen(Menu):
 
 if __name__ == '__main__':
     pass
+

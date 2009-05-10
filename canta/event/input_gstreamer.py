@@ -42,9 +42,9 @@ AUDIOFREQ = 32000
 
 class Input(Thread):
     def __init__(self, song=Song(), song_data=0, player=None, octave=False, debug=0):
-        
+        self.timeAfter = 0
+        self.timeBefore = 0
         Thread.__init__(self)
-        self.msg = dict()
         self.user_cfg = None
         self.player = player
         self.debug = debug
@@ -55,12 +55,12 @@ class Input(Thread):
 
         self.line_nr = -1
 
-        # if its true i dont check for new song.events					
+        # if its true i dont check for new song.events
         self.end_sended = False
-        
+
         # i think the 4 is the resolution in the file
         # but i am not sure and 4 is default if nothing is given
-        self.beat_time = 60. / song.info['bpm'] / 4 
+        self.beat_time = 60. / song.info['bpm'] / 4
         self.pause_time = 0
         self.status = None
         self.switch_time = 0
@@ -68,7 +68,7 @@ class Input(Thread):
 
         self.current_note = None
         self.last_note = None
-        
+
         self.octave = octave
 
         self.tone_nr = None
@@ -83,8 +83,8 @@ class Input(Thread):
         filter = gst.element_factory_make("capsfilter", "filter")
         filter.set_property("caps", caps)
 
-        spectrum.set_property("bands", spect_bands)	
-        spectrum.set_property("threshold", -40)	
+        spectrum.set_property("bands", spect_bands)
+        spectrum.set_property("threshold", -40)
         self.player_pipeline.add(source, spectrum, filter, audiosink)
         gst.element_link_many(source, spectrum, filter, audiosink)
 
@@ -103,6 +103,7 @@ class Input(Thread):
 
 
     def on_message(self, bus, message):
+        self.msg = dict()
         t = message.type
         if t == gst.MESSAGE_EOS:
             pass
@@ -111,89 +112,54 @@ class Input(Thread):
             print "Error: %s" % err, debug
             self.player_pipeline.set_state(gst.STATE_NULL)
         elif t == gst.MESSAGE_ELEMENT:
+            if not self.player.get_pos():
+                return
+            timeBefore = self.timeAfter
+            self.timeAfter = timeAfter = self.player.get_pos()
+            self.msg['start_time'] = timeBefore
+            self.msg['end_time'] = timeAfter
+
             magnitude = message.structure['magnitude']
             len_mag = len(magnitude)
             highest_mag = -40
+
+            # TODO: checkout what's the difference between this time and timeAfter
+            # and try to use this instead when possible, maybe there is starttime, too?
             self.time = message.structure['endtime']
+
             highest_mag_key = None
             for i in range(3, len_mag):
                 if magnitude[i] > highest_mag:
                     highest_mag = magnitude[i]
                     highest_mag_key = i
+            #highest_mag_key = 20
             if not highest_mag_key:
-                return
-            freq = ((AUDIOFREQ / 2) * highest_mag_key + AUDIOFREQ / 4) / spect_bands * (32000 / AUDIOFREQ) * 1.37
-            line_nr, tone_nr = self.song.get_pos(self.player.get_pos())
-            
-            if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
-                target_pitch = self.song.lines[line_nr].segments[tone_nr].pitch
+                frequency = pitch = None
             else:
-                sleep(0.01)
-                return None
-                
-            timeBefore = self.player.get_pos()
+                frequency = ((AUDIOFREQ / 2) * highest_mag_key + AUDIOFREQ / 4) / spect_bands * (32000 / AUDIOFREQ) * 1.37
+                line_nr, tone_nr = self.song.get_pos(self.player.get_pos())
 
-            frequency = freq
-            if frequency is None:
-                return None	
-            
-            # Calculate the pitch.
-            # We use the formula from MIDI standard and subtract 48 so
-            # we match the Ultrastar conventions.
-            # It works but I don't know why...
+                # Calculate the pitch.
+                # We use the formula from MIDI standard and subtract 48 so
+                # we match the Ultrastar conventions.
+                # It works but I don't know why...
 
-            self.pitch = 12. * math.log(frequency / 440., 2) + 69 - 48 #-48)#-24)#- 60)
+                pitch = 12. * math.log(frequency / 440., 2) + 69 - 48 #-48)#-24)#- 60)
 
-            if not self.octave:	
-                same_octave = False
-                while not same_octave:			# that code do all tones display on same octave
-                    difference = self.pitch - target_pitch
-                    if difference > 6:
-                        self.pitch -= 12
-                    elif difference < -6:
-                        self.pitch += 12
-                    else:
-                        same_octave = True
-
-                difference = self.pitch - target_pitch
-
-                # this is a help so that you only
-                #have to sing nearly right and get points
-                if abs(difference) < 2:
-                    self.pitch = target_pitch
-                #else:
-                #	print "bad pitches: ",self.pitch, target_pitch, difference
-                    #sys.exit(0)
-            else:
-                difference = self.pitch - target_pitch
-
-            timeAfter = self.player.get_pos()
-            timeBefore = timeAfter -0.1
-            if timeAfter != "pause" and timeBefore != "pause" and \
-                timeBefore != "end" and timeAfter != "end":
+            if timeBefore != 'end' and timeAfter != 'end' \
+                and timeBefore != 'pause' and timeAfter != 'pause':
                 self.length = timeAfter - timeBefore
                 self.length_in_beats = self.length / self.beat_time
                 self.msg['type'] = "input"
-                self.msg['pitch'] = self.pitch
-                self.msg['song_pitch'] = target_pitch
-                self.msg['difference'] = abs(self.pitch - target_pitch )
+                self.msg['pitch'] = pitch
                 self.msg['song'] = self.song
                 self.msg['real_pos_time'] = timeBefore - self.song.info['gap'] / 1000.
                 self.msg['length_in_beats'] = self.length_in_beats
                 self.msg['beat_time'] = self.beat_time
-                if line_nr != None:
-                    self.song_data.set_data(self.msg) # round Event
+                self.song_data.set_data(self.msg) # round Event
 
 
 
     def stop(self):
         self.player_pipeline.set_state(gst.STATE_NULL)
-
-
-
-
-        
-
-        
-
 

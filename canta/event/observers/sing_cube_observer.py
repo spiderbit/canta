@@ -23,12 +23,21 @@ import soya
 from canta.event.observers.cube_observer import CubeObserver
 
 class SingCubeObserver(CubeObserver):
-    def __init__(self, parent_world, color, color_formula, min_pitch=0., max_pitch=11., debug=0,):
+    def __init__(self, parent_world, color, color_formula, min_pitch=0., max_pitch=11., debug=0, octave=False, player=None):
         CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
         self.color = color
         self.color_formula = color_formula
+        self.player = player
+        self.octave = octave
 
     def input(self, data):
+
+        target_pitch = self.get_target_pitch(data)
+        if not target_pitch:
+            return
+        self.octave_correction(data, target_pitch)
+        difference = data['pitch'] - target_pitch
+
         if not self.calc_start_end_size(data['song']):
             return False
 
@@ -41,7 +50,7 @@ class SingCubeObserver(CubeObserver):
 
         col = []
         for x in range(len(self.color)):
-            diff = (self.color_formula[x] / 100.) * data['difference']
+            diff = (self.color_formula[x] / 100.) * difference
             tmp = self.color[x] +  diff
             if tmp < 0:
                 tmp = 0
@@ -52,9 +61,39 @@ class SingCubeObserver(CubeObserver):
         properties['diffuse'] = col
         self.draw_tone(time_stamp, data['pitch'], duration, properties)
 
+    def get_target_pitch(self, data):
+
+        line_nr, tone_nr = data['song'].get_pos(self.player.get_pos())
+        if not tone_nr:
+            line_nr, tone_nr = data['song'].get_pos(data['start_time'])
+        if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
+            target_pitch = data['song'].lines[line_nr].segments[tone_nr].pitch
+        else:
+            target_pitch = None
+        return target_pitch
+
+
+    def octave_correction(self, data, target_pitch):
+        if not self.octave:
+            same_octave = False
+            while not same_octave:			# that code do all tones display on same octave
+                difference = data['pitch'] - target_pitch
+                if difference > 6:
+                    data['pitch'] -= 12
+                elif difference < -6:
+                    data['pitch'] += 12
+                else:
+                    same_octave = True
+
+            difference = data['pitch'] - target_pitch
+
+            # this is a help so that you only
+            #have to sing nearly right and get points
+            if abs(difference) < 2:
+                data['pitch'] = target_pitch
+
 
     def update(self, subject):
-        #print "BUG:", subject.data
         status = subject.data['type']
         if status == 'roundStart':
             pass
@@ -67,6 +106,8 @@ class SingCubeObserver(CubeObserver):
         elif status == 'end':
             self._end()
         elif status == 'input':
-            self.input(subject.data)
+            if subject.data['pitch']:
+                self.input(subject.data)
         elif self.debug:
             print 'status: ', status
+
