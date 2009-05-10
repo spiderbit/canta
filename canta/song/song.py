@@ -249,6 +249,16 @@ class Song:
             #print "tone_nr ", tone_nr
         return line_nr, tone_nr
 
+    def get_pitch_between(self, start_time, end_time):
+        line_nr, tone_nr = self.get_pos(end_time)
+        if not tone_nr:
+            line_nr, tone_nr = self.get_pos(start_time)
+        if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
+            target_pitch = self.lines[line_nr].segments[tone_nr].pitch
+        else:
+            target_pitch = None
+        return target_pitch
+
 
     def get_midi(self, line_nr, tone_nr):
         midi_tone = self.lines[line_nr].segments[tone_nr].pitch + 60 #72
@@ -706,3 +716,4 @@ def main(): # main
     print
 
 if __name__ == '__main__': main()
+

@@ -38,6 +38,8 @@ from canta.event.observers.lyrics_bg_box import LyricsBgBox
 from canta.event.observers.time_label import TimeLabel
 from canta.event.observers.pause import Pause
 
+from canta.game import Game
+
 from canta.song.song import Song
 
 from canta.menus.menu import Menu
@@ -59,7 +61,8 @@ class SingScreen(Menu):
         self.theme_mgr = theme_mgr
         self.octave = octave
         self.player= player
-
+        self.helper = True
+        self.game = Game(self.octave, self.helper, allowed_difference=1)
         self.widget_properties = widget_properties
         self.menu_list = menu_list
         self.menu_list['singscreen'] = self
@@ -182,7 +185,7 @@ class SingScreen(Menu):
         use_pil = self.config['screen']['pil']
         # The observer for the results screen (when the song ended):
         result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
-                self.player, use_pil, debug=self.debug)
+                use_pil, self.game, debug=self.debug)
         result_view.set_heading(h1_results)
 
         #(r, g, b, a)
@@ -218,7 +221,7 @@ class SingScreen(Menu):
                          sing_bar_color, sing_bar_formula,
                          self.song.getMinPitch(),
                          self.song.getMaxPitch(),
-                         player=self.player,
+                         self.game,
                          debug=self.debug)
 
         # The observer for the song position cube:

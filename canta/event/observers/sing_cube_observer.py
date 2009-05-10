@@ -23,20 +23,22 @@ import soya
 from canta.event.observers.cube_observer import CubeObserver
 
 class SingCubeObserver(CubeObserver):
-    def __init__(self, parent_world, color, color_formula, min_pitch=0., max_pitch=11., debug=0, octave=False, player=None):
+    def __init__(self, parent_world, color, color_formula, min_pitch=0., \
+        max_pitch=11., game=None, debug=0):
         CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
         self.color = color
         self.color_formula = color_formula
-        self.player = player
-        self.octave = octave
+        self.game = game
 
     def input(self, data):
-
-        target_pitch = self.get_target_pitch(data)
+        target_pitch = data['song'].get_pitch_between( \
+            data['start_time'], data['end_time'])
         if not target_pitch:
             return
-        self.octave_correction(data, target_pitch)
-        difference = data['pitch'] - target_pitch
+
+        pitch = data['pitch']
+        pitch = self.game.get_corrected_pitch(target_pitch, pitch)
+        difference = pitch - target_pitch
 
         if not self.calc_start_end_size(data['song']):
             return False
@@ -45,7 +47,7 @@ class SingCubeObserver(CubeObserver):
         duration = data['length_in_beats']
 
         properties = {}
-        properties['length']=duration
+        properties['length'] = duration
         properties['rotate'] = False
 
         col = []
@@ -59,38 +61,17 @@ class SingCubeObserver(CubeObserver):
             col.append(tmp)
 
         properties['diffuse'] = col
-        self.draw_tone(time_stamp, data['pitch'], duration, properties)
+        self.draw_tone(time_stamp, pitch, duration, properties)
 
-    def get_target_pitch(self, data):
-
-        line_nr, tone_nr = data['song'].get_pos(self.player.get_pos())
-        if not tone_nr:
-            line_nr, tone_nr = data['song'].get_pos(data['start_time'])
-        if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
-            target_pitch = data['song'].lines[line_nr].segments[tone_nr].pitch
-        else:
-            target_pitch = None
-        return target_pitch
-
-
-    def octave_correction(self, data, target_pitch):
-        if not self.octave:
-            same_octave = False
-            while not same_octave:			# that code do all tones display on same octave
-                difference = data['pitch'] - target_pitch
-                if difference > 6:
-                    data['pitch'] -= 12
-                elif difference < -6:
-                    data['pitch'] += 12
-                else:
-                    same_octave = True
-
-            difference = data['pitch'] - target_pitch
-
-            # this is a help so that you only
-            #have to sing nearly right and get points
-            if abs(difference) < 2:
-                data['pitch'] = target_pitch
+    def get_corrected_pitch(self, target_pitch, pitch):
+        '''
+            gives back pitch on target_pitch if the difference to it
+            is smaller then allowed_difference
+        '''
+        difference = pitch - target_pitch
+        if abs(difference) <= self.allowed_difference:
+            pitch = target_pitch
+        return pitch
 
 
     def update(self, subject):

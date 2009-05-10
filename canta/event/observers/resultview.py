@@ -29,8 +29,8 @@ import soya.pudding.ext.meter
 from PIL import Image
 
 class ResultView(Menu):
-    def __init__(self, widget_properties, menu_list, song=None, player=None,\
-            use_pil=False, debug=False, octave=False):
+    def __init__(self, widget_properties, menu_list, song=None, \
+            use_pil=False, game=None, debug=False):
 
         self.l_main_menu = _(u'main menu')
         self.l_choose = _(u'choose another song')
@@ -62,8 +62,7 @@ class ResultView(Menu):
 
         self.results = []
         self.pos = None
-        self.player = player
-        self.octave = octave
+        self.game = game
 
     def _end(self):
         # If the played song had its own theme, we overwrite
@@ -207,13 +206,15 @@ class ResultView(Menu):
         # Calculate results:
         right_values = 0
         wrong_values = 0
-        allowed_difference = 1.
 
         for data in self.results:
-            target_pitch = self.get_target_pitch(data)
-            if data['pitch'] and target_pitch:
-                difference = target_pitch - data['pitch']
-                if difference < allowed_difference:
+            pitch = data['pitch']
+            target_pitch = data['song'].get_pitch_between( \
+                data['start_time'], data['end_time'])
+            if pitch and target_pitch:
+                pitch = self.game.get_corrected_pitch(target_pitch, pitch)
+                difference = target_pitch - pitch
+                if self.game.helper and difference <= self.game.allowed_difference:
                     right_values += 1
                 else:
                     wrong_values += 1
@@ -284,42 +285,11 @@ class ResultView(Menu):
     def add(self, button, align = 'left'):
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
-    """----"""
 
-    def get_target_pitch(self, data):
-        line_nr, tone_nr = data['song'].get_pos(self.player.get_pos())
-        if not tone_nr:
-            line_nr, tone_nr = data['song'].get_pos(data['start_time'])
-        if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
-            target_pitch = data['song'].lines[line_nr].segments[tone_nr].pitch
-        else:
-            target_pitch = None
-        return target_pitch
-
-
-    def octave_correction(self, data, target_pitch):
-        if not self.octave:
-            same_octave = False
-            while not same_octave:			# that code do all tones display on same octave
-                difference = data['pitch'] - target_pitch
-                if difference > 6:
-                    data['pitch'] -= 12
-                elif difference < -6:
-                    data['pitch'] += 12
-                else:
-                    same_octave = True
-
-            difference = data['pitch'] - target_pitch
-
-            # this is a help so that you only
-            #have to sing nearly right and get points
-            if abs(difference) < 2:
-                data['pitch'] = target_pitch
-
-    """----"""
 
     def set_value(self, data):
-        target_pitch = self.get_target_pitch(data)
+        target_pitch = data['song'].get_pitch_between( \
+            data['start_time'], data['end_time'])
         if not target_pitch:
             return
         self.results.append(data)
