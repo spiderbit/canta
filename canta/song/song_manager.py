@@ -24,18 +24,19 @@ a class and a few functions to find ultrastar songs and store it in a list
 
 import os
 from canta.song.song import Song, UltraStarFile
+from canta.directory import Directory
 
 class SongManager:
     """Class to recursivly search, validate and sort a list of songs """
 
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, directory):
+        self.directory = directory
         self.songs = []
 
     def search(self):
         """Searches recursive ultrastar songs"""
 
-        for entry in os.walk(self.path):
+        for entry in os.walk(self.directory.name):
             root = entry[0]
             file_names = entry[2]
             for file_name in file_names:
@@ -45,7 +46,7 @@ class SongManager:
                     pass
                 elif lower_file.endswith('.txt'):
                     reader = UltraStarFile(root, file_name)
-                    song = Song(path = root, reader=reader)
+                    song = Song(directory = Directory(root), reader=reader)
                     song.read(mode="headers")
                     file_names = unicode_encode_list(file_names)
                     self.songs.append(song)
@@ -189,9 +190,22 @@ def remove_extention(file_name):
 def unicode_encode_list(elements):
     """encode each string in a string-list to unicode"""
     new_list = []
+    encodings = ['utf-8', 'iso-8859-1']
     for elem in elements:
-        try:
-            new_list.append(elem.decode('utf-8', 'replace'))
-        except UnicodeEncodeError:
-            new_list.append(elem.decode('iso-8859-1'))
+        for enc in encodings:
+            new_elem=decoder(elem, enc)
+            if new_elem:
+                new_list.append(new_elem)
+                break
+        else:
+            new_list.append(elem)
     return new_list
+
+
+def decoder(elem, coding):
+    try:
+        elem.decode(coding, 'replace')
+        return elem
+    except UnicodeEncodeError:
+        return False
+

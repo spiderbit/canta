@@ -47,12 +47,10 @@ from canta.menus.browser import MenuBrowser
 from canta.menus.text import MenuText
 from canta.song.song_editor import SongEditor
 from canta.display.sing_screen import SingScreen
-
 from canta.song.song_manager import SongManager
-
 from canta.theme.particle_system import ParticleSystem
 from canta.display.language import LocaleManager
-
+from canta.directory import Directory
 
 
 class CoreInit:
@@ -411,12 +409,14 @@ class CoreInit:
         about_menu.add_text(license)
 
         # Song browser:
-        song_manager = SongManager(os.path.join(self.app_dir, 'media', 'songs'))
+        sys_directory = Directory(os.path.join(self.app_dir, 'media', 'songs'))
+        home_directory = Directory(os.path.join(self.config_path, 'songs'))
+        song_manager = SongManager(sys_directory)
         song_manager.search()
         song_manager.verify()
         song_manager.sort()
         song_objects = song_manager.songs
-        song_manager_home = SongManager(os.path.join(self.config_path, 'songs'))
+        song_manager_home = SongManager(home_directory)
         song_manager_home.search()
         song_manager_home.verify()
         song_manager_home.sort()
@@ -699,3 +699,4 @@ def main():
     pass
 
 if __name__ == '__main__': main()
+

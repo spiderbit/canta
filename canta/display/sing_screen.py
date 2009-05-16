@@ -94,20 +94,20 @@ class SingScreen(Menu):
         self.song = args[0]
         self.song.reset()
         self.song.read()
-        real_path = self.song.path
+        song_path = self.song.path
         self.song.split_in_lines()
 
-        theme_cfg_file = os.path.join(real_path, 'theme_cfg.xml')
+        theme_cfg_file = os.path.join(song_path, 'theme_cfg.xml')
 
         if os.path.exists(theme_cfg_file):
-            media_path = os.path.join(real_path, 'media')
+            media_path = os.path.join(song_path, 'media')
             #print media_path
             soya.path.append(media_path)
 
             self.theme_mgr.hide_theme(self.widget_properties['theme']['main'])
             theme_name = self.song.info['title']
             self.widget_properties['theme']['song'] = theme_name
-            self.theme_mgr.get_theme(theme_name, real_path)
+            self.theme_mgr.get_theme(theme_name, song_path)
             self.theme_mgr.show_theme(theme_name)
 
             # Copied this stuff for now:
@@ -163,8 +163,8 @@ class SingScreen(Menu):
             self.widget_properties['bar'] = self.theme_mgr.get_bar(theme_name)
 
         img_observer = False
-        song_theme_path = os.path.join(real_path, 'theme_cfg.xml')
-        media_path = os.path.join(real_path, 'media')
+        song_theme_path = os.path.join(song_path, 'theme_cfg.xml')
+        media_path = os.path.join(song_path, 'media')
 
 
         # The observer for the musical notes:

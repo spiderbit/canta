@@ -31,9 +31,9 @@ from song_line import SongLine
 
 class Song:
 
-    def __init__(self, title='', artist='', mp3 = None, path='', bpm=0, gap=0, \
+    def __init__(self, title='', artist='', mp3 = None, directory=None, bpm=0, gap=0, \
             start=0, line_nr=0, octave=False, reader=None, writer=None, debug=0):
-        self.path = unicode(path, 'utf-8', errors='replace')		# only need this because i dont want break the api of coreinit and songmenu(browser)
+        self.directory = directory		# only need this because i dont want break the api of coreinit and songmenu(browser)
         self.splitted = False
         self.debug = debug
         self.info = {}
@@ -52,6 +52,14 @@ class Song:
         self.octave = octave
         self.reader = reader
         self.writer = writer
+
+    def get_path(self):
+        return self.directory.name
+
+    def set_path(self, path):
+        self.directory.name = path
+
+    path = property(get_path, set_path)
 
 
     def __cmp__(self, other):

@@ -46,6 +46,7 @@ def dump_songs(dump_file_name, verbose=False):
     song_manager = SongManager(os.path.join('media', 'songs'))
     song_manager.search()
     song_manager.verify()
+    song_manager.sort()
     songs = song_manager.songs
     if verbose:
         print "Testdump from %s songs" % len(songs)
