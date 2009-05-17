@@ -65,7 +65,7 @@ class Song:
     def __cmp__(self, other):
         """Returns True if other and self have identical attributes"""
 
-        if self.__dict__ == other.__dict__:
+        if type(other) == type(self) and self.__dict__ == other.__dict__:
             return True
         else:
             return False

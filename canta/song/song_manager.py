@@ -29,7 +29,8 @@ from canta.directory import Directory
 class SongManager:
     """Class to recursivly search, validate and sort a list of songs """
 
-    def __init__(self, directory):
+    def __init__(self, name, directory):
+        self.name = name
         self.directory = directory
         self.songs = []
 
@@ -51,6 +52,22 @@ class SongManager:
                     file_names = unicode_encode_list(file_names)
                     self.songs.append(song)
 
+
+    def get_entries(self, rel_path=None):
+        root = Directory(self.directory.join(rel_path))
+        entries = {}
+        for song in self.songs:
+            if song.directory.name.startswith(root.name):
+                rel_depth = song.directory.get_depth() - \
+                    root.get_depth()
+                rel_path = song.directory.get_layer(root.name, 0)
+                if rel_depth > 1:# and not rel_path in entries:
+                    if rel_path not in entries:
+                        entries[rel_path] = []
+                    entries[rel_path].append(song)
+                elif rel_depth == 1:
+                    entries[rel_path] = song
+        return entries
 
     def verify(self):
         """Verify the songs-list"""

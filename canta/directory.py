@@ -46,10 +46,27 @@ class Directory(object):
     def set_name(self, name):
         self.__name = name
 
+    def abs_path(self):
+        return(os.path.abspath(self.__name))
+
+    def join(self, path):
+        if path:
+            return os.path.join(self.__name, path)
+        else:
+            return self.__name
 
     name = property(get_name, set_name)
 
     def get_relative(self, start):
         '''returns the relative path to start'''
         return os.relpath(self.__name, start)
+
+
+    def get_depth(self):
+        return len(self.__name.split('/'))
+
+    def get_layer(self, start=None, layer=0):
+        rel_path = os.path.relpath(self.name, start)
+        rel_path_parts = rel_path.split('/')
+        return rel_path_parts[layer]
 

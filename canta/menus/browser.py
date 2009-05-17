@@ -31,8 +31,8 @@ from PIL import Image
 import soya.pudding.ext.slicingimage
 
 class MenuBrowser(Menu):
-    def __init__(self, browsable_items, widget_properties, \
-            use_pil=False, preview=False, octave=False, player=None, debug=False):
+    def __init__(self, song_managers, default_manager, widget_properties, \
+            use_pil=False, preview=False, octave=False, player=None, start_screen=None, debug=False):
         Menu.__init__(self, widget_properties)
 
         l_next = _(u'next >>')
@@ -44,27 +44,29 @@ class MenuBrowser(Menu):
         self.l_edition = str(_('Edition: '))
         self.l_creator = str(_('Creator: '))
         self.l_bpm = str(_('BPM: '))
-        self.l_start = str(_('Sing'))
+        self.l_start = str(_('Enter'))
 
         # heading and nav container inherited from Menu:
         self.widgets.append(self.heading_cont)
         self.widgets.append(self.nav_cont)
 
-        self.browsable_items = browsable_items
+        self.song_managers = song_managers
+        self.default_manager = default_manager
+        self.selected_manager = default_manager
         self.widget_properties = widget_properties
         self.use_pil = use_pil
         self.preview_sound = preview
+        self.start_screen = start_screen
         self.debug = debug
 
         self.item_containers = []
         self.selected_item = 0
-        
+
         prev_button = MenuButton(label=l_prev, widget_properties=self.widget_properties, function=self.select_prev)
         next_button = MenuButton(l_next, function=self.select_next, widget_properties=self.widget_properties)
         self.add(prev_button, 'center')
         self.add(next_button, 'center')
 
-        self.selected = 0
         self.cover_loaded = False
         pos_size = {}
         pos_size['top'] = 10
@@ -75,32 +77,36 @@ class MenuBrowser(Menu):
         scr_height = self.screen_res_y - 20
         self.player = player
 
+        self.directory_cont = pudding.container.HorizontalContainer( \
+            self.parent_widget, top=scr_top + 60, \
+            right=scr_right, width=scr_width, \
+            height=scr_height)
+        self.directory_cont.left = 180
+
         self.cover_cont = pudding.container.VerticalContainer( \
             self.parent_widget, top=scr_top + 120, \
             right=scr_right, width=scr_width, \
             height=scr_height)
         self.cover_cont.left = 40
-        self.cover_cont.anchors = pudding.ANCHOR_ALL
-        self.cover_cont.padding = 10
-        self.cover_cont.visible = 0
 
         self.scroll_cont = pudding.container.VerticalContainer( \
             self.parent_widget, top=scr_top, \
             right=scr_right, width=scr_width, \
             height=scr_height)
         self.scroll_cont.left = 40
-        self.scroll_cont.anchors = pudding.ANCHOR_ALL
-        self.scroll_cont.padding = 10
-        self.scroll_cont.visible = 0
 
         self.desc_cont = pudding.container.VerticalContainer( \
             self.parent_widget, top=scr_top + 120, \
             right=75, width=10, \
             height=10)
         self.desc_cont.left = self.screen_res_x / 3. + 50 #350
-        self.desc_cont.anchors = pudding.ANCHOR_ALL
-        self.desc_cont.padding = 10
-        self.desc_cont.visible = 0
+
+        container = [self.desc_cont, self.scroll_cont, \
+            self.cover_cont, self.directory_cont]
+        for c in container:
+            c.anchors = pudding.ANCHOR_ALL
+            c.padding = 10
+            c.visible = 0
 
         pos_size['height'] = self.screen_res_y / 10
         pos_size['width'] = self.screen_res_x - 20
@@ -108,6 +114,26 @@ class MenuBrowser(Menu):
         self.scroll_cont.add_child(self.start_button, \
                 pudding.EXPAND_HORIZ)
 
+        pos_size['height'] = self.screen_res_y / 10
+        pos_size['width'] = self.directory_cont.left + 50
+
+        self.browsable_items = self.song_managers[default_manager].get_entries()
+        self.current_entry = 0
+
+        pos_size['height'] = self.screen_res_y / 10
+        pos_size['width'] = self.directory_cont.left + 10
+
+        self.directory_up_button = MenuButton("<<", \
+            widget_properties = self.widget_properties, pos_size=pos_size)
+        self.directory_cont.add_child(self.directory_up_button, \
+                pudding.ALIGN_LEFT)
+
+        self.choose_base_button = MenuButton(self.song_managers[default_manager].name, \
+            widget_properties = self.widget_properties, pos_size=pos_size)
+        self.directory_cont.add_child(self.choose_base_button, \
+                pudding.ALIGN_LEFT)
+
+        self.directory_up_button.function = self.directory_up
         self.desc_label = pudding.control.SimpleLabel( \
                 label='', autosize=True, \
                 font=self.font_p, top=0, \
@@ -116,41 +142,60 @@ class MenuBrowser(Menu):
         self.desc_cont.add_child(self.desc_label)
 
         self.item_containers.append(self.scroll_cont)
-        self.widgets.append(self.scroll_cont)
-        self.widgets.append(self.cover_cont)
-        self.widgets.append(self.desc_cont)
+        for c in container:
+            self.widgets.append(c)
+
+        self.choose_base_button.function = self.choose_base
+        self.dir_pos = ''
+
+    def choose_base(self):
+        self.selected_manager += 1
+        self.selected_manager %= len(self.song_managers)
+        self.browsable_items = self.song_managers[self.selected_manager].get_entries()
+        self.select_song('start')
+        self.choose_base_button.label = self.song_managers[self.selected_manager].name
+        self.choose_base_button.on_resize()
+
+    def directory_up(self):
+        self.dir_pos = "/".join(self.dir_pos.split('/')[:-1])
+        self.browsable_items = self.song_managers[self.selected_manager].get_entries(self.dir_pos)
+        self.start_song()
 
 
-            
+    def enter_directory(self, args):
+        self.dir_pos = os.path.join(self.dir_pos, args[0])
+        self.browsable_items = self.song_managers[self.selected_manager].get_entries(self.dir_pos)
+        self.start_song()
+
     def stop_preview(self):
         if self.preview_sound:
             self.player.stop()
 
-    def load_cover(self, song):
-        wanted_size = self.screen_res_x / 3.
+    def get_cover(self, song):
         if 'cover' in song.info:
-            pic_path = os.path.join(song.path, song.info['cover'])
-            pil_pic = Image.open(pic_path)
-            bigger_size = max(pil_pic.size)
-            factor = bigger_size / wanted_size
-            size_x = pil_pic.size[0] / factor
-            size_y = pil_pic.size[1] / factor
-            size = (int(size_x), int(size_y))
-        
-            pil_pic = pil_pic.resize(size, Image.ANTIALIAS)
-            if self.cover_loaded:
-                del self.cover_cont.children[0:]
+            return os.path.join(song.path, song.info['cover'])
+        else:
+            return None
 
-            self.cover_image = pudding.ext.slicingimage.SlicingImage( \
-                parent=self.cover_cont, \
-                pil_image=pil_pic, top=0,\
-                left=0, z_index=-3)
+    def load_cover(self, pic_path):
+        wanted_size = self.screen_res_x / 3.
+        pil_pic = Image.open(pic_path)
+        bigger_size = max(pil_pic.size)
+        factor = bigger_size / wanted_size
+        size_x = pil_pic.size[0] / factor
+        size_y = pil_pic.size[1] / factor
+        size = (int(size_x), int(size_y))
 
-            self.cover_loaded = True
-
-        elif self.cover_loaded:
+        pil_pic = pil_pic.resize(size, Image.ANTIALIAS)
+        if self.cover_loaded:
             del self.cover_cont.children[0:]
 
+        self.cover_image = pudding.ext.slicingimage.SlicingImage( \
+            parent=self.cover_cont, \
+            pil_image=pil_pic, top=0,\
+            left=0, z_index=-3)
+
+        self.cover_loaded = True
         self.parent_widget.on_resize()
 
 
@@ -165,40 +210,58 @@ class MenuBrowser(Menu):
         self.select_song('next')
 
 
-    def select_song(self, type):
+    def select_song(self, direction):
         if len(self.browsable_items) == 0:
             return
 
-        if type == 'prev':
-            self.selected -= 1
+        self.selected = self.browsable_items.keys()
+        if direction == 'prev':
+            self.current_entry -= 1
+        elif direction == 'next':
+            self.current_entry += 1
+        elif direction == 'start':
+            self.current_entry = 0
 
-        elif type == 'next':
-            self.selected += 1
-        elif type == 'start':
-            self.selected = 0
+        self.current_entry %= len(self.browsable_items)
 
-        if self.debug:
-            print self.selected
+        entry = self.browsable_items[self.browsable_items.keys()[self.current_entry]]
+        if type(entry) != list:
+            # Song preview:
+            song = entry
+            self.start_button.function = self.start_screen.show
+            self.player.load(song.path, song.info['mp3'])
+            if self.preview_sound:
+                self.player.play()
 
-        self.selected %= len(self.browsable_items)
-        song = self.browsable_items[self.selected]
+            song_title = song.info['title']
+            l = self.l_start + ':  "' + song_title + '"'
+            self.start_button.args = [song, self.widgets]
+            self.start_button.label = l
+            self.desc_label.label = self.get_desc(song)
+            self.desc_label.on_resize()
 
-        # Song preview:
-        self.player.load(song.path, song.info['mp3'])
-        if self.preview_sound:
-            self.player.play()
+            # We use PIL only if it's set since it causes errors on some
+            # systems (ATI drivers especially).
+            if self.use_pil:
+                pic_path = self.get_cover(song)
+                if pic_path:
+                    self.load_cover(pic_path)
+        else:
+            self.start_button.function = self.enter_directory
 
-        song_title = song.info['title']
-        l = self.l_start + ':  "' + song_title + '"'
-        self.start_button.args = [song, self.widgets]
-        self.start_button.label = l
-        self.desc_label.label = self.get_desc(song)
-        self.desc_label.on_resize()
+            dir_name = self.browsable_items.keys()[self.current_entry]
+            self.start_button.args = [dir_name]
 
-        # We use PIL only if it's set since it causes errors on some
-        # systems (ATI drivers especially).
-        if self.use_pil:
-            self.load_cover(song)
+            l = self.l_start + ':  "' + "Directory >> " + dir_name + '"'
+            self.start_button.label = l
+            self.desc_label.label = ''
+            self.desc_label.on_resize()
+            app_dir = os.path.dirname(sys.argv[0])
+            # We use PIL only if it's set since it causes errors on some
+            # systems (ATI drivers especially).
+            if self.use_pil:
+                pic_path = os.path.join(app_dir, 'misc', 'directory.png')
+                self.load_cover(pic_path)
 
 
     def select(self, function, args):
@@ -237,5 +300,4 @@ class MenuBrowser(Menu):
 #		if 'bpm' in song.info:
 #			desc += self.l_bpm + str(round(song.info['bpm'], 1)) + '\n'
         return desc
-
 

@@ -411,17 +411,20 @@ class CoreInit:
         # Song browser:
         sys_directory = Directory(os.path.join(self.app_dir, 'media', 'songs'))
         home_directory = Directory(os.path.join(self.config_path, 'songs'))
-        song_manager = SongManager(sys_directory)
-        song_manager.search()
-        song_manager.verify()
-        song_manager.sort()
-        song_objects = song_manager.songs
-        song_manager_home = SongManager(home_directory)
+        song_manager_sys = SongManager('System', sys_directory)
+        song_manager_sys.search()
+        song_manager_sys.verify()
+        song_manager_sys.sort()
+        song_objects = song_manager_sys.songs
+        song_manager_home = SongManager('Home', home_directory)
         song_manager_home.search()
         song_manager_home.verify()
         song_manager_home.sort()
         song_objects_home = song_manager_home.songs
-        song_objects.extend(song_objects_home)
+
+        song_managers = []
+        song_managers.append(song_manager_sys)
+        song_managers.append(song_manager_home)
 
         self.load_player()
 
@@ -431,7 +434,7 @@ class CoreInit:
 
 
 
-        song_editor_browser = SongEditorBrowser(song_objects_home, \
+        song_editor_browser = SongEditorBrowser(song_managers, 1, \
             self.widget_properties, self.use_pil, self.sound_preview, player = self.player, start_screen=song_editor)
         song_editor_browser.set_heading(h1_song_browser)
         song_editor_browser.set_bg_box()
@@ -451,7 +454,7 @@ class CoreInit:
                     menu_list=self.menus, config=self.config, \
                     octave=self.octave, player=self.player,debug=self.debug)
 
-        song_browser = SongBrowser(song_objects, \
+        song_browser = SongBrowser(song_managers, 0, \
             self.widget_properties, self.use_pil, \
             self.sound_preview, self.octave, start_screen=sing_screen, \
             player=self.player)
