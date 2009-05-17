@@ -92,12 +92,6 @@ class GSTPlayer(Player):
             # catch some states like READY (others?)
             return None
 
-    def get_length(self):
-        result = self.playbin.set_state(gst.STATE_PAUSED)
-        self.playbin.get_state() # block until the state is really changed
-        format = gst.Format(gst.FORMAT_TIME)
-        return self.playbin.query_duration(gst.FORMAT_TIME)[0]
-
     def pause(self):
         self.playbin.set_state(gst.STATE_PAUSED)
         self._pause()
@@ -132,4 +126,3 @@ def main():
     x.stop()
 
 if __name__ == '__main__': main()
-

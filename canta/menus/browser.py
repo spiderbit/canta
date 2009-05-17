@@ -44,7 +44,6 @@ class MenuBrowser(Menu):
         self.l_edition = str(_('Edition: '))
         self.l_creator = str(_('Creator: '))
         self.l_bpm = str(_('BPM: '))
-        self.l_length = str(_('Length: '))
         self.l_start = str(_('Sing'))
 
         # heading and nav container inherited from Menu:
@@ -59,7 +58,7 @@ class MenuBrowser(Menu):
 
         self.item_containers = []
         self.selected_item = 0
-
+        
         prev_button = MenuButton(label=l_prev, widget_properties=self.widget_properties, function=self.select_prev)
         next_button = MenuButton(l_next, function=self.select_next, widget_properties=self.widget_properties)
         self.add(prev_button, 'center')
@@ -122,7 +121,7 @@ class MenuBrowser(Menu):
         self.widgets.append(self.desc_cont)
 
 
-
+            
     def stop_preview(self):
         if self.preview_sound:
             self.player.stop()
@@ -137,7 +136,7 @@ class MenuBrowser(Menu):
             size_x = pil_pic.size[0] / factor
             size_y = pil_pic.size[1] / factor
             size = (int(size_x), int(size_y))
-
+        
             pil_pic = pil_pic.resize(size, Image.ANTIALIAS)
             if self.cover_loaded:
                 del self.cover_cont.children[0:]
@@ -235,10 +234,8 @@ class MenuBrowser(Menu):
             desc += self.l_edition + song.info['edition'] + '\n'
         if 'creator' in song.info:
             desc += self.l_creator + song.info['creator'] + '\n'
-        length_sec = self.player.get_length()/ 1000000000.
-        desc += '%s%s\n' % (self.l_length, \
-            time.strftime("%M:%S", time.gmtime(length_sec)))
 #		if 'bpm' in song.info:
 #			desc += self.l_bpm + str(round(song.info['bpm'], 1)) + '\n'
         return desc
+
 
