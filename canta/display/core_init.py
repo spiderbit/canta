@@ -38,8 +38,6 @@ import warnings
 from canta.display.style import Style
 from canta.display.properties import DisplayProperties
 from canta.theme.theme_manager import ThemeManager
-from canta.menus.song_editor_browser import SongEditorBrowser
-from canta.menus.song_browser import SongBrowser
 from canta.menus.menu import Menu
 from canta.menus.button import MenuButton
 from canta.menus.item_group import MenuGroup
@@ -400,9 +398,11 @@ class CoreInit:
                 left=self.screen_res_x / 2)
         about_menu.set_heading(h1_about)
         about_menu.set_bg_box()
-        about_back = MenuButton(l_back, widget_properties = self.widget_properties, target = main_menu)
+        about_back = MenuButton(l_back, widget_properties = self.widget_properties, \
+            target = main_menu)
         about_menu.add(about_back, 'horiz')
-        about_quit = MenuButton(l_quit, function=self.quit, pos_size=0, widget_properties = self.widget_properties)
+        about_quit = MenuButton(l_quit, function=self.quit, \
+            pos_size=0, widget_properties = self.widget_properties)
         about_menu.add(about_quit, 'center')
         fd_license = open(os.path.join(self.app_dir, about_file), 'r')
         license = fd_license.read()
@@ -428,20 +428,25 @@ class CoreInit:
 
         self.load_player()
 
-        # Song editor:'theme_mgr'
+
         song_editor = SongEditor(self.app_dir, self.widget_properties, \
             self.theme_mgr, main_menu, player=self.player, debug=self.debug )
 
-
-
-        song_editor_browser = SongEditorBrowser(song_managers, 1, \
-            self.widget_properties, self.use_pil, self.sound_preview, player = self.player, start_screen=song_editor)
+        entry_start_texts = {}
+        entry_start_texts['directory'] = 'Enter'
+        entry_start_texts['song'] = 'Edit'
+        song_editor_browser = MenuBrowser(song_managers, 1, \
+            self.widget_properties, self.use_pil, self.sound_preview, \
+            entry_start_texts = entry_start_texts, player = self.player, \
+            start_screen=song_editor)
         song_editor_browser.set_heading(h1_song_browser)
         song_editor_browser.set_bg_box()
         self.menus['browser_editor'] = song_editor_browser
 
-        back_button = MenuButton(l_back,  widget_properties=self.widget_properties, target=main_menu, function=song_editor_browser.stop_preview)
-        quit_button = MenuButton(l_quit, function=self.quit, pos_size=0, widget_properties=self.widget_properties)
+        back_button = MenuButton(l_back,  widget_properties=self.widget_properties, \
+            target=main_menu, function=song_editor_browser.stop_preview)
+        quit_button = MenuButton(l_quit, function=self.quit, pos_size=0, \
+            widget_properties=self.widget_properties)
         song_editor_browser.add(back_button, 'center')
         song_editor_browser.add(quit_button, 'center')
 
@@ -454,10 +459,14 @@ class CoreInit:
                     menu_list=self.menus, config=self.config, \
                     octave=self.octave, player=self.player,debug=self.debug)
 
-        song_browser = SongBrowser(song_managers, 0, \
+        entry_start_texts = {}
+        entry_start_texts['directory'] = 'Enter'
+        entry_start_texts['song'] = 'Start'
+
+        song_browser = MenuBrowser(song_managers, 0, \
             self.widget_properties, self.use_pil, \
             self.sound_preview, self.octave, start_screen=sing_screen, \
-            player=self.player)
+            entry_start_texts = entry_start_texts, player=self.player)
 
         song_browser.set_heading(h1_song_browser)
         song_browser.set_bg_box()

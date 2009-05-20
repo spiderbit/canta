@@ -37,7 +37,7 @@ Installation / Requirements
 	- python-mutagen
 	- python-wxgtk
 	- python-mingus >= 0.4.0.1
-	- and of course: python (2.5)
+	- and of course: python (2.6)
 
 3. OPTIONAL:
 
