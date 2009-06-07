@@ -53,9 +53,8 @@ class SingScreen(Menu):
     """Sing screen.
     """
     def __init__(self, app_dir, camera, theme_mgr, widget_properties, \
-            menu_list, config, octave, player=None,debug=False):
+            menu_list, config, octave, player=None):
         Menu.__init__(self, widget_properties)
-
         self.app_dir = app_dir
         self.camera = camera
         self.theme_mgr = theme_mgr
@@ -63,33 +62,21 @@ class SingScreen(Menu):
         self.player= player
         self.helper = True
         self.game = Game(self.octave, self.helper, allowed_difference=1)
-        self.widget_properties = widget_properties
         self.menu_list = menu_list
         self.menu_list['singscreen'] = self
         self.config = config
-        self.debug = debug
-
         self.widget_properties['theme_mgr'] = theme_mgr
-        #self.parent_widget = self.widget_properties['root_widget']
-        #self.parent_world = self.widget_properties['root_world']
 
 
     def show(self, args):
         h1_pause = _(u'Pause')
         h1_results = _(u'Results')
 
-        # From args we get the select PygamePlayered song's name.
-        #selected_song = args[0]
-
-        # Also we get widgets from the browser window
-        # and turn them invisible.
-        invisible_items = args[1]
-        for item in invisible_items:
-            item.visible = 0
+        self.menu_list['browser'] = args[1]
 
         #self.camera = MovableCamera(self.app_dir, self.parent_world, debug = self.debug)
         self.camera.z = 15
-        self.parent_widget.add_child(self.camera)
+        self.parent.add_child(self.camera)
 
         self.song = args[0]
         self.song.reset()
@@ -180,12 +167,12 @@ class SingScreen(Menu):
         self.widget_properties['anchoring'] = 'bottom'
 
         # The observer for the lyrics:
-        label = SongLabelObserver(self.widget_properties, self.debug)
+        label = SongLabelObserver(self.widget_properties)
 
         use_pil = self.config['screen']['pil']
         # The observer for the results screen (when the song ended):
         result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
-                use_pil, self.game, debug=self.debug)
+                use_pil, self.game)
         result_view.set_heading(h1_results)
 
         #(r, g, b, a)
@@ -213,27 +200,24 @@ class SingScreen(Menu):
         bar = MainCubeObserver(self.parent_world,
                        song_bar_color,
                        self.song.getMinPitch(),
-                       self.song.getMaxPitch(),
-                       debug=self.debug)
+                       self.song.getMaxPitch())
 
         # The observer for the microphone captured notes:
         input_bar = SingCubeObserver(self.parent_world,
                          sing_bar_color, sing_bar_formula,
                          self.song.getMinPitch(),
                          self.song.getMaxPitch(),
-                         self.game,
-                         debug=self.debug)
+                         self.game)
 
         # The observer for the song position cube:
         pos_bar = PosCubeObserver(self.parent_world,
-                      pos_bar_color,
-                      debug=self.debug)
+                      pos_bar_color)
 
         # The observer for the background box (lyrics):
-        l_bg_box = LyricsBgBox(self.widget_properties, self.debug)
+        l_bg_box = LyricsBgBox(self.widget_properties)
 
         # Observer for the song time:
-        time_label = TimeLabel(self.widget_properties, self.debug)
+        time_label = TimeLabel(self.widget_properties)
 
         self.input_subject = SongData()
         self.input_subject.attach(input_bar)
@@ -242,8 +226,7 @@ class SingScreen(Menu):
 
         # maybe a subject-observer solution would be better
         # if we make would use it over network but for first release i think its good enough
-        self.keyboard_event = KeyboardEvent(self.widget_properties, \
-                 self.debug)
+        self.keyboard_event = KeyboardEvent(self.widget_properties)
 
         self.keyboard_event.add_connection(type = soya.sdlconst.K_ESCAPE, \
             action = self.pause)
@@ -261,17 +244,17 @@ class SingScreen(Menu):
             from canta.event.input_gstreamer import Input
 
         self.input = Input(self.song, self.input_subject, \
-                self.player, self.octave, self.debug)
+                self.player, self.octave)
         self.input.config = self.config
         self.song_event = SongEvent(self.song, self.widget_properties,\
                 self.song_data, self.player, \
-                self.keyboard_event, self.input, self.debug)
+                self.keyboard_event, self.input)
 
 
         # Observer for the pause menu:
         pause = Pause(self.widget_properties, \
             self.song_data, self.player, self.keyboard_event, self.song, \
-            self.song_event, self.debug)
+            self.song_event)
         pause.set_heading(h1_pause)
 
         self.song_data.attach(label)

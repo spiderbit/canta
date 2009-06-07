@@ -32,9 +32,9 @@ class CubeObserver(CubeList):
             * add an underscore to variables that clash with
             python specific keywords (e.g. min -> min_)
     """
-    def __init__(self, parent_world, min_pitch=0., max_pitch=11., debug=0, \
+    def __init__(self, parent_world, min_pitch=0., max_pitch=11., \
                  size_x=0.3, size_y=0.2):
-        CubeList.__init__(self, parent_world, debug)
+        CubeList.__init__(self, parent_world)
         # These 2 values could also be a paramter for draw_tone
         # (if it seems to be better?)
         # They are size of 1 beat (x and y) (z is constant):
@@ -48,12 +48,12 @@ class CubeObserver(CubeList):
         # Count of different pitches in line:
         self.number_of_different_tones = self.max_pitch - self.min_pitch
 
-        # Define the size of the line. How can we get the whole size of x? 
+        # Define the size of the line. How can we get the whole size of x?
         # we would need from the camera
         #	1. the distance
-        #	2. the viewangle 
+        #	2. the viewangle
         #	3. the size of projection (if distance is zero)
-        self.size_of_window_x = 15.  
+        self.size_of_window_x = 15.
 
         # Distance to the left in beats.
         # You get the width of a line by calculating beats * size_x
@@ -61,7 +61,7 @@ class CubeObserver(CubeList):
 
 
     def calc_start_end_size(self, song):	# these values differ only from line to line
-            
+
         line_nr = song.line_nr
         if line_nr == None:
             return False
@@ -76,7 +76,7 @@ class CubeObserver(CubeList):
                 + song.lines[line_nr].segments[-1].duration \
                 + self.distance_from_side - self.start_x)
         if self.end_x != 0:
-    
+
             self.size_x = self.size_of_window_x / self.end_x
         else:
             self.size_x = 1
@@ -92,7 +92,6 @@ class CubeObserver(CubeList):
                     + (duration / 2)) * self.size_x
         position_z = 0
 
-        if self.debug: print "position: ", position_y
         properties['x'] = position_x
         properties['y'] = position_y
         properties['z'] = position_z

@@ -390,14 +390,12 @@ class CoreInit:
 
         # Main menu:
         main_menu = Menu(self.widget_properties)
-        main_menu.set_heading(h1_main_menu)
-        self.menus['main'] = main_menu # obsolete?
 
+        self.menus['main'] = main_menu # obsolete?
         # About menu:
         about_menu = MenuText(self.widget_properties, top=self.screen_res_y / 3, \
                 left=self.screen_res_x / 2)
         about_menu.set_heading(h1_about)
-        about_menu.set_bg_box()
         about_back = MenuButton(l_back, widget_properties = self.widget_properties, \
             target = main_menu)
         about_menu.add(about_back, 'horiz')
@@ -408,80 +406,62 @@ class CoreInit:
         license = fd_license.read()
         about_menu.add_text(license)
 
-        # Song browser:
-        sys_directory = Directory(os.path.join(self.app_dir, 'media', 'songs'))
-        home_directory = Directory(os.path.join(self.config_path, 'songs'))
-        song_manager_sys = SongManager('System', sys_directory)
-        song_manager_sys.search()
-        song_manager_sys.verify()
-        song_manager_sys.sort()
-        song_objects = song_manager_sys.songs
-        song_manager_home = SongManager('Home', home_directory)
-        song_manager_home.search()
-        song_manager_home.verify()
-        song_manager_home.sort()
-        song_objects_home = song_manager_home.songs
-
-        song_managers = []
-        song_managers.append(song_manager_sys)
-        song_managers.append(song_manager_home)
-
         self.load_player()
-
-
         song_editor = SongEditor(self.app_dir, self.widget_properties, \
             self.theme_mgr, main_menu, player=self.player, debug=self.debug )
-
-        entry_start_texts = {}
-        entry_start_texts['directory'] = 'Enter'
-        entry_start_texts['song'] = 'Edit'
-        song_editor_browser = MenuBrowser(song_managers, 1, \
-            self.widget_properties, self.use_pil, self.sound_preview, \
-            entry_start_texts = entry_start_texts, player = self.player, \
-            start_screen=song_editor)
-        song_editor_browser.set_heading(h1_song_browser)
-        song_editor_browser.set_bg_box()
-        self.menus['browser_editor'] = song_editor_browser
-
-        back_button = MenuButton(l_back,  widget_properties=self.widget_properties, \
-            target=main_menu, function=song_editor_browser.stop_preview)
-        quit_button = MenuButton(l_quit, function=self.quit, pos_size=0, \
-            widget_properties=self.widget_properties)
-        song_editor_browser.add(back_button, 'center')
-        song_editor_browser.add(quit_button, 'center')
-
-
 
         # Sing screen:
         sing_screen = SingScreen(app_dir=self.app_dir, \
                     camera=self.camera, theme_mgr=self.theme_mgr, \
                     widget_properties=self.widget_properties, \
                     menu_list=self.menus, config=self.config, \
-                    octave=self.octave, player=self.player,debug=self.debug)
+                    octave=self.octave, player=self.player)
 
-        entry_start_texts = {}
-        entry_start_texts['directory'] = 'Enter'
-        entry_start_texts['song'] = 'Start'
+        pos_size = {}
+        pos_size['height'] = self.screen_res_y / 16
+        pos_size['width'] = self.screen_res_x - 80
+        pos_size['top'] = 10
+        pos_size['left'] = 10
 
-        song_browser = MenuBrowser(song_managers, 0, \
-            self.widget_properties, self.use_pil, \
-            self.sound_preview, self.octave, start_screen=sing_screen, \
-            entry_start_texts = entry_start_texts, player=self.player)
+        # Song browser:
+        entries = []
+        entry_sing_screen = {}
+        entry_sing_screen['song_start_text'] = 'Start'
+        entry_sing_screen['start_screen'] = sing_screen
+        entry_sing_screen['menu_text'] = _(u"Sing")
+        entry_song_editor = {}
+        entry_song_editor['song_start_text'] = 'Edit'
+        entry_song_editor['start_screen'] = song_editor
+        entry_song_editor['menu_text'] = _(u'Song Editor')
+        entries.append(entry_sing_screen)
+        entries.append(entry_song_editor)
 
-        song_browser.set_heading(h1_song_browser)
-        song_browser.set_bg_box()
-        self.menus['browser'] = song_browser
+        browsers = []
+        for entry in entries:
+            browser = MenuBrowser(1, self.widget_properties, \
+                entry['start_screen'], self.sound_preview, \
+                self.use_pil, player = self.player,\
+                song_start_text=entry['song_start_text'])
+            browser.set_heading(h1_song_browser)
 
-        sb_back = MenuButton(l_back, target=main_menu, widget_properties = self.widget_properties,function=song_browser.stop_preview)
-        sb_quit = MenuButton(l_quit, function=self.quit, pos_size=0, widget_properties = self.widget_properties)
-        song_browser.add(sb_back, 'center')
-        song_browser.add(sb_quit, 'center')
-
+            back_button = MenuButton(l_back, target=main_menu, \
+                widget_properties = self.widget_properties, \
+                function=browser.stop_preview)
+            quit_button = MenuButton(l_quit, function=self.quit, \
+                pos_size=0, widget_properties = self.widget_properties)
+            browser.add(back_button, 'center')
+            browser.add(quit_button, 'center')
+            browsers.append(browser)
+            # Add buttons to main menu:
+            args = {}
+            args['selected'] = entry['start_screen']
+            args['widgets'] = [main_menu]
+            main_menu.add(MenuButton(entry['menu_text'], target=browser, function=browser.start_song,\
+                widget_properties=self.widget_properties, pos_size=pos_size), 'center')
 
         # Options parent menu:
         self.options_menu_main = Menu(self.widget_properties)
         self.options_menu_main.set_heading(h1_settings_main)
-        self.options_menu_main.set_bg_box()
 
         # Options sub menus:
         self.options_menu_screen = MenuGroup(self.widget_properties)
@@ -493,11 +473,6 @@ class CoreInit:
         self.options_menu_misc = MenuGroup(self.widget_properties)
         self.options_menu_misc.set_heading(h1_settings_misc)
 
-        pos_size = {}
-        pos_size['height'] = self.screen_res_y / 16
-        pos_size['width'] = self.screen_res_x - 80
-        pos_size['top'] = 10
-        pos_size['left'] = 10
 
         # Add buttons to options parent menu:
         self.options_menu_main.add(MenuButton(l_back, target=main_menu, \
@@ -626,19 +601,6 @@ class CoreInit:
                     'selected_item' : selected_theme})
         theme_group = {'heading': h2_settings_theme, 'items' : theme_items}
         self.options_menu_theme.add_group(theme_group)
-
-        # Add buttons to main menu:
-        sing_args = {}
-        sing_args['selected'] = sing_screen
-        sing_args['widgets'] = [main_menu]
-        main_menu.add(MenuButton(l_start, target=song_browser, function=song_browser.start_song,\
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
-
-        edit_args = {}
-        edit_args['selected'] = song_editor
-        edit_args['widgets'] = [main_menu]
-        main_menu.add(MenuButton(l_song_editor, target=song_editor_browser, function=song_editor_browser.start_song,\
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
 
         main_menu.add(MenuButton(l_settings_main, target=self.options_menu_main, \
             widget_properties=self.widget_properties, pos_size=pos_size), 'center')

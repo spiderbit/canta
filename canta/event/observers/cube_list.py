@@ -24,19 +24,14 @@ from soya import Smoke, FlagSubFire, FlagFirework, Particles
 from canta.theme.rotating_body import RotatingBody
 
 class CubeList:
-    def __init__(self, parent_world, debug=0):
-        self.debug = debug
-
+    def __init__(self, parent_world):
         self.parent_world = parent_world
         self.world = soya.World()
         self.parent_world.add(self.world)
 
 
     def _delete_all(self):
-        #if len(self.world.children) >0:
         del self.world.children[0:]
-        #for child in self.world.children:
-        #	self.world.remove(child)
 
 
     def draw_grid(self, words):
@@ -62,7 +57,7 @@ class CubeList:
 
             #if i == pos:
             #	pos_z = 3
-        
+
             #else:
             pos_z = 0
             x = soya.Body(self.world, model).set_xyz(position_x, position_y, pos_z)
@@ -73,7 +68,7 @@ class CubeList:
         material = soya.Material()
         if properties['diffuse']:
             material.diffuse = properties['diffuse']
-        
+
         #material.diffuse = (0.0, 0.2, 0.7, 1.0)
         # We use here a light blue, to get metallic reflexions.
         if properties['specular']:
@@ -110,10 +105,6 @@ class CubeList:
         else:
             body = soya.Body(self.world, model)
         body.set_xyz(properties['x'], properties['y'], properties['z'])
-        #body.
-        #print "neuer balken eigentlich", len(self.world.children)
-        #for key, value in properties.items():
-        #	print key, value
 
 
     def _activate_note(self, pos):

@@ -49,7 +49,6 @@ class SongEditor(soya.Body):
     """
     def __init__(self, app_dir, widget_properties, theme_mgr, main_menu, player, debug=0):
 
-
         self.l_help_hint_0 = _(u'Press [h] for help...')
         self.l_help_hint_1 = _(u'Press [ESC] to go back...')
         self.l_help_hint = self.l_help_hint_0
@@ -99,8 +98,6 @@ class SongEditor(soya.Body):
 
 
     def show(self, args):
-        for item in args[1]:
-            item.visible = 0
 
         # get name of the selected song name from args:
         self.song = args[0]
@@ -309,7 +306,6 @@ class SongEditor(soya.Body):
 
     def rem_tone(self):
         line, tone, seg_pos = self.song.get_pos_in_segments(self.song.line_nr, self.pos)
-
         line_nr = self.song.line_nr
         number_of_segments = len(self.song.lines[line_nr].segments)
         number_of_lines = len(self.song.lines)
@@ -556,3 +552,4 @@ def main():
 if __name__ == '__main__': main()
 
 # vim: ai ts=4 sts=4 et sw=4
+

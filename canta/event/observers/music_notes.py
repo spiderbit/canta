@@ -78,3 +78,4 @@ class MusicNotes:
             self._draw_line(subject.data['song'].line_nr)
         elif status == 'end':
             self._end()
+

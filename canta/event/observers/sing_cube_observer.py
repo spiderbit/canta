@@ -89,6 +89,4 @@ class SingCubeObserver(CubeObserver):
         elif status == 'input':
             if subject.data['pitch']:
                 self.input(subject.data)
-        elif self.debug:
-            print 'status: ', status
 

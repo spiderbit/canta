@@ -50,7 +50,7 @@ class PosCubeObserver(CubeObserver):
         self.size_of_window_x = 15
 
         self.range_x = 5
-        
+
         # For the pos cube.
         self.size_x = 0.1
         bar = soya.cube.Cube(material=self.material)
@@ -65,7 +65,7 @@ class PosCubeObserver(CubeObserver):
 
 
     def _update_pos_bar(self, data):
-        
+
         song = data['song']
         line_nr = song.line_nr
         self.calc_start_end_size(song)
@@ -73,7 +73,7 @@ class PosCubeObserver(CubeObserver):
 
         if self.start_x >= 0:
             #print linePos * 100 / time_between , "%"
-    
+
             position_x = ((line_pos / data['beat_time'] + (self.size_x /2)) \
                 - (self.end_x * data['beat_time'] / data['beat_time'] / 2)) \
                 * self.size_x
@@ -81,15 +81,12 @@ class PosCubeObserver(CubeObserver):
             self.pos_cube.set_xyz(position_x, 0 , 0) # draw position
 
 
-        # draw tone works in the moment only for beats not direct with a position value
-        #self.draw_tone(word.time_stamp, word.pitch, word.duration, word.special)		
-
 
     def _end(self):
         self.parent_world.remove(self.world)
 
 
-    def update(self, subject):	
+    def update(self, subject):
         status = subject.data['type']
         if status == 'roundStart':
             self._update_pos_bar(subject.data)

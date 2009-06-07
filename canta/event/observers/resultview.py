@@ -21,14 +21,14 @@ import os
 import sys
 import soya
 import soya.pudding as pudding
-from canta.menus.menu import Menu
+from canta.menus.menu import ContentMenu
 from canta.menus.button import MenuButton
 #import PIL.Image as pil
 import soya.pudding.ext.slicingimage
 import soya.pudding.ext.meter
 from PIL import Image
 
-class ResultView(Menu):
+class ResultView(ContentMenu):
     def __init__(self, widget_properties, menu_list, song=None, \
             use_pil=False, game=None, debug=False):
 
@@ -41,11 +41,8 @@ class ResultView(Menu):
         self.l_percental = _(u'Score: ')
         self.l_percent_symbol = u'%'
 
-        Menu.__init__(self, widget_properties)
+        ContentMenu.__init__(self, widget_properties)
         # heading, nav and box container inherited from Menu:
-        self.widgets.append(self.heading_cont)
-        self.widgets.append(self.nav_cont)
-        self.widgets.append(self.box_cont)
 
         self.widget_properties = widget_properties
         self.menu_list = menu_list
@@ -68,7 +65,6 @@ class ResultView(Menu):
         # If the played song had its own theme, we overwrite
         # the values with the menu theme:
         if self.song_theme_name is not None:
-        #if False:
             # FIXME: Copied this stuff for now (blacki said I can do this
             # in a loop, but I must ask him again, how ):
             self.widget_properties['font']['lyrics']['to_sing'] = {}
@@ -119,13 +115,12 @@ class ResultView(Menu):
         res_width = self.screen_res_x - 20
         res_height = self.screen_res_y - 20
         self.results_cont = pudding.container.VerticalContainer( \
-                self.parent_widget, top=res_top, \
+                self, top=res_top, \
                 right=res_right, width=res_width, \
                 height=res_height)
         self.results_cont.left = 40
         self.results_cont.anchors = pudding.ANCHOR_ALL
         self.results_cont.padding = 20
-        self.results_cont.visible = 0
 
         # Add a heading to the results (song name and artist):
         heading = ''
@@ -178,7 +173,7 @@ class ResultView(Menu):
 
         self.results_cont.add_child(self.result_meter, pudding.EXPAND_HORIZ)
         self.results_cont.add_child(self.res_label, pudding.EXPAND_HORIZ)
-        self.widgets.append(self.results_cont)
+        self.add_child(self.results_cont)
 
         # Add a button that leads to the main menu:
         main_menu = self.menu_list['main']
@@ -189,9 +184,7 @@ class ResultView(Menu):
 
         # Add a button that leads to the SongBrowser:
         show_browser = self.menu_list['browser']
-        #args = {}
-        #args['widgets'] = [self] # hide
-        #args['selected'] = self.menu_list['singscreen'] # browser needs this
+        args['selected'] = self.menu_list['singscreen'] # browser needs this
         self.add(MenuButton(label=self.l_choose, \
                 target=show_browser, \
                 widget_properties=self.widget_properties), \
@@ -227,7 +220,6 @@ class ResultView(Menu):
             per_cent_right =   (float(right_values) \
                 / len(self.results)) * 100.
 
-        #per_cent_right = 89.9
         rv = self.l_right_values + str(right_values)
         wv = self.l_wrong_values + str(wrong_values)
         pc = self.l_percental + str(round(per_cent_right, 1)) + self.l_percent_symbol
@@ -267,7 +259,7 @@ class ResultView(Menu):
             self.theme_mgr.show_theme(self.widget_properties['theme']['main'])
             self.widget_properties['theme']['song'] = None
 
-        self.parent_widget.on_resize()
+        self.parent.on_resize()
         self.show()
 
 

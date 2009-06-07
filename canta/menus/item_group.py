@@ -25,20 +25,17 @@ import soya.pudding.ext.meter
 
 from canta.menus.button import MenuButton
 from canta.menus.toggle_button import MenuToggle
-from canta.menus.menu import Menu
+from canta.menus.menu import ContentMenu
 
-class MenuGroup(Menu):
+class MenuGroup(ContentMenu):
     def __init__(self, widget_properties):
-        Menu.__init__(self, widget_properties)
+        ContentMenu.__init__(self, widget_properties)
 
         self.widget_properties = widget_properties
         self.group_count = 0
         self.heights = []
         self.toggle_list = []
 
-        # heading and nav container inherited from Menu:
-        self.widgets.append(self.heading_cont)
-        self.widgets.append(self.nav_cont)
 
     def add_group(self, items):
         # TODO: find out how this works and make it dynamic.
@@ -54,11 +51,8 @@ class MenuGroup(Menu):
         top = self.box_cont.top
 
         self.group_cont = pudding.container.VerticalContainer( \
-                self.parent_widget, top=top, left=30, width=100, z_index=1)
+                self, top=top, left=30, width=100, z_index=1)
         self.group_cont.padding = 10
-        self.group_cont.visible = 0
-        self.widgets.append(self.group_cont)
-
         self.heading_label = pudding.control.SimpleLabel( \
                 self.group_cont, top=10, left=15, label=items['heading'], \
                 font=self.font_p,
@@ -70,14 +64,12 @@ class MenuGroup(Menu):
         bc_height = 10 # any number, we ANCHOR_ALL later
 
         box_cont = pudding.container.Container( \
-                self.parent_widget, left=bc_left, top=bc_top, \
+                self, left=bc_left, top=bc_top, \
                 width=bc_width, height=bc_height, z_index=-3)
         box_cont.right = 20
         box_cont.bottom = 30
         box_cont.anchors = pudding.ANCHOR_ALL
         box_cont.padding = 5
-        box_cont.visible = 0
-        self.widgets.append(box_cont)
 
         box_left = 10
         box_width = self.screen_res_x - 40
@@ -112,6 +104,4 @@ class MenuGroup(Menu):
     def add(self, button, align='left'):
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
-
-
 

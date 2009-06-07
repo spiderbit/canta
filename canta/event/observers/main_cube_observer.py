@@ -22,12 +22,12 @@ from canta.event.observers.cube_observer import CubeObserver
 
 class MainCubeObserver(CubeObserver):
     def __init__(self, parent_world, color, min_pitch=0., max_pitch=11., debug=0):
-        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
+        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch)
         self.color = color
 
 
 
-    def _next_line(self, song):	
+    def _next_line(self, song):
         """Draw the whole line that is selected (song.line_nr).
             pitch = (integer) pitch value from File
             words = list of SongSegments
@@ -36,7 +36,7 @@ class MainCubeObserver(CubeObserver):
         properties = {}
 
 
-    
+
 
         line_nr = song.line_nr
         self.calc_start_end_size(song)
@@ -73,6 +73,4 @@ class MainCubeObserver(CubeObserver):
             self._next_line(subject.data['song'])
         elif status == 'end':
             self._end()
-        elif self.debug:
-            print 'status: ', status
 

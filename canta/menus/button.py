@@ -27,6 +27,7 @@ class MenuButton(pudding.control.Button):
         self.target = target
         self.root = None
         self.args = args
+        self.visible = 1
 
         self.font_on = widget_properties['font']['button']['on_focus']['obj']
         self.font_off = widget_properties['font']['button']['off_focus']['obj']
@@ -88,5 +89,4 @@ class MenuButton(pudding.control.Button):
             self.root.hide()
             self.target.show()
         return True
-
 
