@@ -1,7 +1,9 @@
 Canta 0.2-beta7
 
 * remove old pyaudio input code
-
+* improved internal structure in menu-code
+* adds directory entry to the songbrowser you can walk now through a directory structure in songs
+* refactored microphon input processing and visualisation see commit 1421a6b for more info
 
 Canta 0.2-beta6
 
