@@ -184,7 +184,6 @@ class ResultView(ContentMenu):
 
         # Add a button that leads to the SongBrowser:
         show_browser = self.menu_list['browser']
-        args['selected'] = self.menu_list['singscreen'] # browser needs this
         self.add(MenuButton(label=self.l_choose, \
                 target=show_browser, \
                 widget_properties=self.widget_properties), \
