@@ -41,6 +41,5 @@ Installation / Requirements
 
 3. OPTIONAL:
 
-	- pyaudio		http://people.csail.mit.edu/hubert/pyaudio/
 	- python-numpy or python-numeric
 	- python-pygame

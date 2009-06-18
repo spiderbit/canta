@@ -1,3 +1,8 @@
+Canta 0.2-beta7
+
+* remove old pyaudio input code
+
+
 Canta 0.2-beta6
 
 * easy automatic generation of note-textures for the songs inside the songeditor

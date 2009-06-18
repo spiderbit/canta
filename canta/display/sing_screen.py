@@ -238,9 +238,7 @@ class SingScreen(Menu):
             action = self.make_screenshot)
 
         selected_input = self.config['sound']['input']
-        if selected_input == 'PyAudio' or selected_input == 'OSS':
-            from canta.event.input_old import Input
-        elif selected_input == 'Gstreamer':
+        if selected_input == 'Gstreamer':
             from canta.event.input_gstreamer import Input
 
         self.input = Input(self.song, self.input_subject, \
