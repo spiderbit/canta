@@ -21,57 +21,103 @@
 import soya
 
 from canta.event.observers.cube_observer import CubeObserver
+from canta.song.song_segment import SongSegment
 
 class SingCubeObserver(CubeObserver):
     def __init__(self, parent_world, color, color_formula, min_pitch=0., \
-        max_pitch=11., game=None, debug=0):
-        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch, debug)
+        max_pitch=11., game=None):
+        CubeObserver.__init__(self, parent_world, min_pitch, max_pitch)
         self.color = color
         self.color_formula = color_formula
         self.game = game
 
     def input(self, data):
-        target_pitch = data['song'].get_pitch_between( \
-            data['start_time'], data['end_time'])
-        if not target_pitch:
-            return
-
+        '''Calculates the possible/lost/gathered points and returns it'''
         pitch = data['pitch']
-        pitch = self.game.get_corrected_pitch(target_pitch, pitch)
-        difference = pitch - target_pitch
+        target_tone = data['song'].get_tone_between( \
+            data['start_time'], data['end_time'])
+        if not target_tone or not isinstance(target_tone, SongSegment):
+            return
+        elif pitch:
+            '''sang'''
+            if target_tone.freestyle:
+                '''freestyle'''
+                self.hit_tone(data, target_tone.pitch, 0)
+            else:
+                pitch = self.game.get_corrected_pitch(target_tone.pitch, pitch)
+                difference = target_tone.pitch - pitch
+                if self.game.helper:
+                    '''helper on'''
+                    if difference <= self.game.allowed_difference:
+                        '''sang within allowed diff'''
+                        self.hit_tone(data, pitch, difference)
+                    else:
+                        '''sang not within allowed diff'''
+                        self.missed_tone(data, pitch, difference)
+                elif difference == 0:
+                    '''helper off but hit exactly the pitch'''
+                    self.hit_tone(data, pitch, difference)
+                else:
+                    '''helper off and not hit pitch'''
+                    self.missed_tone(data, pitch, difference)
+        else:
+            '''not sang'''
+            self.not_sang(data)
 
-        if not self.calc_start_end_size(data['song']):
-            return False
 
+    def get_type(self, data):
+        '''
+            get the type of the target_tone as string,
+            i think it would be better if
+            song_segment has a string like that
+            instead the 2 seperate attribs
+        '''
+        target_tone = data['song'].get_tone_between( \
+            data['start_time'], data['end_time'])
+        if target_tone.freestyle:
+            _type='freestyle'
+        elif target_tone.special:
+            _type='bonus'
+        else:
+            _type='normal'
+        return _type
+
+    def hit_tone(self, data, pitch, difference):
+        self.draw(data, 0, pitch)
+        _type = self.get_type(data)
+        self.game.add_stat(_type, hit=True)
+
+    def missed_tone(self, data, pitch, difference):
+        self.draw(data, difference, pitch)
+        _type = self.get_type(data)
+        self.game.add_stat(_type, hit=False)
+
+    def not_sang(self, data):
+        _type = self.get_type(data)
+        self.game.add_stat(_type, hit=False)
+
+
+    def draw(self, data, difference, pitch, properties=None):
+        self.calc_start_end_size(data['song'])
         time_stamp = data['real_pos_time']/data['beat_time']
         duration = data['length_in_beats']
+        if properties == None:
+            properties = {}
+            properties['length'] = duration
+            properties['rotate'] = False
 
-        properties = {}
-        properties['length'] = duration
-        properties['rotate'] = False
+            col = []
+            for x in range(len(self.color)):
+                diff = (self.color_formula[x] / 100.) * difference
+                tmp = self.color[x] +  diff
+                if tmp < 0:
+                    tmp = 0
+                elif tmp > 1:
+                    tmp = 1
+                col.append(tmp)
 
-        col = []
-        for x in range(len(self.color)):
-            diff = (self.color_formula[x] / 100.) * difference
-            tmp = self.color[x] +  diff
-            if tmp < 0:
-                tmp = 0
-            elif tmp > 1:
-                tmp = 1
-            col.append(tmp)
-
-        properties['diffuse'] = col
+            properties['diffuse'] = col
         self.draw_tone(time_stamp, pitch, duration, properties)
-
-    def get_corrected_pitch(self, target_pitch, pitch):
-        '''
-            gives back pitch on target_pitch if the difference to it
-            is smaller then allowed_difference
-        '''
-        difference = pitch - target_pitch
-        if abs(difference) <= self.allowed_difference:
-            pitch = target_pitch
-        return pitch
 
 
     def update(self, subject):
@@ -87,6 +133,5 @@ class SingCubeObserver(CubeObserver):
         elif status == 'end':
             self._end()
         elif status == 'input':
-            if subject.data['pitch']:
-                self.input(subject.data)
+            self.input(subject.data)
 

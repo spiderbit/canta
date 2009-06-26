@@ -1,5 +1,10 @@
 Canta 0.2-beta7
 
+* improved song result system:
+ - passed/hitted points gets collected seperatly
+ - points get collected/displayed type specific
+ - bonus points count double
+ - you get now a school-like score: a+/a/b/c/d/e/f
 * remove old pyaudio input code
 * improved internal structure in menu-code
 * adds directory entry to the songbrowser you can walk now through a directory structure in songs
@@ -8,8 +13,8 @@ Canta 0.2-beta7
 Canta 0.2-beta6
 
 * easy automatic generation of note-textures for the songs inside the songeditor
-* generation of sheet music of only the current line (on-the-fly), thats 
-faster than always for the hole song 
+* generation of sheet music of only the current line (on-the-fly), thats
+faster than always for the hole song
 with change in the songeditor
 * code improvements
 * remove rpm/deb build system from the project repository
@@ -61,3 +66,4 @@ Canta 0.2-beta2
 
 Canta 0.2-beta1
 * Initial version.
+

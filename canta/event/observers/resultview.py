@@ -23,7 +23,6 @@ import soya
 import soya.pudding as pudding
 from canta.menus.menu import ContentMenu
 from canta.menus.button import MenuButton
-#import PIL.Image as pil
 import soya.pudding.ext.slicingimage
 import soya.pudding.ext.meter
 from PIL import Image
@@ -36,10 +35,12 @@ class ResultView(ContentMenu):
         self.l_choose = _(u'choose another song')
         self.l_quit = _(u'quit')
         #self.separator = ' - '
-        self.l_right_values = _(u'Right: ')
-        self.l_wrong_values = _(u'Wrong: ')
-        self.l_percental = _(u'Score: ')
-        self.l_percent_symbol = u'%'
+        self.l_points = {}
+        self.l_points['normal'] = _(u'normal points: ')
+        self.l_points['freestyle'] = _(u'freestyle points: ')
+        self.l_points['bonus'] = _(u'bonus points: ')
+        self.l_points['sum'] = _(u'points: ')
+        self.l_score = _(u'SCORE: ')
 
         ContentMenu.__init__(self, widget_properties)
         # heading, nav and box container inherited from Menu:
@@ -57,7 +58,7 @@ class ResultView(ContentMenu):
         self.main_theme_name = self.widget_properties['theme']['main']
         self.song_theme_name = self.widget_properties['theme']['song']
 
-        self.results = []
+        self.values = []
         self.pos = None
         self.game = game
 
@@ -158,10 +159,6 @@ class ResultView(ContentMenu):
                     pil_image=pil_pic, top=0,\
                     left=0, z_index=-3)
 
-        # Add the result meter (percentage):
-        self.result_meter = pudding.ext.meter.Meter(min=0, max=100, \
-            left=10, top=10, width=200, height=50)
-
         font_p = self.widget_properties['font']['p']['obj']
         color_p = self.widget_properties['font']['p']['color']
         self.res_label = pudding.control.SimpleLabel(
@@ -170,10 +167,6 @@ class ResultView(ContentMenu):
                     color=color_p,
                     top=10,
                     left=10)
-
-        self.results_cont.add_child(self.result_meter, pudding.EXPAND_HORIZ)
-        self.results_cont.add_child(self.res_label, pudding.EXPAND_HORIZ)
-        self.add_child(self.results_cont)
 
         # Add a button that leads to the main menu:
         main_menu = self.menu_list['main']
@@ -195,51 +188,49 @@ class ResultView(ContentMenu):
                 widget_properties=self.widget_properties), \
                 'center')
 
-        # Calculate results:
-        right_values = 0
-        wrong_values = 0
+        point_order = ('normal', 'freestyle', 'bonus', 'sum')
+        for p in point_order:
+             self.res_label.label += self.l_points[p] + \
+                str(self.game.get_points(p))  + '/' + \
+                str(self.game.get_points_possible(p)) + '\n'
 
-        for data in self.results:
-            pitch = data['pitch']
-            target_pitch = data['song'].get_pitch_between( \
-                data['start_time'], data['end_time'])
-            if pitch and target_pitch:
-                pitch = self.game.get_corrected_pitch(target_pitch, pitch)
-                difference = target_pitch - pitch
-                if self.game.helper and difference <= self.game.allowed_difference:
-                    right_values += 1
-                else:
-                    wrong_values += 1
-            else:
-                wrong_values += 1
+        points = self.game.get_points()
+        points_possible = self.game.get_points_possible()
 
-        if len(self.results) == 0:
+        if points == 0:
             per_cent_right = float(0)
         else:
-            per_cent_right =   (float(right_values) \
-                / len(self.results)) * 100.
+            per_cent_right =   (float(points) \
+                / float(points_possible) ) * 100.
 
-        rv = self.l_right_values + str(right_values)
-        wv = self.l_wrong_values + str(wrong_values)
-        pc = self.l_percental + str(round(per_cent_right, 1)) + self.l_percent_symbol
-        self.res_label.label =  pc + '\n' + rv + '\n' + wv
-
-        # 7 Colors from warm to hot (0 to 100%):
+        swells = ( 97, 90, 80, 68, 53, 35, 0 )
+        scores = ( 'A+', 'A', 'B', 'C', 'D', 'E', 'F' )
+        # 7 Colors from hot to warm (100% to 0%):
         alpha = 0.8
-        if per_cent_right < 15.:
-            col = (0.2, 0.0, 0.4, alpha)
-        elif per_cent_right < 30.:
-            col = (0.2, 0.3, 0.7, alpha)
-        elif per_cent_right < 45.:
-            col = (0.0, 0.8, 0.8, alpha)
-        elif per_cent_right < 60.:
-            col = (0.0, 0.8, 0.1, alpha)
-        elif per_cent_right < 75.:
-            col = (0.9, 0.8, 0.0, alpha)
-        elif per_cent_right < 90.:
-            col = (1.0, 0.6, 0.0, alpha)
+        colors = []
+        colors.append((0.9, 0.1, 0.0, alpha))
+        colors.append((1.0, 0.6, 0.0, alpha))
+        colors.append((0.9, 0.8, 0.0, alpha))
+        colors.append((0.0, 0.8, 0.1, alpha))
+        colors.append((0.0, 0.8, 0.8, alpha))
+        colors.append((0.2, 0.3, 0.7, alpha))
+        colors.append((0.2, 0.0, 0.4, alpha))
+        for swell, _score, color in zip(swells, scores, colors):
+            if per_cent_right >= swell:
+                score = _score
+                col = color
+                break
+        self.res_label.label += '\n' + self.l_score + score
+
+        # Add the result meter (percentage):
+        self.result_meter = pudding.ext.meter.Meter(min=0, max=100, \
+            left=10, top=10, width=200, height=50)
+
+        if points == 0:
+            per_cent_right = float(0)
         else:
-            col = (0.9, 0.1, 0.0, alpha)
+            per_cent_right =   (float(points) \
+                / float(points_possible) ) * 100.
 
         self.result_meter.color = col
         self.result_meter.border_color = self.bg_box.border_color
@@ -247,16 +238,16 @@ class ResultView(ContentMenu):
         self.result_meter.user_change = False
         self.result_meter.__set_value__(per_cent_right)
 
-        self.nav_cont.visible = 1
-        self.box_cont.visible = 1
-        self.results_cont.visible = 1
-
         self.main_theme_name = self.widget_properties['theme']['main']
         self.song_theme_name = self.widget_properties['theme']['song']
         if self.song_theme_name is not None:
             self.theme_mgr.hide_theme(self.song_theme_name)
             self.theme_mgr.show_theme(self.widget_properties['theme']['main'])
             self.widget_properties['theme']['song'] = None
+
+        self.results_cont.add_child(self.result_meter, pudding.EXPAND_HORIZ)
+        self.results_cont.add_child(self.res_label, pudding.EXPAND_HORIZ)
+        self.add_child(self.results_cont)
 
         self.parent.on_resize()
         self.show()
@@ -267,23 +258,11 @@ class ResultView(ContentMenu):
         if status == 'end':
             "end sendet"
             self._end()
-        elif status == 'input':
-            if 'pitch' in subject.data:
-                self.set_value(subject.data)
-        #elif status == 'activateNote':
-        #    self.results.append({})
+
 
     def add(self, button, align = 'left'):
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
-
-
-    def set_value(self, data):
-        target_pitch = data['song'].get_pitch_between( \
-            data['start_time'], data['end_time'])
-        if not target_pitch:
-            return
-        self.results.append(data)
 
 
     def quit(self, args=None):

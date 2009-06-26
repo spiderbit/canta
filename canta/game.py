@@ -19,10 +19,19 @@
 
 
 class Game:
+    '''
+        this class is for Game settings or methods
+        that are needed to work with them
+    '''
     def __init__(self, octave=True, helper=True, allowed_difference=1):
         self.octave = octave
+        # if helper is set you only need to sing nearly the right tone
         self.helper = helper
         self.allowed_difference = allowed_difference
+        self.stats = {}
+        self.stats['normal'] = {'hits' : 0, 'misses' : 0, 'points' : 100}
+        self.stats['bonus'] = {'hits' : 0, 'misses' : 0, 'points' : 200}
+        self.stats['freestyle'] = {'hits' : 0, 'misses' : 0, 'points' : 100}
 
     def get_corrected_pitch(self, target_pitch, pitch):
         if not self.octave:
@@ -32,7 +41,7 @@ class Game:
     def octave_correction(self, target_pitch, pitch):
         ''' change octave of pitch so that it's nearest to target_pitch '''
         same_octave = False
-        while not same_octave:			# that code do all tones display on same octave
+        while not same_octave:
             difference = pitch - target_pitch
             if difference > 6:
                 pitch -= 12
@@ -41,4 +50,23 @@ class Game:
             else:
                 same_octave = True
         return pitch
+
+    def add_stat(self, _type, hit):
+        if hit:
+            self.stats[_type]['hits']+=1
+        else:
+            self.stats[_type]['misses']+=1
+
+
+    def get_points(self, _type='sum', target='hits'):
+        points = 0
+        if _type == 'sum':
+            for k,v in self.stats.iteritems():
+                points += v[target] * v['points']
+        else:
+            points = self.stats[_type][target] * self.stats[_type]['points']
+        return points
+
+    def get_points_possible(self, _type='sum'):
+        return self.get_points(_type=_type) + self.get_points(_type=_type, target='misses')
 

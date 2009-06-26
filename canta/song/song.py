@@ -257,15 +257,16 @@ class Song:
             #print "tone_nr ", tone_nr
         return line_nr, tone_nr
 
-    def get_pitch_between(self, start_time, end_time):
+    def get_tone_between(self, start_time, end_time):
+        '''Returns a tone if the end_time or start_time is between it'''
         line_nr, tone_nr = self.get_pos(end_time)
         if not tone_nr:
             line_nr, tone_nr = self.get_pos(start_time)
         if tone_nr != None:# and len(self.song.lines[self.song.line_nr].segments) < self.song.pos:
-            target_pitch = self.lines[line_nr].segments[tone_nr].pitch
+            tone = self.lines[line_nr].segments[tone_nr]
         else:
-            target_pitch = None
-        return target_pitch
+            tone = None
+        return tone
 
 
     def get_midi(self, line_nr, tone_nr):
@@ -625,7 +626,7 @@ class UltraStarFile:
             if line.startswith('*'):
                 special = True
             elif line.startswith('F'):
-                freestype = True
+                freestyle = True
             time_stamp = int(words[1])
             duration = int(words[2])
             pitch = int(words[3])

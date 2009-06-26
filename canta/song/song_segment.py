@@ -37,3 +37,4 @@ class SongSegment:
             return True
         else:
             return False
+

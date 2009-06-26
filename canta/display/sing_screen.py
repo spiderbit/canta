@@ -61,7 +61,6 @@ class SingScreen(Menu):
         self.octave = octave
         self.player= player
         self.helper = True
-        self.game = Game(self.octave, self.helper, allowed_difference=1)
         self.menu_list = menu_list
         self.menu_list['singscreen'] = self
         self.config = config
@@ -88,7 +87,6 @@ class SingScreen(Menu):
 
         if os.path.exists(theme_cfg_file):
             media_path = os.path.join(song_path, 'media')
-            #print media_path
             soya.path.append(media_path)
 
             self.theme_mgr.hide_theme(self.widget_properties['theme']['main'])
@@ -96,17 +94,6 @@ class SingScreen(Menu):
             self.widget_properties['theme']['song'] = theme_name
             self.theme_mgr.get_theme(theme_name, song_path)
             self.theme_mgr.show_theme(theme_name)
-
-            # Copied this stuff for now:
-#			font_p = self.theme_mgr.get_font(theme_name, 'p', 'None', 'font')
-#			self.widget_properties['font']['p']['obj'] = font_p
-#			color_p = self.theme_mgr.get_font(theme_name, 'p', 'None', 'color')
-#			self.widget_properties['font']['p']['color'] = color_p
-#
-#			font_h1 = self.theme_mgr.get_font(theme_name, 'h1', 'None', 'font')
-#			self.widget_properties['font']['h1']['obj'] = font_h1
-#			color_h1 = self.theme_mgr.get_font(theme_name, 'h1', 'None', 'color')
-#			self.widget_properties['font']['h1']['color'] = color_h1
 
             self.widget_properties['font']['lyrics']['to_sing'] = {}
             font_lyrics_ts = self.theme_mgr.get_font(theme_name, 'lyrics', 'to_sing', 'font')
@@ -170,21 +157,11 @@ class SingScreen(Menu):
         label = SongLabelObserver(self.widget_properties)
 
         use_pil = self.config['screen']['pil']
+        self.game = Game(self.octave, self.helper, allowed_difference=1)
         # The observer for the results screen (when the song ended):
         result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
                 use_pil, self.game)
         result_view.set_heading(h1_results)
-
-        #(r, g, b, a)
-#		sing_bar_color = (1, 1, 0, 1)
-#		sing_bar_formula = (-20, 0, 0, 0) # in %
-
-#		song_bar_color = {}
-#		song_bar_color['special'] = (1, 0, 0, 0.6)
-#		song_bar_color['freestyle'] = (0, 1., 0., 0.6)
-#		song_bar_color['normal'] = (1, 0., 1., 0.4)
-
-#		pos_bar_color = (0, 0, 1, 1)
 
         sing_bar_color = self.widget_properties['bar']['singbar']['color']
         sing_bar_formula = self.widget_properties['bar']['singbar']['formula']
@@ -267,14 +244,11 @@ class SingScreen(Menu):
 
         self.parent_world.add(self.keyboard_event)
 
-        #self.parent_world.add(self.input)
         self.input.start()
 
         self.parent_world.add(self.song_event)
         self.player.load()
         self.player.play()
-        #pudding.main_loop.MainLoop().stop()
-        #soya.MainLoop(self.widget_properties['root_world']).main_loop()
 
 
     def pause(self):
