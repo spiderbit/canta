@@ -37,15 +37,15 @@ class TimeLabel:
         self.z_index = 4
 
         self.time_word = _(u'Time: ')
-        self.time_pos = '00:00'
-        
+        time_pos = '00:00'
+
         self.container = pudding.container.HorizontalContainer( \
                 self.parent_widget, height=height, \
                 left=self.left, top=self.top)
         self.container.anchors = pudding.ANCHOR_RIGHT \
                  | pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT
         self.container.add_child(pudding.control.SimpleLabel(
-                    label=self.time_word + self.time_pos,
+                    label=self.time_word + time_pos,
                     font=self.font_p,
                     color=self.color_p))
         self.container.on_resize()
@@ -55,15 +55,17 @@ class TimeLabel:
         del self.container.children[0:]
 
 
-    def _set_time(self, real_pos_time, gap):
-        pos = int(real_pos_time + gap / 1000.)
-        self.time_pos = time.strftime("%M:%S",time.gmtime(pos))
-        self.container.children[0].label = self.time_word + self.time_pos
+    def _set_time(self, player):
+        pos = int(player.get_pos())
+        duration = int(player.get_duration())
+        time_pos = time.strftime("%M:%S",time.gmtime(pos))
+        time_duration = time.strftime("%M:%S",time.gmtime(duration))
+        self.container.children[0].label = self.time_word + time_pos + ' / ' + time_duration
 
     def update(self, subject):
         status = subject.data['type']
         if status == 'roundStart':
-            self._set_time(subject.data['real_pos_time'], subject.data['song'].info['gap'])
+            self._set_time(subject.data['player'])
         elif status == 'end':
             self._end()
         elif self.debug:

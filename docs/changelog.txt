@@ -1,5 +1,6 @@
 Canta 0.2-beta7
 
+* duration of the song gets displayed behind the position [ pos / duration ]
 * improved song result system:
  - passed/hitted points gets collected seperatly
  - points get collected/displayed type specific

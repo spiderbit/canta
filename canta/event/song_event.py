@@ -83,6 +83,7 @@ class SongEvent(soya.Body):
                     self.real_pos_time = self.player.get_pos() \
                         - self.song.info['gap'] / 1000. # position in the song
                     self.msg['real_pos_time'] = self.real_pos_time
+                    self.msg['player'] = self.player
                     self.msg['type'] = "roundStart"
                     self.song_data.set_data(self.msg) # round Event
                 #if self.start:
@@ -137,3 +138,4 @@ class SongEvent(soya.Body):
                         self.song_data.set_data(self.msg)
 
                     self.last_note = self.current_note
+

@@ -92,6 +92,11 @@ class GSTPlayer(Player):
             # catch some states like READY (others?)
             return None
 
+    def get_duration(self):
+        """Returns the duration of the song in seconds"""
+        duration, format = self.playbin.query_duration(gst.FORMAT_TIME)
+        return duration / 1000000000.
+
     def pause(self):
         self.playbin.set_state(gst.STATE_PAUSED)
         self._pause()
@@ -126,3 +131,4 @@ def main():
     x.stop()
 
 if __name__ == '__main__': main()
+
