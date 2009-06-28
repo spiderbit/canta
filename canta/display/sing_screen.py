@@ -34,7 +34,6 @@ from canta.event.observers.debug_widget import DebugWidget
 from canta.event.observers.resultview import ResultView
 from canta.event.observers.pos_cube_observer import PosCubeObserver
 from canta.event.observers.music_notes import MusicNotes
-from canta.event.observers.lyrics_bg_box import LyricsBgBox
 from canta.event.observers.time_label import TimeLabel
 from canta.event.observers.pause import Pause
 

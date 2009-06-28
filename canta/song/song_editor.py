@@ -24,10 +24,9 @@ import thread
 import soya
 import soya.pudding as pudding
 
-from canta.event.observers.song_label_observer import SongLabelObserver
+from canta.event.observers.lyrics_observer import LyricsObserver
 from canta.event.observers.main_cube_observer import MainCubeObserver
 from canta.event.observers.click_observer import ClickObserver
-from canta.event.observers.lyrics_bg_box import LyricsBgBox
 from canta.event.observers.music_notes import MusicNotes
 from canta.event.subjects.song_data import SongData
 from canta.song.song import Song
@@ -123,7 +122,7 @@ class SongEditor(soya.Body):
             self.widget_properties['font']['lyrics']['done']['color']
 
         # The observer for the lyrics:
-        lyrics = SongLabelObserver(self.widget_properties, self.debug)
+        lyrics = LyricsObserver(self.widget_properties)
 
         # The observer for the symbolical musical representations:
 
@@ -136,15 +135,10 @@ class SongEditor(soya.Body):
                         song_bar_color, self.debug)
 
         self.music_notes = MusicNotes(self.parent_world)
-        # The observer for the background box (lyrics):
-        l_bg_box = LyricsBgBox(self.widget_properties, self.debug)
-
-
 
         self.pos = 0
         self.song_data = SongData()
         self.song_data.attach(lyrics)
-        self.song_data.attach(l_bg_box)
         self.song_data.attach(cube)
         self.song_data.attach(self.music_notes)
 
