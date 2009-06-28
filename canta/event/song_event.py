@@ -75,7 +75,6 @@ class SongEvent(soya.Body):
         pos = self.player.get_pos()
         if not pos:
             return
-        #print "in begin_round (song_event) self.song.line_nr", self.song.line_nr
         if self.debug: print "start: ",self.song.info['start']
         if not self.end_sended:
             if not self.player.paused:

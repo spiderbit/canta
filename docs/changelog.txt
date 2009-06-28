@@ -1,6 +1,6 @@
 Canta 0.2-beta7
 
-* added second lyrics container now there are first thecurrent and second the next lyrics line
+* added second lyrics container, now there are first the current and second the next lyrics line
 * duration of the song gets displayed behind the position [ pos / duration ]
 * improved song result system:
  - passed/hitted points gets collected seperatly
