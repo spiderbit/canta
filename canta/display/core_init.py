@@ -429,16 +429,18 @@ class CoreInit:
         entry_sing_screen['song_start_text'] = 'Start'
         entry_sing_screen['start_screen'] = sing_screen
         entry_sing_screen['menu_text'] = _(u"Sing")
+        entry_sing_screen['default_manager'] = 0
         entry_song_editor = {}
         entry_song_editor['song_start_text'] = 'Edit'
         entry_song_editor['start_screen'] = song_editor
         entry_song_editor['menu_text'] = _(u'Song Editor')
+        entry_song_editor['default_manager'] = 1
         entries.append(entry_sing_screen)
         entries.append(entry_song_editor)
 
         browsers = []
         for entry in entries:
-            browser = MenuBrowser(1, self.widget_properties, \
+            browser = MenuBrowser(entry['default_manager'], self.widget_properties, \
                 entry['start_screen'], self.sound_preview, \
                 self.use_pil, player = self.player,\
                 song_start_text=entry['song_start_text'])
