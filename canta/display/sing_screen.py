@@ -27,7 +27,7 @@ import soya.pudding as pudding
 from canta.event.song_event import SongEvent
 from canta.event.keyboard_event import KeyboardEvent
 from canta.event.subjects.song_data import SongData
-from canta.event.observers.song_label_observer import SongLabelObserver
+from canta.event.observers.lyrics_observer import LyricsObserver
 from canta.event.observers.main_cube_observer import MainCubeObserver
 from canta.event.observers.sing_cube_observer import SingCubeObserver
 from canta.event.observers.debug_widget import DebugWidget
@@ -148,13 +148,16 @@ class SingScreen(Menu):
         pos_size = {}
         pos_size['width'] = 70
         pos_size['height'] = 30
-        pos_size['top'] = soya.get_screen_height() / 1.1 - 12
         pos_size['left'] = 35
         self.widget_properties['pos_size'] = pos_size
         self.widget_properties['anchoring'] = 'bottom'
 
-        # The observer for the lyrics:
-        label = SongLabelObserver(self.widget_properties)
+        # The observers for the lyrics:
+        self.widget_properties['pos_size']['top'] = soya.get_screen_height() * 0.8
+        lyrics_current = LyricsObserver(self.widget_properties)
+
+        self.widget_properties['pos_size']['top'] = soya.get_screen_height() * 0.9
+        lyrics_next = LyricsObserver(self.widget_properties, line_diff=1)
 
         use_pil = self.config['screen']['pil']
         self.game = Game(self.octave, self.helper, allowed_difference=1)
@@ -189,9 +192,6 @@ class SingScreen(Menu):
         # The observer for the song position cube:
         pos_bar = PosCubeObserver(self.parent_world,
                       pos_bar_color)
-
-        # The observer for the background box (lyrics):
-        l_bg_box = LyricsBgBox(self.widget_properties)
 
         # Observer for the song time:
         time_label = TimeLabel(self.widget_properties)
@@ -232,7 +232,8 @@ class SingScreen(Menu):
             self.song_event)
         pause.set_heading(h1_pause)
 
-        self.song_data.attach(label)
+        self.song_data.attach(lyrics_current)
+        self.song_data.attach(lyrics_next)
         self.song_data.attach(pos_bar)
         self.song_data.attach(bar)
         self.song_data.attach(time_label)
@@ -240,7 +241,6 @@ class SingScreen(Menu):
         self.song_data.attach(result_view)
         self.song_data.attach(input_bar)
         self.song_data.attach(music_notes)
-        self.song_data.attach(l_bg_box)
 
         self.parent_world.add(self.keyboard_event)
 

@@ -3,6 +3,8 @@
 #
 #    CANTA - A free entertaining educational software for singing
 #    Copyright (C) 2007  S. Huchler, A. Kattner, F. Lopez
+#    Copyright (C) 2008  S. Huchler
+#    Copyright (C) 2009  S. Huchler
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -20,36 +22,31 @@
 import os
 import soya
 import soya.pudding as pudding
+from canta.event.observers.label_list import LabelList
 
-class LyricsBgBox:
-    """ Draw a background box for the lyrics.
-    """
-    def __init__(self, widget_properties, debug=0):
-    
-        parent_widget = widget_properties['root_widget']
+class LyricsObserver(pudding.container.Container):
+
+    def __init__(self, widget_properties, line_diff=0):
+
+        parent = widget_properties['root_widget']
+        self.line_diff = line_diff
 
         screen_res_x = widget_properties['config']['screen'].as_int('resolution_x')
         screen_res_y = widget_properties['config']['screen'].as_int('resolution_y')
+        bc_top = widget_properties['pos_size']['top']
+        bc_left = int (0.02 * screen_res_x)
+        bc_width = screen_res_x * 0.9 # any number, we ANCHOR_ALL later
+        bc_height = screen_res_y * 0.07
+        pudding.container.Container.__init__( \
+                self, parent=parent, left=bc_left, top=bc_top,\
+                width=bc_width, height=bc_height)
 
         box_border_color = widget_properties['box']['border']['color']
         box_bg_color = widget_properties['box']['background']['color']
-
-        bc_top = screen_res_y / 1.1 - 20
-        bc_left = 10
-        bc_width = 10 # any number, we ANCHOR_ALL later
-        bc_height = screen_res_y
-        self.box_cont = pudding.container.Container( \
-                parent_widget, left=bc_left, top=bc_top,\
-                width=bc_width, height=bc_height)
-        self.box_cont.right = 20
-        self.box_cont.bottom = 30
-        self.box_cont.anchors = pudding.ANCHOR_ALL
-        self.box_cont.padding = 5
-
-        box_left = 10
-        box_width = screen_res_x - 40
-        box_height = screen_res_y - bc_top - 25
-        bg_box = pudding.control.Box(self.box_cont, \
+        box_left = self.left
+        box_width = self.width
+        box_height = self.height
+        bg_box = pudding.control.Box(self, \
                 left=box_left, \
                 width=box_width, \
                 height=box_height, \
@@ -58,22 +55,31 @@ class LyricsBgBox:
                 z_index=-3)
         bg_box.anchors = pudding.ANCHOR_BOTTOM | pudding.ANCHOR_LEFT \
                 | pudding.ANCHOR_RIGHT
-
-        parent_widget.on_resize()
-
-
-    def _end(self):
-        self.box_cont.visible = 0
+        self.label_list = LabelList(bg_box, widget_properties)
 
 
     def update(self, subject):
         status = subject.data['type']
-        if status == 'end':
-            self._end()
+        if status == 'nextLine':
+            song = subject.data['song']
+            self.label_list._delete_all()
+            line_nr = song.line_nr + self.line_diff
+            if 0 <= line_nr < len(song.lines):
+                self.label_list._show_line(song.lines[line_nr].segments)
+        elif status == 'activateNote':
+            if self.line_diff == 0:
+                self.label_list._activate_note(subject.data['pos'])
+        elif status == 'deActivateNote':
+            if self.line_diff == 0:
+                self.label_list._de_activate_note(subject.data['old_pos'])
+        elif status == 'end':
+            self.visible = 0
+
 
 
 def main():
     pass
+
 
 if __name__ == '__main__': main()
 
