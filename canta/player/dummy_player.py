@@ -62,6 +62,11 @@ class DummyPlayer(Player):
             self.pos = 0.0
             return "end"
 
+
+    def get_duration(self):
+        """Returns the duration of the song in seconds"""
+        return self.length
+
     def pause(self):
         self.pos += time() - self.start_time
         self._pause()
