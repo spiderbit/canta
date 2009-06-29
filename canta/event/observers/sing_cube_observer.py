@@ -45,7 +45,7 @@ class SingCubeObserver(CubeObserver):
                 self.hit_tone(data, target_tone.pitch, 0)
             else:
                 pitch = self.game.get_corrected_pitch(target_tone.pitch, pitch)
-                difference = target_tone.pitch - pitch
+                difference = abs(target_tone.pitch - pitch)
                 if self.game.helper:
                     '''helper on'''
                     if difference <= self.game.allowed_difference:
