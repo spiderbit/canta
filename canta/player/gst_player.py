@@ -37,6 +37,9 @@ class GSTPlayer(Player):
         self.pipeline.add(sink)
         self.audiotestsrc.link(sink)
         self.time_format = gst.Format(gst.FORMAT_TIME)
+        bus = self.playbin.get_bus()
+        bus.add_signal_watch()
+        bus.connect("message", self.on_message)
 
 
     def load(self, path=None, file=None):
@@ -54,6 +57,7 @@ class GSTPlayer(Player):
         self.playbin.set_state(gst.STATE_NULL)
 
     def play(self, start=0):
+        self.ended = False
         if not self.paused and start!=0:
             result = self.playbin.set_state(gst.STATE_PAUSED)
             self.playbin.get_state() # block until the state is really changed
@@ -78,14 +82,15 @@ class GSTPlayer(Player):
         state = self.playbin.get_state(timeout=50*gst.MSECOND)[1]
         if self.is_paused():
             return "pause"
+        elif self.ended:
+            #self.ended = False
+            return "end"
         elif state == gst.STATE_PLAYING:
             try:
                 duration, format = self.playbin.query_duration(gst.FORMAT_TIME)
                 pos = self.playbin.query_position(gst.FORMAT_TIME)[0]
                 if pos < duration:
                     return pos / 1000000000.
-                else:
-                    return "end"
             except gst.QueryError:
                 return 0
         else:
@@ -110,6 +115,16 @@ class GSTPlayer(Player):
 
     def fadeout(self):
         print "not implemented yet"
+
+    def on_message(self, bus, message):
+        t = message.type
+        if t == gst.MESSAGE_EOS:
+            self.playbin.set_state(gst.STATE_NULL)
+            self.ended=True
+        elif t == gst.MESSAGE_ERROR:
+            self.playbin.set_state(gst.STATE_NULL)
+            err, debug = message.parse_error()
+            #print "Error: %s" % err, debug
 
 
 
