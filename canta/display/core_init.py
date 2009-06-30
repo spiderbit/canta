@@ -108,6 +108,8 @@ class CoreInit:
 
         self.locale = self.config['misc']['locale']
         self.octave = int(self.config['misc'].as_bool('octave'))
+        self.helper = int(self.config['misc'].as_bool('helper'))
+        self.allowed_difference =  int(self.config['misc'].as_int('allowed_difference'))
 
         self.screen_res_x =  self.config['screen'].as_int('resolution_x')
         self.screen_res_y =  self.config['screen'].as_int('resolution_y')
@@ -379,6 +381,8 @@ class CoreInit:
         i_theme =  _(u'Choose a theme:')
         i_lan = _(u'Choose a language:')
         i_octave = _(u'Octave correctness:')
+        i_helper = _(u'Easier tone hitting:')
+        i_allowed_difference = _(u'Allowed difference:')
 
         # File paths:
         about_file = os.path.join('misc', 'ABOUT.txt')
@@ -415,7 +419,7 @@ class CoreInit:
                     camera=self.camera, theme_mgr=self.theme_mgr, \
                     widget_properties=self.widget_properties, \
                     menu_list=self.menus, config=self.config, \
-                    octave=self.octave, player=self.player)
+                    player=self.player)
 
         pos_size = {}
         pos_size['height'] = self.screen_res_y / 16
@@ -559,6 +563,15 @@ class CoreInit:
                     'toggle_items' : on_off_toggle,
                     'selected_item' : self.octave})
 
+        misc_items.append({'info' : i_helper,
+                    'button_type' : 'toggle',
+                    'toggle_items' : on_off_toggle,
+                    'selected_item' : self.helper})
+        misc_items.append({'info' : i_allowed_difference,
+                    'button_type' : 'toggle',
+                    'toggle_items' : ['1', '2', '3', '4', '5', '6', '7'],
+                    'selected_item' : self.allowed_difference})
+
         misc_group = {'heading' : h2_settings_misc, 'items' : misc_items}
         self.options_menu_misc.add_group(misc_group)
 
@@ -640,6 +653,9 @@ class CoreInit:
 
         locale = self.options_menu_misc.toggle_list[0].label
         octave = self.options_menu_misc.toggle_list[1].label
+        helper = self.options_menu_misc.toggle_list[2].label
+        allowed_difference = self.options_menu_misc.toggle_list[3].label
+
 
         self.config['screen'] = {
             'resolution_x' : x,
@@ -658,7 +674,9 @@ class CoreInit:
         }
         self.config['misc'] = {
             'locale' : locale,
-            'octave' : octave
+            'octave' : octave,
+            'helper' : helper,
+            'allowed_difference' : allowed_difference
         }
         self.config.write()
 

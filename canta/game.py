@@ -23,11 +23,11 @@ class Game:
         this class is for Game settings or methods
         that are needed to work with them
     '''
-    def __init__(self, octave=True, helper=True, allowed_difference=1):
-        self.octave = octave
+    def __init__(self, config):
+        self.octave = config['misc'].as_bool('octave')
         # if helper is set you only need to sing nearly the right tone
-        self.helper = helper
-        self.allowed_difference = allowed_difference
+        self.helper = config['misc'].as_bool('helper')
+        self.allowed_difference = config['misc'].as_int('allowed_difference')
         self.stats = {}
         self.stats['normal'] = {'hits' : 0, 'misses' : 0, 'points' : 100}
         self.stats['bonus'] = {'hits' : 0, 'misses' : 0, 'points' : 200}

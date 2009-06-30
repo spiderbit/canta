@@ -52,14 +52,12 @@ class SingScreen(Menu):
     """Sing screen.
     """
     def __init__(self, app_dir, camera, theme_mgr, widget_properties, \
-            menu_list, config, octave, player=None):
+            menu_list, config, player=None):
         Menu.__init__(self, widget_properties)
         self.app_dir = app_dir
         self.camera = camera
         self.theme_mgr = theme_mgr
-        self.octave = octave
-        self.player= player
-        self.helper = True
+        self.player = player
         self.menu_list = menu_list
         self.menu_list['singscreen'] = self
         self.config = config
@@ -159,7 +157,7 @@ class SingScreen(Menu):
         lyrics_next = LyricsObserver(self.widget_properties, line_diff=1)
 
         use_pil = self.config['screen']['pil']
-        self.game = Game(self.octave, self.helper, allowed_difference=1)
+        self.game = Game(self.config)
         # The observer for the results screen (when the song ended):
         result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
                 use_pil, self.game)
@@ -218,8 +216,8 @@ class SingScreen(Menu):
             from canta.event.input_gstreamer import Input
 
         self.input = Input(self.song, self.input_subject, \
-                self.player, self.octave)
-        self.input.config = self.config
+                self.player, self.config)
+
         self.song_event = SongEvent(self.song, self.widget_properties,\
                 self.song_data, self.player, \
                 self.keyboard_event, self.input)

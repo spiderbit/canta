@@ -13,3 +13,6 @@ name = string(default=silver)
 [misc]
 locale = string(default=default)
 octave = boolean(default=off)
+helper = boolean(default=on)
+allowed_difference = integer(default=1)
+

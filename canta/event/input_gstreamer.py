@@ -41,13 +41,12 @@ AUDIOFREQ = 32000
 
 
 class Input(Thread):
-    def __init__(self, song=Song(), song_data=0, player=None, octave=False, debug=0):
+    def __init__(self, song=Song(), song_data=0, player=None, config=None):
         self.timeAfter = 0
         self.timeBefore = 0
         Thread.__init__(self)
         self.user_cfg = None
         self.player = player
-        self.debug = debug
         self.song_data = song_data
 
         self.paused = False # is the Song paused
@@ -69,7 +68,7 @@ class Input(Thread):
         self.current_note = None
         self.last_note = None
 
-        self.octave = octave
+        self.octave = config['misc'].as_bool('octave')
 
         self.tone_nr = None
         self.line_nr = None
