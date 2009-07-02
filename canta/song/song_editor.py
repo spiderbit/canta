@@ -46,7 +46,7 @@ from canta.song.song_segment import SongSegment
 class SongEditor(soya.Body):
     """TODO...
     """
-    def __init__(self, app_dir, widget_properties, theme_mgr, main_menu, player, debug=0):
+    def __init__(self, app_dir, widget_properties, theme_mgr, main_menu, player):
 
         self.l_help_hint_0 = _(u'Press [h] for help...')
         self.l_help_hint_1 = _(u'Press [ESC] to go back...')
@@ -56,7 +56,6 @@ class SongEditor(soya.Body):
         self.separator = u' - '
         self.h_help = _(u'Help')
         self.help_file_path = os.path.join(app_dir, 'misc', 'HELP.txt')
-        self.debug = debug
         self.widget_properties = widget_properties
         self.app_dir = app_dir
         self.parent_world = widget_properties['root_world']
@@ -85,8 +84,7 @@ class SongEditor(soya.Body):
         self.help_hint_cont.right = 10
         self.help_hint_cont.anchors = pudding.ANCHOR_ALL
         self.help_hint_cont.visible = 0
-        self.keyboard_event = KeyboardEvent(self.widget_properties, \
-                 self.debug, theme_mgr)
+        self.keyboard_event = KeyboardEvent(self.widget_properties, theme_mgr)
 
         self.txt_input = InputField(self.widget_properties, '')
         self.txt_input.label.visible = 0
@@ -132,7 +130,7 @@ class SongEditor(soya.Body):
         song_bar_color['normal'] = (0, 0., 1., 0.4)
 
         cube = MainCubeObserver(self.widget_properties['root_world'], \
-                        song_bar_color, self.debug)
+                        song_bar_color)
 
         self.music_notes = MusicNotes(self.parent_world)
 

@@ -47,7 +47,8 @@ def main():
     version = '(experimental)'
 
     # debug flag:
-    DEBUG = False
+    # python sets an own debug variable if you start python with the right parameter
+
 
     # get platform info:
     PLATFORM = sys.platform
@@ -63,6 +64,6 @@ def main():
     #	import win32com.client
 
     window_title = APP_NAME + ' ' + version
-    CoreInit(window_title, APP_DIR ,DEBUG)
+    CoreInit(window_title, APP_DIR)
 
 if __name__ == '__main__': main()

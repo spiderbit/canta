@@ -67,15 +67,15 @@ class MenuBrowserPresentation(Menu):
 
 class MenuBrowser(MenuBrowserPresentation):
     def __init__(self, default_manager, widget_properties, sing_screen,\
-             preview=False, use_pil=False, player=None, \
-             song_start_text='enter'):
+             config=None, player=None, song_start_text='enter'):
         MenuBrowserPresentation.__init__(self, widget_properties)
+        self.config = config
         self.cover_loaded = False
         self.player = player
         self.song_managers = []
         self.default_manager = self.selected_manager = default_manager
-        self.use_pil = use_pil
-        self.preview = preview
+        self.use_pil = self.config['screen'].as_bool('pil')
+        self.preview = self.config['sound'].as_bool('preview')
         self.prev_button.function=self.select_prev
         self.next_button.function=self.select_next
         app_dir = os.path.dirname(sys.argv[0])

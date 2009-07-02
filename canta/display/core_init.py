@@ -36,9 +36,8 @@ from validate import Validator
 import warnings
 
 from canta.display.style import Style
-from canta.display.properties import DisplayProperties
-from canta.theme.theme_manager import ThemeManager
 from canta.menus.menu import Menu
+from canta.menus.settings import Settings
 from canta.menus.button import MenuButton
 from canta.menus.item_group import MenuGroup
 from canta.menus.browser import MenuBrowser
@@ -47,8 +46,8 @@ from canta.song.song_editor import SongEditor
 from canta.display.sing_screen import SingScreen
 from canta.song.song_manager import SongManager
 from canta.theme.particle_system import ParticleSystem
-from canta.display.language import LocaleManager
 from canta.directory import Directory
+from canta.theme.theme_manager import ThemeManager
 
 
 class CoreInit:
@@ -60,34 +59,14 @@ class CoreInit:
         * all menus and needed instances.
         Then start the main loop.
     """
-    def __init__(self, window_title='', app_dir = os.path.dirname(sys.argv[0]), debug=0):
+    def __init__(self, window_title='', app_dir = os.path.dirname(sys.argv[0])):
 
         self.app_dir = app_dir
-        self.debug = debug
         self.window_title = window_title
         self._start()
 
 
-    def check_sound_modules(self):
-        try:
-             import pygame, Numeric
-        except ImportError:
-             self.valid_sound_players.remove('PyGame')
-        try:
-             import oss, numpy
-        except ImportError:
-             self.valid_sound_inputs.remove('OSS')
-        try:
-             import pyaudio, numpy
-        except ImportError:
-             self.valid_sound_inputs.remove('PyAudio')
-
-
     def _start(self):
-
-        self.valid_sound_players = ['PyGame', 'Dummy', 'Gstreamer']
-        self.valid_sound_inputs = ['OSS', 'PyAudio', 'Gstreamer']
-        self.check_sound_modules()
 
         # get user config settings and store them:
         self.config_path = os.path.join(user.home, '.canta')
@@ -106,20 +85,11 @@ class CoreInit:
             self.config = ConfigObj(os.path.join(self.config_path, 'config'), configspec=spec_file)
             self.config.validate(vdt)
 
-        self.locale = self.config['misc']['locale']
-        self.octave = int(self.config['misc'].as_bool('octave'))
-        self.helper = int(self.config['misc'].as_bool('helper'))
-        self.allowed_difference =  int(self.config['misc'].as_int('allowed_difference'))
 
         self.screen_res_x =  self.config['screen'].as_int('resolution_x')
         self.screen_res_y =  self.config['screen'].as_int('resolution_y')
-        self.fullscreen_on = int(self.config['screen'].as_bool('fullscreen'))
-        self.fps_label = int(self.config['screen'].as_bool('fps_label'))
-        self.use_pil = int(self.config['screen'].as_bool('pil'))
-        self.sound_player = self.config['sound']['player']
-        self.sound_input = self.config['sound']['input']
-        self.sound_preview = int(self.config['sound'].as_bool('preview'))
         self.theme_name = self.config['theme']['name']
+
 
         self.widget_properties = {}
         self.widget_properties['theme'] = {}
@@ -127,11 +97,6 @@ class CoreInit:
         self.widget_properties['theme']['song'] = None
 
         self.widget_properties['config'] = self.config
-
-        self.lm = LocaleManager(self.app_dir)
-        self.lm.install(self.locale)
-
-        self.disp = DisplayProperties()
 
         # initialize game engine:
         self._init_game_engine()
@@ -148,7 +113,7 @@ class CoreInit:
             particles.rotate_z(-180.0)
 
         # load the theme config settings:
-        self.theme_mgr = ThemeManager(self.root_world, self.debug)
+        self.theme_mgr = ThemeManager(self.root_world)
         self.theme_dir = os.path.join(self.app_dir, 'media', 'themes', self.theme_name)
         self.theme_mgr.get_theme(self.theme_name, self.theme_dir)
 
@@ -212,6 +177,8 @@ class CoreInit:
 
         self.widget_properties['bar'] = self.theme_mgr.get_bar(self.theme_name)
 
+        self.settings = Settings(self.config, self.widget_properties, self)
+
         # initialize widget system:
         self._init_widget_engine()
 
@@ -222,118 +189,6 @@ class CoreInit:
         self.init_menus()
 
 
-    def _init_game_engine(self):
-        """Initialize soya game engine, append our paths to soya's paths,
-            create the scene and set up a camera.
-        """
-
-        # Hide window manager's resizability
-        # features (maximise, resize, ...):
-        RESIZEABLE = False
-
-        soya.init(title=self.window_title, \
-                width=self.screen_res_x, height=self.screen_res_y, \
-                fullscreen=self.fullscreen_on, \
-                resizeable=RESIZEABLE, sound=False)
-
-        # Enable/disable soya's auto (blender model) importer:
-        soya.AUTO_EXPORTERS_ENABLED = True
-
-        # Append some paths:
-        #	* themes/[selected theme name]/media
-        #	TODO: append paths for all themes in themes/,
-        #	so we can change the theme at runtime (?)...
-        #	* songs/[song name]/media
-        default_path = os.path.join(self.app_dir, 'media', 'themes', \
-            'default', 'media')
-        soya.path.append(default_path)
-        theme_path = os.path.join(self.app_dir, 'media', 'themes', \
-            self.widget_properties['theme']['main'], 'media')
-        soya.path.append(theme_path)
-
-        self.root_world = soya.World()
-        self.widget_properties['root_world'] = self.root_world
-        # set up a camera:
-        self.camera = soya.Camera(self.root_world)
-
-        ### CAMERA TESTS ###
-        moveable = False
-        rotating = False
-        if moveable:
-            from lib.cameras.movable_camera import MovableCamera
-            self.camera = MovableCamera(self.app_dir, self.parent_world, debug=self.debug)
-        if rotating:
-            from lib.cameras.spinning_camera import SpinningCamera
-            cube = soya.Body(self.root_world, soya.cube.Cube().to_model())
-            cube.visible = 0
-            self.camera = SpinningCamera(self.root_world, cube)
-        ### END CAMERA TESTS ###
-
-        self.camera.set_xyz(0.0, 0.0, 15.0)
-
-        self.light = soya.Light(self.root_world)
-        self.light.set_xyz(0.0, 7.7, 17.0)
-
-
-    def load_player(self):
-        # The music players:
-        if self.sound_player == 'Dummy':
-            from canta.player.dummy_player import DummyPlayer
-            self.player = DummyPlayer()
-        elif self.sound_player == 'Gstreamer':
-            from canta.player.gst_player import GSTPlayer
-            self.player = GSTPlayer()
-        elif self.sound_player == 'PyGame':
-            from canta.player.pygame_player import PygamePlayer
-            self.player = PygamePlayer()
-        else:
-            print "something wrong in configfile, player not found!"
-            sys.exit(0)
-
-    def _init_widget_engine(self):
-        """Initialize the pudding widget system, create a root widget.
-        """
-        pudding.init(style=Style(self.widget_properties, self.debug))
-
-        # Create a pudding root widget:
-        self.root_widget = pudding.core.RootWidget( \
-                width=self.screen_res_x, \
-                height=self.screen_res_y, \
-                top=0, left=0)
-
-        self.widget_properties['root_widget'] = self.root_widget
-
-        # Loading Label:
-        # This should come immediatly, but it comes too late (after
-        # the models are loaded).
-        lc_top = self.screen_res_x / 2
-        lc_left = self.screen_res_x / 2 - 100
-        self.loading_cont = pudding.container.HorizontalContainer( \
-                self.root_widget, \
-                top=lc_top,
-                left=lc_left,
-                width=10, height=10, z_index=1)
-        self.loading_cont.anchors = pudding.ANCHOR_RIGHT \
-                     | pudding.ANCHOR_TOP | \
-                    pudding.ANCHOR_LEFT
-        self.loading_cont.add_child(pudding.control.SimpleLabel(
-                    label=_(u'Loading, please wait...'),
-                    font=self.widget_properties['font']['p']['obj'],
-                    top=10,
-                    left=10,
-                    color=self.widget_properties['font']['p']['color']
-                    ), pudding.EXPAND_HORIZ)
-
-        self.root_widget.add_child(self.camera)
-        soya.set_root_widget(self.root_widget)
-
-        if self.fps_label:
-            pudding.ext.fpslabel.FPSLabel(soya.root_widget, \
-                position = pudding.TOP_RIGHT)
-
-        pudding.main_loop.MainLoop(self.root_world).update()
-
-
     def init_menus(self):
         """Initialize all menus, then tell pudding main loop to idle().
         """
@@ -341,11 +196,7 @@ class CoreInit:
         # Button labels:
         l_start = _(u"Sing")#_(u'Party Mode')
         l_song_editor = _(u'Song Editor')
-        l_settings_main = _(u'Settings')
-        l_settings_screen = _(u'Screen')
-        l_settings_sound = _(u'Sound')
-        l_settings_theme = _(u'Theme')
-        l_settings_misc = _(u'Misc')
+
         l_about = _(u'About')
         l_quit2 = _(u'Quit')
 
@@ -356,40 +207,15 @@ class CoreInit:
 
         # Menu headings:
         h1_main_menu =  _(u'Main Menu')
-        h1_settings_main =  _(u'Settings')
-        h1_settings_screen =  _(u'Screen Settings')
-        h2_settings_screen =  _(u'SCREEN:')
-        h1_settings_sound =  _(u'Sound Settings')
-        h2_settings_sound =  _(u'SOUND:')
-        h1_settings_theme =  _(u'Theme Settings')
-        h2_settings_theme =  _(u'THEME:')
-        h1_settings_misc = _(u'Miscellaneous Settings')
-        h2_settings_misc = _(u'Miscellaneous')
         h1_about =  _(u'About')
         h1_song_browser =  _(u'Choose a song...')
 
-        # Settings:
-        valid_languages = self.lm.get_langs()
-        on_off_toggle = [('off'), ('on')]
-        i_resolution =  _(u'Resolution:')
-        i_fullscreen =  _(u'Fullscreen:')
-        i_fps_label =  _(u'FPS label:')
-        i_pil =  _(u'Cover images:')
-        i_sound_output =  _(u'Select sound output engine:')
-        i_sound_input =  _(u'Select sound input engine:')
-        i_song_preview =  _(u'Play preview in song browser (experimental):')
-        i_theme =  _(u'Choose a theme:')
-        i_lan = _(u'Choose a language:')
-        i_octave = _(u'Octave correctness:')
-        i_helper = _(u'Easier tone hitting:')
-        i_allowed_difference = _(u'Allowed difference:')
 
         # File paths:
         about_file = os.path.join('misc', 'ABOUT.txt')
         logo_path = 'logo.png'
         show_logo = False
 
-        # obsolete?
         self.menus = {}
 
         # Main menu:
@@ -412,7 +238,7 @@ class CoreInit:
 
         self.load_player()
         song_editor = SongEditor(self.app_dir, self.widget_properties, \
-            self.theme_mgr, main_menu, player=self.player, debug=self.debug )
+            self.theme_mgr, main_menu, player=self.player)
 
         # Sing screen:
         sing_screen = SingScreen(app_dir=self.app_dir, \
@@ -445,8 +271,7 @@ class CoreInit:
         browsers = []
         for entry in entries:
             browser = MenuBrowser(entry['default_manager'], self.widget_properties, \
-                entry['start_screen'], self.sound_preview, \
-                self.use_pil, player = self.player,\
+                entry['start_screen'], self.config, player = self.player,\
                 song_start_text=entry['song_start_text'])
             browser.set_heading(h1_song_browser)
 
@@ -465,160 +290,8 @@ class CoreInit:
             main_menu.add(MenuButton(entry['menu_text'], target=browser, function=browser.start_song,\
                 widget_properties=self.widget_properties, pos_size=pos_size), 'center')
 
-        # Options parent menu:
-        self.options_menu_main = Menu(self.widget_properties)
-        self.options_menu_main.set_heading(h1_settings_main)
+        self.settings.init_menus(main_menu, pos_size)
 
-        # Options sub menus:
-        self.options_menu_screen = MenuGroup(self.widget_properties)
-        self.options_menu_screen.set_heading(h1_settings_screen)
-        self.options_menu_sound = MenuGroup(self.widget_properties)
-        self.options_menu_sound.set_heading(h1_settings_sound)
-        self.options_menu_theme = MenuGroup(self.widget_properties)
-        self.options_menu_theme.set_heading(h1_settings_theme)
-        self.options_menu_misc = MenuGroup(self.widget_properties)
-        self.options_menu_misc.set_heading(h1_settings_misc)
-
-
-        # Add buttons to options parent menu:
-        self.options_menu_main.add(MenuButton(l_back, target=main_menu, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'horiz')
-        self.options_menu_main.add(MenuButton(l_save, function=self.save, \
-            widget_properties = self.widget_properties, pos_size=pos_size), 'horiz')
-        self.options_menu_main.add(MenuButton(l_save_quit, function=self.save, \
-            args='quit', widget_properties=self.widget_properties, pos_size=pos_size), 'horiz')
-
-        self.options_menu_main.add(MenuButton(l_settings_screen, target=self.options_menu_screen, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
-        self.options_menu_main.add(MenuButton(l_settings_sound, target=self.options_menu_sound, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
-        self.options_menu_main.add(MenuButton(l_settings_theme, target=self.options_menu_theme, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
-        self.options_menu_main.add(MenuButton(l_settings_misc, target=self.options_menu_misc, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
-
-        back_from_screen = MenuButton(l_back, target=self.options_menu_main, \
-            widget_properties=self.widget_properties)
-        back_from_sound = MenuButton(l_back, target=self.options_menu_main, \
-            widget_properties=self.widget_properties)
-        back_from_theme = MenuButton(l_back, target=self.options_menu_main, \
-            widget_properties=self.widget_properties)
-        back_from_misc = MenuButton(l_back, target=self.options_menu_main, \
-            widget_properties=self.widget_properties)
-        save_button = MenuButton(l_save, function=self.save, \
-            widget_properties=self.widget_properties)
-        save_quit_button = MenuButton(l_save_quit, function=self.save, \
-            args='quit', widget_properties=self.widget_properties)
-
-        # Add items to settings menus:
-        self.options_menu_screen.add(back_from_screen, 'center')
-        self.options_menu_screen.add(save_button, 'center')
-        self.options_menu_screen.add(save_quit_button, 'center')
-
-        self.options_menu_sound.add(back_from_sound, 'center')
-        self.options_menu_sound.add(save_button, 'center')
-        self.options_menu_sound.add(save_quit_button, 'center')
-
-        self.options_menu_theme.add(back_from_theme, 'center')
-        self.options_menu_theme.add(save_button, 'center')
-        self.options_menu_theme.add(save_quit_button, 'center')
-
-        self.options_menu_misc.add(back_from_misc, 'center')
-        self.options_menu_misc.add(save_button, 'center')
-        self.options_menu_misc.add(save_quit_button, 'center')
-
-
-        res = str(self.screen_res_x) + 'x' + str(self.screen_res_y)
-        if res in self.disp.valid_resolutions:
-            selected_resolution = \
-                self.disp.valid_resolutions.index(res)
-        else:
-            selected_resolution = 2
-
-        screen_items = []
-        screen_items.append({'info' : i_resolution,
-                    'button_type' : 'toggle',
-                    'toggle_items' : self.disp.valid_resolutions,
-                    'selected_item' : selected_resolution})
-        screen_items.append({'info' : i_fullscreen, 'button_type' : 'toggle', \
-                    'toggle_items' : on_off_toggle,
-                    'selected_item' : self.fullscreen_on})
-        screen_items.append({'info' : i_fps_label, 'button_type' : 'toggle', \
-                    'toggle_items' : on_off_toggle,
-                    'selected_item' : self.fps_label})
-        screen_items.append({'info' : i_pil, 'button_type' : 'toggle', \
-                    'toggle_items' : on_off_toggle, \
-                    'selected_item' : self.use_pil})
-        screen_group = {'heading' : h2_settings_screen, 'items' : screen_items}
-        self.options_menu_screen.add_group(screen_group)
-
-
-        misc_items = []
-        misc_items.append({'info' : i_lan,
-                    'button_type' : 'toggle',
-                    'toggle_items' : valid_languages,
-                    'selected_item' : self.locale})
-        misc_items.append({'info' : i_octave,
-                    'button_type' : 'toggle',
-                    'toggle_items' : on_off_toggle,
-                    'selected_item' : self.octave})
-
-        misc_items.append({'info' : i_helper,
-                    'button_type' : 'toggle',
-                    'toggle_items' : on_off_toggle,
-                    'selected_item' : self.helper})
-        misc_items.append({'info' : i_allowed_difference,
-                    'button_type' : 'toggle',
-                    'toggle_items' : ['1', '2', '3', '4', '5', '6', '7'],
-                    'selected_item' : self.allowed_difference})
-
-        misc_group = {'heading' : h2_settings_misc, 'items' : misc_items}
-        self.options_menu_misc.add_group(misc_group)
-
-
-        if self.sound_player in self.valid_sound_players:
-            self.selected_player = self.valid_sound_players.index(self.sound_player)
-        else:
-            self.selected_player = 1 # defaults to PyGame
-        sound_items = []
-        sound_items.append({'info' : i_sound_output,
-                    'button_type' : 'toggle',
-                    'toggle_items' : self.valid_sound_players,
-                    'selected_item' : self.selected_player})
-
-        if self.sound_input in self.valid_sound_inputs:
-            self.selected_input = self.valid_sound_inputs.index(self.sound_input)
-        else:
-            self.selected_input = 0 # defaults to OSS
-
-        sound_items.append({'info' : i_sound_input,
-                    'button_type' : 'toggle',
-                    'toggle_items' : self.valid_sound_inputs,
-                    'selected_item' : self.selected_input})
-
-        sound_items.append({'info' : i_song_preview,
-                    'button_type' : 'toggle',
-                    'toggle_items' : on_off_toggle,
-                    'selected_item' : self.sound_preview})
-
-        sound_group = {'heading' : h2_settings_sound, 'items' : sound_items}
-        self.options_menu_sound.add_group(sound_group)
-
-        available_themes = self.theme_mgr.get_theme_names(os.path.join(self.app_dir, 'media', 'themes'))
-
-        if self.theme_name in available_themes:
-            selected_theme = available_themes.index(self.theme_name)
-        else: selected_theme = 0
-        theme_items = []
-        theme_items.append({'info' : i_theme,
-                    'button_type' : 'toggle',
-                    'toggle_items' : available_themes,
-                    'selected_item' : selected_theme})
-        theme_group = {'heading': h2_settings_theme, 'items' : theme_items}
-        self.options_menu_theme.add_group(theme_group)
-
-        main_menu.add(MenuButton(l_settings_main, target=self.options_menu_main, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
         main_menu.add(MenuButton(l_about, target=about_menu, \
             widget_properties=self.widget_properties, pos_size=pos_size), 'center')
         main_menu.add(MenuButton(l_quit2, function=self.quit, args=0, \
@@ -626,9 +299,9 @@ class CoreInit:
 
         # hide the loading label:
         self.loading_cont.visible = 0
-
+        use_pil = int(self.config['screen'].as_bool('pil'))
         # logo:
-        if self.use_pil and show_logo:
+        if use_pil and show_logo:
             try:
                 logo = pudding.control.Logo(self.root_widget, logo_path, z_index=4)
             except:
@@ -638,51 +311,118 @@ class CoreInit:
         pudding.main_loop.MainLoop(self.root_world).idle()
 
 
-    def save(self, args=None):
-        # Sucking values out of the pudding labels, wich is crap:
-        x, y = self.options_menu_screen.toggle_list[0].label.split('x')
-        fs = self.options_menu_screen.toggle_list[1].label
-        fps = self.options_menu_screen.toggle_list[2].label
-        pil = self.options_menu_screen.toggle_list[3].label
-
-        sp = self.options_menu_sound.toggle_list[0].label
-        si = self.options_menu_sound.toggle_list[1].label
-        spr = self.options_menu_sound.toggle_list[2].label
-
-        tn = self.options_menu_theme.toggle_list[0].label
-
-        locale = self.options_menu_misc.toggle_list[0].label
-        octave = self.options_menu_misc.toggle_list[1].label
-        helper = self.options_menu_misc.toggle_list[2].label
-        allowed_difference = self.options_menu_misc.toggle_list[3].label
 
 
-        self.config['screen'] = {
-            'resolution_x' : x,
-            'resolution_y' : y,
-            'fullscreen' : fs,
-            'fps_label' : fps,
-            'pil' : pil
-        }
-        self.config['sound'] = {
-            'player' : sp,
-            'input' : si,
-            'preview' : spr,
-        }
-        self.config['theme'] = {
-            'name' : tn
-        }
-        self.config['misc'] = {
-            'locale' : locale,
-            'octave' : octave,
-            'helper' : helper,
-            'allowed_difference' : allowed_difference
-        }
-        self.config.write()
 
-        if args == 'quit':
-            soya.quit()
-            self._start()
+    def _init_game_engine(self):
+        """Initialize soya game engine, append our paths to soya's paths,
+            create the scene and set up a camera.
+        """
+
+        # Hide window manager's resizability
+        # features (maximise, resize, ...):
+        RESIZEABLE = False
+
+        soya.init(title=self.window_title, \
+                width=self.config['screen'].as_int('resolution_x'),
+                height=self.config['screen'].as_int('resolution_y'), \
+                fullscreen=int(self.config['screen'].as_bool('fullscreen')), \
+                resizeable=RESIZEABLE, sound=False)
+
+        # Enable/disable soya's auto (blender model) importer:
+        soya.AUTO_EXPORTERS_ENABLED = True
+
+        # Append some paths:
+        #	* themes/[selected theme name]/media
+        #	TODO: append paths for all themes in themes/,
+        #	so we can change the theme at runtime (?)...
+        #	* songs/[song name]/media
+        default_path = os.path.join(self.app_dir, 'media', 'themes', \
+            'default', 'media')
+        soya.path.append(default_path)
+        theme_path = os.path.join(self.app_dir, 'media', 'themes', \
+            self.widget_properties['theme']['main'], 'media')
+        soya.path.append(theme_path)
+
+        self.root_world = soya.World()
+        self.widget_properties['root_world'] = self.root_world
+        # set up a camera:
+        self.camera = soya.Camera(self.root_world)
+
+        ### CAMERA TESTS ###
+        moveable = False
+        rotating = False
+        if moveable:
+            from lib.cameras.movable_camera import MovableCamera
+            self.camera = MovableCamera(self.app_dir, self.parent_world)
+        if rotating:
+            from lib.cameras.spinning_camera import SpinningCamera
+            cube = soya.Body(self.root_world, soya.cube.Cube().to_model())
+            cube.visible = 0
+            self.camera = SpinningCamera(self.root_world, cube)
+        ### END CAMERA TESTS ###
+
+        self.camera.set_xyz(0.0, 0.0, 15.0)
+
+        self.light = soya.Light(self.root_world)
+        self.light.set_xyz(0.0, 7.7, 17.0)
+
+
+    def load_player(self):
+        sound_player = self.config['sound']['player']
+        # The music players:
+        if sound_player == 'Dummy':
+            from canta.player.dummy_player import DummyPlayer
+            self.player = DummyPlayer()
+        elif sound_player == 'Gstreamer':
+            from canta.player.gst_player import GSTPlayer
+            self.player = GSTPlayer()
+        else:
+            print "something wrong in configfile, player not found!"
+            sys.exit(0)
+
+    def _init_widget_engine(self):
+        """Initialize the pudding widget system, create a root widget.
+        """
+        pudding.init(style=Style(self.widget_properties))
+
+        # Create a pudding root widget:
+        self.root_widget = pudding.core.RootWidget( \
+                width=self.config['screen'].as_int('resolution_x'),
+                height=self.config['screen'].as_int('resolution_y'), \
+                top=0, left=0)
+
+        self.widget_properties['root_widget'] = self.root_widget
+
+        # Loading Label:
+        # This should come immediatly, but it comes too late (after
+        # the models are loaded).
+        lc_top = self.config['screen'].as_int('resolution_x') / 2
+        lc_left = self.config['screen'].as_int('resolution_x') / 2 - 100
+        self.loading_cont = pudding.container.HorizontalContainer( \
+                self.root_widget, \
+                top=lc_top,
+                left=lc_left,
+                width=10, height=10, z_index=1)
+        self.loading_cont.anchors = pudding.ANCHOR_RIGHT \
+                     | pudding.ANCHOR_TOP | \
+                    pudding.ANCHOR_LEFT
+        self.loading_cont.add_child(pudding.control.SimpleLabel(
+                    label=_(u'Loading, please wait...'),
+                    font=self.widget_properties['font']['p']['obj'],
+                    top=10,
+                    left=10,
+                    color=self.widget_properties['font']['p']['color']
+                    ), pudding.EXPAND_HORIZ)
+
+        self.root_widget.add_child(self.camera)
+        soya.set_root_widget(self.root_widget)
+
+        if self.config['screen'].as_bool('fps_label'):
+            pudding.ext.fpslabel.FPSLabel(soya.root_widget, \
+                position = pudding.TOP_RIGHT)
+
+        pudding.main_loop.MainLoop(self.root_world).update()
 
 
     def quit(self, args=None):

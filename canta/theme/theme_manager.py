@@ -23,8 +23,7 @@ from canta.theme.theme import Theme
 class ThemeManager:
     """TODO
     """
-    def __init__(self, parent_world=None, debug=0):
-        self.debug = debug
+    def __init__(self, parent_world=None):
         self.parent_world = parent_world
         self.themes = {}
         self.theme_cfg_file = 'theme_cfg.xml'
@@ -33,7 +32,7 @@ class ThemeManager:
     def get_theme(self, theme_name='', theme_dir=''):
         self.theme_name = theme_name
 
-        self.themes[theme_name] = Theme(self.parent_world, theme_dir, self.theme_cfg_file, self.debug)
+        self.themes[theme_name] = Theme(self.parent_world, theme_dir, self.theme_cfg_file)
 
 #	def get_all(self, themes_dir):
 #		for dir_name in os.listdir(self.themes_path):
@@ -56,13 +55,13 @@ class ThemeManager:
                 paths.append(path)
         sorted = paths.sort()
         for name in paths:
-            theme_names.append(name)		
+            theme_names.append(name)
         return theme_names
 
 
     def show_theme(self, theme_name):
         self.themes[theme_name].add_to_world()
-        
+
 
     def hide_theme(self, theme_name):
         self.themes[theme_name].remove_from_world()
@@ -80,3 +79,4 @@ class ThemeManager:
 
     def get_bar(self, theme_name):
         return self.themes[theme_name].bar
+

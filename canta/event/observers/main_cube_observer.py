@@ -21,7 +21,7 @@
 from canta.event.observers.cube_observer import CubeObserver
 
 class MainCubeObserver(CubeObserver):
-    def __init__(self, parent_world, color, min_pitch=0., max_pitch=11., debug=0):
+    def __init__(self, parent_world, color, min_pitch=0., max_pitch=11.):
         CubeObserver.__init__(self, parent_world, min_pitch, max_pitch)
         self.color = color
 
