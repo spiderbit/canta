@@ -51,15 +51,16 @@ from canta.cameras.movable_camera import MovableCamera
 class SingScreen(Menu):
     """Sing screen.
     """
-    def __init__(self, app_dir, camera, theme_mgr, widget_properties, \
-            menu_list, config, player=None):
+    def __init__(self, app_dir, main_menu, camera, theme_mgr, widget_properties, \
+            config, player=None):
         Menu.__init__(self, widget_properties)
+        self.main_menu = main_menu
         self.app_dir = app_dir
         self.camera = camera
         self.theme_mgr = theme_mgr
         self.player = player
-        self.menu_list = menu_list
-        self.menu_list['singscreen'] = self
+#        self.menu_list = {}
+#        self.menu_list['singscreen'] = self
         self.config = config
         self.widget_properties['theme_mgr'] = theme_mgr
 
@@ -68,11 +69,9 @@ class SingScreen(Menu):
         h1_pause = _(u'Pause')
         h1_results = _(u'Results')
 
-        self.menu_list['browser'] = args[1]
-
         #self.camera = MovableCamera(self.app_dir, self.parent_world, debug = self.debug)
         self.camera.z = 15
-        self.parent.add_child(self.camera)
+        #self.parent.add_child(self.camera)
 
         self.song = args[0]
         self.song.reset()
@@ -159,8 +158,9 @@ class SingScreen(Menu):
         use_pil = self.config['screen']['pil']
         self.game = Game(self.config)
         # The observer for the results screen (when the song ended):
-        result_view = ResultView(self.widget_properties, self.menu_list, self.song, \
-                use_pil, self.game)
+        browser = args[1]
+        result_view = ResultView(self.widget_properties, self.main_menu, \
+                browser, self.song, use_pil, self.game)
         result_view.set_heading(h1_results)
 
         sing_bar_color = self.widget_properties['bar']['singbar']['color']

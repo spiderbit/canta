@@ -27,7 +27,7 @@ except ImportError:
     print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
     pass
 
-from canta.display.core_init import CoreInit
+from canta.core import Core
 
 
 def main():
@@ -65,6 +65,7 @@ def main():
     #	import win32com.client
 
     window_title = APP_NAME + ' ' + version
-    CoreInit(window_title, APP_DIR)
+    Core(window_title, APP_DIR)
 
 if __name__ == '__main__': main()
+

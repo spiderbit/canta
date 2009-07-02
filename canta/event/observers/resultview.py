@@ -28,8 +28,8 @@ import soya.pudding.ext.meter
 from PIL import Image
 
 class ResultView(ContentMenu):
-    def __init__(self, widget_properties, menu_list, song=None, \
-            use_pil=False, game=None, debug=False):
+    def __init__(self, widget_properties, main_menu, browser, song=None, \
+            use_pil=False, game=None):
 
         self.l_main_menu = _(u'main menu')
         self.l_choose = _(u'choose another song')
@@ -46,11 +46,11 @@ class ResultView(ContentMenu):
         # heading, nav and box container inherited from Menu:
 
         self.widget_properties = widget_properties
-        self.menu_list = menu_list
+        self.main_menu = main_menu
+        self.browser = browser
         self.song = song
         self.use_pil = use_pil
         self.theme_mgr = self.widget_properties['theme_mgr']
-        self.debug = debug
 
         self.world = soya.World()
         self.parent_world.add(self.world)
@@ -169,16 +169,14 @@ class ResultView(ContentMenu):
                     left=10)
 
         # Add a button that leads to the main menu:
-        main_menu = self.menu_list['main']
         self.add(MenuButton(label=self.l_main_menu, \
-                target=main_menu,  \
+                target=self.main_menu,  \
                 widget_properties=self.widget_properties), \
                 'center')
 
         # Add a button that leads to the SongBrowser:
-        show_browser = self.menu_list['browser']
         self.add(MenuButton(label=self.l_choose, \
-                target=show_browser, \
+                target=self.browser, \
                 widget_properties=self.widget_properties), \
                 'center')
 

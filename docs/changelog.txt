@@ -1,3 +1,5 @@
+* refactored Canta core
+
 Canta 0.2.0 (2009-12-23)
 
 * song-generator displays the name of the starter-script in the usage-screen now

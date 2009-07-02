@@ -34,8 +34,6 @@ except ImportError:
     print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
     pass
 
-from canta.display.core_init import CoreInit
-
 def usage():
     print "\n| CANTA Theme Viewer"
     print "| USAGE: python <theme name> <res x> <res y> <fs>"
@@ -43,7 +41,7 @@ def usage():
     print "|   - res x: resolution, e.g. 1024"
     print "|   - res y: resolution, e.g. 768"
     print "|   - fs: fullscreen 1 or 0\n|"
-    print "|   Example: python run_view_theme.py mozart 1024 768 0"
+    print "|   Example: python run_view_theme mozart 1024 768 0"
 
 def main():
     if len(sys.argv) != 5:

@@ -20,7 +20,7 @@
 
 import sys
 import os
-from canta.display.language import LocaleManager
+#from canta.display.language import LocaleManager
 from canta.menus.menu import Menu
 from canta.menus.button import MenuButton
 from canta.menus.item_group import MenuGroup
@@ -31,12 +31,15 @@ from canta.theme.theme_manager import ThemeManager
 import soya
 
 
-class Settings:
+class Settings(Menu):
     """Initialize
         * user configuration (screen resolution, fullscreen settings, selected theme, ...)
     """
-    def __init__(self, config, widget_properties, core):
+    def __init__(self, config, widget_properties, locale_manager, main_menu, core=None):
         self.core = core
+        self.main_menu = main_menu
+        self.lm = locale_manager
+        Menu.__init__(self, widget_properties)
         self.widget_properties = widget_properties
         self.config = config
         self.locale = self.config['misc']['locale']
@@ -54,20 +57,25 @@ class Settings:
         self.sound_preview = int(self.config['sound'].as_bool('preview'))
         self.theme_name = self.config['theme']['name']
 
-        self.app_dir = os.path.dirname(sys.argv[0])
+#        self.app_dir = os.path.dirname(sys.argv[0])
 
-        self.lm = LocaleManager(self.app_dir)
-        self.lm.install(self.locale)
+ #       self.lm = LocaleManager(self.app_dir)
+  #      self.lm.install(self.locale)
 
         self.disp = DisplayProperties()
 
         self.valid_sound_players = ['Dummy', 'Gstreamer']
         self.valid_sound_inputs = ['Gstreamer']
 
+        pos_size = {}
+        pos_size['height'] = self.screen_res_y / 16
+        pos_size['width'] = self.screen_res_x - 80
+        pos_size['top'] = 10
+        pos_size['left'] = 10
 
-    def init_menus(self, main_menu, pos_size):
+
+        #def init_menus(self, main_menu, pos_size):
         # Button labels:
-        l_settings_main = _(u'Settings')
         l_settings_screen = _(u'Screen')
         l_settings_sound = _(u'Sound')
         l_settings_theme = _(u'Theme')
@@ -105,7 +113,8 @@ class Settings:
         i_allowed_difference = _(u'Allowed difference:')
 
        # Options parent menu:
-        self.options_menu_main = Menu(self.widget_properties)
+        #self.options_menu_main = Menu(self.widget_properties)
+        self.options_menu_main = self
         self.options_menu_main.set_heading(h1_settings_main)
 
         # Options sub menus:
@@ -119,7 +128,7 @@ class Settings:
         self.options_menu_misc.set_heading(h1_settings_misc)
 
         # Add buttons to options parent menu:
-        self.options_menu_main.add(MenuButton(l_back, target=main_menu, \
+        self.options_menu_main.add(MenuButton(l_back, target=self.main_menu, \
             widget_properties=self.widget_properties, pos_size=pos_size), 'horiz')
         self.options_menu_main.add(MenuButton(l_save, function=self.save, \
             widget_properties = self.widget_properties, pos_size=pos_size), 'horiz')
@@ -219,16 +228,16 @@ class Settings:
             self.selected_player = self.valid_sound_players.index(self.sound_player)
         else:
             self.selected_player = 1 # defaults to PyGame
+        if self.sound_input in self.valid_sound_inputs:
+            self.selected_input = self.valid_sound_inputs.index(self.sound_input)
+        else:
+            self.selected_input = 0 # defaults to OSS
+
         sound_items = []
         sound_items.append({'info' : i_sound_output,
                     'button_type' : 'toggle',
                     'toggle_items' : self.valid_sound_players,
                     'selected_item' : self.selected_player})
-
-        if self.sound_input in self.valid_sound_inputs:
-            self.selected_input = self.valid_sound_inputs.index(self.sound_input)
-        else:
-            self.selected_input = 0 # defaults to OSS
 
         sound_items.append({'info' : i_sound_input,
                     'button_type' : 'toggle',
@@ -243,7 +252,7 @@ class Settings:
         sound_group = {'heading' : h2_settings_sound, 'items' : sound_items}
         self.options_menu_sound.add_group(sound_group)
         theme_mgr = ThemeManager()
-        available_themes = theme_mgr.get_theme_names(os.path.join(self.app_dir, 'media', 'themes'))
+        available_themes = theme_mgr.get_theme_names(os.path.join(self.core.app_dir, 'media', 'themes'))
 
         if self.theme_name in available_themes:
             selected_theme = available_themes.index(self.theme_name)
@@ -256,9 +265,62 @@ class Settings:
         theme_group = {'heading': h2_settings_theme, 'items' : theme_items}
         self.options_menu_theme.add_group(theme_group)
 
-        main_menu.add(MenuButton(l_settings_main, target=self.options_menu_main, \
-            widget_properties=self.widget_properties, pos_size=pos_size), 'center')
 
+
+
+    def init_config_menu(self):
+
+        top = self.box_cont.top
+
+        self.group_cont = pudding.container.VerticalContainer( \
+                self, top=top, left=30, width=100, z_index=1)
+        self.group_cont.padding = 10
+        self.heading_label = pudding.control.SimpleLabel( \
+                self.group_cont, top=10, left=15, label=items['heading'], \
+                font=self.font_p,
+                color=self.color_h)
+
+        bc_top = top + 25
+        bc_left = 10
+        bc_width = 10 # any number, we ANCHOR_ALL later
+        bc_height = 10 # any number, we ANCHOR_ALL later
+
+        box_cont = pudding.container.Container( \
+                self, left=bc_left, top=bc_top, \
+                width=bc_width, height=bc_height, z_index=-3)
+        box_cont.right = 20
+        box_cont.bottom = 30
+        box_cont.anchors = pudding.ANCHOR_ALL
+        box_cont.padding = 5
+
+        box_left = 10
+        box_width = self.screen_res_x - 40
+
+        box_height = len(items['items']) * 65
+        self.bg_box = pudding.control.Box(box_cont, \
+                left=box_left, \
+                width=box_width, \
+                height=box_height, \
+                background_color=self.box_bg_color, \
+                border_color=self.box_border_color, \
+                z_index=-3)
+        self.bg_box.anchors = pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT | pudding.ANCHOR_RIGHT
+
+
+        for item in items['items']:
+            self.info_label = pudding.control.SimpleLabel(self.group_cont, \
+                label=item['info'], font=self.font_p, left=10, \
+                color=self.color_p)
+            if item['button_type'] == 'toggle':
+                selected_item = item['selected_item']
+                self.toggle_list.append(self.group_cont.add_child( \
+                    MenuToggle(self.widget_properties, \
+                    item['toggle_items'], selected_item)))
+            elif item['button_type'] == 'button':
+                self.group_cont.add_child(MenuButton(item['label'], \
+                    item['function'], item['args'], \
+                    self.widget_properties))
+        self.group_count += 1
 
 
     def save(self, args=None):
@@ -307,5 +369,5 @@ class Settings:
 
         if args == 'quit':
             soya.quit()
-            self.core._start()
+            self.core._start()  # starts recursive a new core needs better solution (reload)
 
