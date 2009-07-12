@@ -24,9 +24,9 @@ class Game:
         that are needed to work with them
     '''
     def __init__(self, config):
-        self.octave = config['misc'].as_bool('octave')
+        self.octave = config['misc'].as_bool('octave_adjusting')
         # if helper is set you only need to sing nearly the right tone
-        self.helper = config['misc'].as_bool('helper')
+        self.helper = config['misc'].as_bool('easier_tone_hitting')
         self.allowed_difference = config['misc'].as_int('allowed_difference')
         self.stats = {}
         self.stats['normal'] = {'hits' : 0, 'misses' : 0, 'points' : 100}

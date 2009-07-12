@@ -39,10 +39,9 @@ class LocaleManager:
 
 
     def install(self, lang):
-        #lang = 'en_US'
         #1. way
         # application can set the wished language:
-        if lang == 'default':
+        if lang == 'System Setting':
             self.install_default()
         else:
             lang = gettext.translation( 'canta', self.locale_path, languages=[lang])
@@ -50,8 +49,6 @@ class LocaleManager:
 
 
     def install_default(self):
-
-
         # if you choose this way gettext looks what language ist set in env
         # you can choose that with: export LANG=de_DE
         gettext.install('canta', self.locale_path, unicode=1)

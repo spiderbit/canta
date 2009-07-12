@@ -28,13 +28,14 @@ from canta.menus.toggle_button import MenuToggle
 from canta.menus.menu import ContentMenu
 
 class MenuGroup(ContentMenu):
-    def __init__(self, widget_properties):
+    def __init__(self, widget_properties, key=""):
         ContentMenu.__init__(self, widget_properties)
 
         self.widget_properties = widget_properties
         self.group_count = 0
         self.heights = []
         self.toggle_list = []
+        self.key = key
 
 
     def add_group(self, items):
@@ -74,7 +75,7 @@ class MenuGroup(ContentMenu):
         box_left = 10
         box_width = self.screen_res_x - 40
 
-        box_height = len(items['items']) * 65
+        box_height = len(items) * 65
         self.bg_box = pudding.control.Box(box_cont, \
                 left=box_left, \
                 width=box_width, \
@@ -86,14 +87,16 @@ class MenuGroup(ContentMenu):
 
 
         for item in items['items']:
+            label_string = _('Choose a') + " " + item['info']
             self.info_label = pudding.control.SimpleLabel(self.group_cont, \
-                label=item['info'], font=self.font_p, left=10, \
+                label=label_string, font=self.font_p, left=10, \
                 color=self.color_p)
             if item['button_type'] == 'toggle':
                 selected_item = item['selected_item']
                 self.toggle_list.append(self.group_cont.add_child( \
                     MenuToggle(self.widget_properties, \
-                    item['toggle_items'], selected_item)))
+                    item['toggle_items'], selected_item, \
+                    item['info'])))
             elif item['button_type'] == 'button':
                 self.group_cont.add_child(MenuButton(item['label'], \
                     item['function'], item['args'], \
@@ -104,4 +107,8 @@ class MenuGroup(ContentMenu):
     def add(self, button, align='left'):
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
+
+    def save(self):
+        for item in self.toggle_list:
+            item.save()
 

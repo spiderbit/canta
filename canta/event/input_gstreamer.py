@@ -68,7 +68,7 @@ class Input(Thread):
         self.current_note = None
         self.last_note = None
 
-        self.octave = config['misc'].as_bool('octave')
+        self.octave = config['misc'].as_bool('octave_adjusting')
 
         self.tone_nr = None
         self.line_nr = None

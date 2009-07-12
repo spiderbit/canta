@@ -62,8 +62,8 @@ class SongEditor(Menu):
         self.parent_widget = widget_properties['root_widget']
         self.theme_mgr = theme_mgr
 
-        self.screen_res_x = self.widget_properties['config']['screen'].as_int('resolution_x')
-        self.screen_res_y = self.widget_properties['config']['screen'].as_int('resolution_y')
+        self.screen_res_x = int(widget_properties['config']['screen']['resolution'].split('x')[0])
+        self.screen_res_y = int(widget_properties['config']['screen']['resolution'].split('x')[1])
 
         self.font_p = widget_properties['font']['p']['obj']
         self.color_p = widget_properties['font']['p']['color']
@@ -101,7 +101,7 @@ class SongEditor(Menu):
         pos_size = {}
         pos_size['width'] = 70
         pos_size['height'] = 30
-        pos_size['top'] = self.widget_properties['config']['screen'].as_int('resolution_y') / 1.1 - 12
+        pos_size['top'] = int(self.widget_properties['config']['screen']['resolution'].split('x')[1]) / 1.1 - 12
         pos_size['left'] = 35
         self.widget_properties['pos_size'] = pos_size
         self.widget_properties['anchoring'] = 'bottom'

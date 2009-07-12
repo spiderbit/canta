@@ -23,7 +23,7 @@ class MenuToggle(pudding.control.Button):
     """TODO.
     """
     # TODO: Inherit from own button, because its almost the same...
-    def __init__(self, widget_properties, toggle_list, selected_item):
+    def __init__(self, widget_properties, toggle_list, selected_item, key=''):
 
         self.font_on = widget_properties['font']['button']['on_focus']['obj']
         self.font_off = widget_properties['font']['button']['off_focus']['obj']
@@ -37,17 +37,19 @@ class MenuToggle(pudding.control.Button):
         self.border_color_on = widget_properties['button']['border']['on_focus']['color']
         self.border_color_off = widget_properties['button']['border']['off_focus']['color']
 
+        self.config = widget_properties['config']
+
         pudding.control.Button.__init__(self, \
-            width = widget_properties['config']['screen'].as_int('resolution_x') / 6)
+            width = int(widget_properties['config']['screen']['resolution'].split('x')[0]) / 6)
 
-
+        self.key=key
         self.border_color = self.border_color_off
         self.background_color = self.bg_color_off
         self.child.font = self.font_off
         self.child.color = self.font_color_off
 
         self.toggle_list = toggle_list
-        
+
         #
         if type(selected_item) == int:
             self.selected_item = selected_item
@@ -82,9 +84,11 @@ class MenuToggle(pudding.control.Button):
 
         self.active_item = self.toggle_list[self.selected_item]
         self.label = self.active_item
-        #print self.active_item
+
 
     def get_active_item():
         return self.active_item
 
-        
+    def save(self):
+        self.config[self._parent._parent.key][self.key] = self.active_item
+

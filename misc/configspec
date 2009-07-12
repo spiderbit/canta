@@ -1,18 +1,17 @@
 [screen]
 fullscreen = boolean(default=off)
-resolution_y = integer(default=768, min=100)
-resolution_x = integer(default=1024, min=100)
+resolution = option(default='800x600', '1024x768', '640x480', '800x600')
 pil = boolean(default=off)
 fps_label = boolean(default=off)
 [sound]
-player = string(default=Gstreamer)
+player = option(default=Gstreamer, Gstreamer)
 preview = boolean(default=off)
-input = string(default=Gstreamer)
+input = option(default=Gstreamer, Gstreamer)
 [theme]
-name = string(default=silver)
+name = option(default=silver, silver, white)
 [misc]
-locale = string(default=default)
-octave = boolean(default=off)
-helper = boolean(default=on)
-allowed_difference = integer(default=1)
+locale = option(default='System Setting', de_De, en_US, 'System Setting')
+octave_adjusting = boolean(default=off)
+easier_tone_hitting = boolean(default=on)
+allowed_difference = option(1, 2, 3, 4, 5, 6, 7, default=1)
 

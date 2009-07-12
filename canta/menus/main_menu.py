@@ -42,9 +42,13 @@ class MainMenu(Menu):
         Menu.__init__(self, widget_properties)
         self.core = core
         self.config = config
+
         self.locale = self.config['misc']['locale']
         self.lm = LocaleManager(self.core.app_dir)
+        valid_languages = self.lm.get_langs()
         self.lm.install(self.locale)
+
+
         self.theme_mgr = theme_mgr
         self.camera = camera
         # Button labels:

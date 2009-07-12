@@ -69,6 +69,7 @@ class Core:
         # copy default config
         spec_file = os.path.join(self.app_dir, 'misc', 'configspec')
         self.config = ConfigObj(configspec=spec_file)
+        print self.config.configspec.keys()
         self.config.filename = os.path.join(self.config_path, 'config')
         if not os.access(os.path.join(self.config_path, 'config'), os.F_OK):
             self.config.validate(vdt, copy=True)
@@ -78,8 +79,8 @@ class Core:
             self.config.validate(vdt)
 
 
-        self.screen_res_x =  self.config['screen'].as_int('resolution_x')
-        self.screen_res_y =  self.config['screen'].as_int('resolution_y')
+        x, y =  self.config['screen']['resolution'].split('x')
+        self.screen_res_x, self.screen_res_y = int (x), int(y)
         self.theme_name = self.config['theme']['name']
 
 
@@ -204,8 +205,8 @@ class Core:
         RESIZEABLE = False
 
         soya.init(title=self.window_title, \
-                width=self.config['screen'].as_int('resolution_x'),
-                height=self.config['screen'].as_int('resolution_y'), \
+                width=self.screen_res_x,
+                height=self.screen_res_y, \
                 fullscreen=int(self.config['screen'].as_bool('fullscreen')), \
                 resizeable=RESIZEABLE, sound=False)
 
@@ -254,8 +255,8 @@ class Core:
 
         # Create a pudding root widget:
         self.root_widget = pudding.core.RootWidget( \
-                width=self.config['screen'].as_int('resolution_x'),
-                height=self.config['screen'].as_int('resolution_y'), \
+                width=self.screen_res_x,
+                height=self.screen_res_y, \
                 top=0, left=0)
 
         self.widget_properties['root_widget'] = self.root_widget

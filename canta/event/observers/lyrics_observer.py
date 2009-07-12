@@ -30,9 +30,9 @@ class LyricsObserver(pudding.container.Container):
 
         parent = widget_properties['root_widget']
         self.line_diff = line_diff
+        screen_res_x = int(widget_properties['config']['screen']['resolution'].split('x')[0])
+        screen_res_y = int(widget_properties['config']['screen']['resolution'].split('x')[1])
 
-        screen_res_x = widget_properties['config']['screen'].as_int('resolution_x')
-        screen_res_y = widget_properties['config']['screen'].as_int('resolution_y')
         bc_top = widget_properties['pos_size']['top']
         bc_left = int (0.02 * screen_res_x)
         bc_width = screen_res_x * 0.9 # any number, we ANCHOR_ALL later

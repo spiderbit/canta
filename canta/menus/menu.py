@@ -29,8 +29,8 @@ class Menu(pudding.container.Container):
                 top=0, left=0)
         self.visible = 0
         self.parent_world = widget_properties['root_world']
-        self.screen_res_x = widget_properties['config']['screen'].as_int('resolution_x')
-        self.screen_res_y = widget_properties['config']['screen'].as_int('resolution_y')
+        self.screen_res_x = int(widget_properties['config']['screen']['resolution'].split('x')[0])
+        self.screen_res_y = int(widget_properties['config']['screen']['resolution'].split('x')[1])
         self.font_p = widget_properties['font']['p']['obj']
         self.color_p = widget_properties['font']['p']['color']
         self.font_h = widget_properties['font']['h1']['obj']
