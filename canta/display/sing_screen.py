@@ -244,7 +244,7 @@ class SingScreen(Menu):
         self.input.start()
 
         self.parent_world.add(self.song_event)
-        self.player.load()
+        self.player.load(self.song.path, self.song.info['mp3'])
         self.player.play()
 
 

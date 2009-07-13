@@ -40,6 +40,7 @@ class GSTPlayer(Player):
         bus = self.playbin.get_bus()
         bus.add_signal_watch()
         bus.connect("message", self.on_message)
+        self.ended = False
 
 
     def load(self, path=None, file=None):
