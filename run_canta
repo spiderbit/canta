@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 #    CANTA - A free entertaining educational software for singing
-#    Copyright (C) 2007  S. Huchler, A. Kattner, F. Lopez
+#    Copyright (C) 2007-2009  S. Huchler, A. Kattner, F. Lopez
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ def main():
     #else:
     #    version = '(experimental)'
 
-    version = '(experimental)'
+    version = '0.2-rc1'
 
     # debug flag:
     # python sets an own debug variable if you start python with the right parameter
