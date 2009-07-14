@@ -31,7 +31,7 @@ class LocaleManager:
         self.app_dir = app_dir
         self.locale_path = os.path.join( self.app_dir, 'locale')
         self.langs = []
-        
+
     def get_langs(self):
         self.load_langs()
         self.langs.insert(0,'default')
@@ -45,7 +45,6 @@ class LocaleManager:
         if lang == 'default':
             self.install_default()
         else:
-            print "FIND:", gettext.find('canta', self.locale_path, [lang], all=1)
             lang = gettext.translation( 'canta', self.locale_path, languages=[lang])
             lang.install(unicode=1)
 
@@ -63,7 +62,4 @@ class LocaleManager:
         locale = os.listdir(self.locale_path)
         for lang in locale:
             self.langs.append(lang[0:2])
-
-
-
 
