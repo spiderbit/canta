@@ -39,7 +39,3 @@ Installation / Requirements
 	- python-mingus >= 0.4.0.1
 	- and of course: python (2.6)
 
-3. OPTIONAL:
-
-	- python-numpy or python-numeric
-	- python-pygame
