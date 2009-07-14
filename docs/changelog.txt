@@ -1,5 +1,6 @@
-Canta 0.2-beta7
+Canta 0.2-rc1
 
+* small improvements in translation code and translation files
 * new config options "Easier tone hitting" and "Allowed difference"
 * second lyrics container, now there are first the current and second the next lyrics line
 * duration of the song gets displayed behind the position [ pos / duration ]

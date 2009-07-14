@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: canta v0.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2009-07-14 19:30+0200\n"
-"PO-Revision-Date: 2009-07-14 19:29+0100\n"
+"POT-Creation-Date: 2009-07-14 20:52+0200\n"
+"PO-Revision-Date: 2009-07-14 21:12+0100\n"
 "Last-Translator: Stefan Huchler <stefan@canta-game.org>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
@@ -19,15 +19,18 @@ msgstr ""
 "X-Poedit-Country: GERMANY\n"
 "X-Poedit-SourceCharset: utf-8\n"
 
-#: canta/display/core_init.py:197 canta/display/core_init.py:261
+#: canta/display/core_init.py:197
+#: canta/display/core_init.py:261
 msgid "Sing"
 msgstr "Singe"
 
-#: canta/display/core_init.py:198 canta/display/core_init.py:266
+#: canta/display/core_init.py:198
+#: canta/display/core_init.py:266
 msgid "Song Editor"
 msgstr "Lied Editor"
 
-#: canta/display/core_init.py:200 canta/display/core_init.py:210
+#: canta/display/core_init.py:200
+#: canta/display/core_init.py:210
 msgid "About"
 msgstr "Über Canta"
 
@@ -35,19 +38,23 @@ msgstr "Über Canta"
 msgid "Quit"
 msgstr "Beenden"
 
-#: canta/display/core_init.py:203 canta/menus/settings.py:75
+#: canta/display/core_init.py:203
+#: canta/menus/settings.py:75
 msgid "back"
 msgstr "zurück"
 
-#: canta/display/core_init.py:204 canta/menus/settings.py:76
+#: canta/display/core_init.py:204
+#: canta/menus/settings.py:76
 msgid "save"
 msgstr "speichern"
 
-#: canta/display/core_init.py:205 canta/menus/settings.py:77
+#: canta/display/core_init.py:205
+#: canta/menus/settings.py:77
 msgid "save & restart"
 msgstr "speichern & neustart"
 
-#: canta/display/core_init.py:206 canta/menus/settings.py:78
+#: canta/display/core_init.py:206
+#: canta/menus/settings.py:78
 #: canta/event/observers/resultview.py:36
 msgid "quit"
 msgstr "Beenden"
@@ -80,7 +87,8 @@ msgstr "Drücke [h] für Hilfe..."
 msgid "Press [ESC] to go back..."
 msgstr "Drücke [ESC] um zurück zu gehen"
 
-#: canta/song/song_editor.py:54 canta/menus/browser_entry.py:133
+#: canta/song/song_editor.py:54
+#: canta/menus/browser_entry.py:133
 msgid "BPM: "
 msgstr "Takte pro Minute:"
 
@@ -92,7 +100,8 @@ msgstr "Linie:"
 msgid "Help"
 msgstr "Hilfe"
 
-#: canta/menus/settings.py:70 canta/menus/settings.py:81
+#: canta/menus/settings.py:70
+#: canta/menus/settings.py:81
 msgid "Settings"
 msgstr "Einstellungen"
 
@@ -145,10 +154,12 @@ msgid "Miscellaneous"
 msgstr "Sonstiges"
 
 #: canta/menus/settings.py:93
+#: canta/menus/settings.py:266
 msgid "off"
 msgstr "aus"
 
 #: canta/menus/settings.py:93
+#: canta/menus/settings.py:266
 msgid "on"
 msgstr "an"
 
@@ -241,33 +252,31 @@ msgid "choose another song"
 msgstr "Wähle einen anderen Song"
 
 #: canta/event/observers/resultview.py:39
-msgid "normal points: "
-msgstr "Normale Punkte:"
+msgid "normal points"
+msgstr "Normale Punkte"
 
 #: canta/event/observers/resultview.py:40
-msgid "freestyle points: "
-msgstr "Punkte für frei Gesungenes:"
+msgid "freestyle points"
+msgstr "Freestyle Punkte"
 
 #: canta/event/observers/resultview.py:41
-msgid "bonus points: "
-msgstr "Bonus Punkte:"
+msgid "bonus points"
+msgstr "Bonus Punkte"
 
 #: canta/event/observers/resultview.py:42
-msgid "points: "
-msgstr "Punkte:"
+msgid "points"
+msgstr "Punkte"
 
 #: canta/event/observers/resultview.py:43
-msgid "SCORE: "
-msgstr "Note:"
+msgid "SCORE"
+msgstr "Note"
 
 #~ msgid "Right: "
 #~ msgstr "Richtig:"
-
 #~ msgid "Wrong: "
 #~ msgstr "Falsch:"
-
 #~ msgid "Score: "
 #~ msgstr "Punktestand:"
-
 #~ msgid "Sing "
 #~ msgstr "Singe"
+

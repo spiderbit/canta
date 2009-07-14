@@ -36,11 +36,11 @@ class ResultView(ContentMenu):
         self.l_quit = _(u'quit')
         #self.separator = ' - '
         self.l_points = {}
-        self.l_points['normal'] = _(u'normal points: ')
-        self.l_points['freestyle'] = _(u'freestyle points: ')
-        self.l_points['bonus'] = _(u'bonus points: ')
-        self.l_points['sum'] = _(u'points: ')
-        self.l_score = _(u'SCORE: ')
+        self.l_points['normal'] = _(u'normal points')
+        self.l_points['freestyle'] = _(u'freestyle points')
+        self.l_points['bonus'] = _(u'bonus points')
+        self.l_points['sum'] = _(u'points')
+        self.l_score = _(u'SCORE')
 
         ContentMenu.__init__(self, widget_properties)
         # heading, nav and box container inherited from Menu:
@@ -190,9 +190,9 @@ class ResultView(ContentMenu):
 
         point_order = ('normal', 'freestyle', 'bonus', 'sum')
         for p in point_order:
-             self.res_label.label += self.l_points[p] + \
-                str(self.game.get_points(p))  + '/' + \
-                str(self.game.get_points_possible(p)) + '\n'
+            self.res_label.label += '{0}: {1!s}/{2!s}\n'.format(
+                self.l_points[p], self.game.get_points(p),
+                self.game.get_points_possible(p))
 
         points = self.game.get_points()
         points_possible = self.game.get_points_possible()
@@ -220,7 +220,7 @@ class ResultView(ContentMenu):
                 score = _score
                 col = color
                 break
-        self.res_label.label += '\n' + self.l_score + score
+        self.res_label.label += '\n{0}: {1!s}'.format(self.l_score, score)
 
         # Add the result meter (percentage):
         self.result_meter = pudding.ext.meter.Meter(min=0, max=100, \
