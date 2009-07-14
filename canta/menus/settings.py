@@ -90,14 +90,14 @@ class Settings:
 
         # Settings:
         valid_languages = self.lm.get_langs()
-        on_off_toggle = [('off'), ('on')]
+        on_off_toggle = [_('off'), _('on')]
         i_resolution =  _(u'Resolution:')
         i_fullscreen =  _(u'Fullscreen:')
         i_fps_label =  _(u'FPS label:')
         i_pil =  _(u'Cover images:')
         i_sound_output =  _(u'Select sound output engine:')
         i_sound_input =  _(u'Select sound input engine:')
-        i_song_preview =  _(u'Play preview in song browser (experimental):')
+        i_song_preview =  _(u'Play preview in song browser:')
         i_theme =  _(u'Choose a theme:')
         i_lan = _(u'Choose a language:')
         i_octave = _(u'Octave correctness:')
@@ -263,20 +263,22 @@ class Settings:
 
     def save(self, args=None):
         # Sucking values out of the pudding labels, wich is crap:
+        toggle_map = [_('off'), _('on')]
+        on_off_mapping = {toggle_map[0]: 'off', toggle_map[1]: 'on'}
         x, y = self.options_menu_screen.toggle_list[0].label.split('x')
-        fs = self.options_menu_screen.toggle_list[1].label
-        fps = self.options_menu_screen.toggle_list[2].label
-        pil = self.options_menu_screen.toggle_list[3].label
+        fs = on_off_mapping[self.options_menu_screen.toggle_list[1].label]
+        fps = on_off_mapping[self.options_menu_screen.toggle_list[2].label]
+        pil = on_off_mapping[self.options_menu_screen.toggle_list[3].label]
 
         sp = self.options_menu_sound.toggle_list[0].label
         si = self.options_menu_sound.toggle_list[1].label
-        spr = self.options_menu_sound.toggle_list[2].label
+        spr = on_off_mapping[self.options_menu_sound.toggle_list[2].label]
 
         tn = self.options_menu_theme.toggle_list[0].label
 
         locale = self.options_menu_misc.toggle_list[0].label
-        octave = self.options_menu_misc.toggle_list[1].label
-        helper = self.options_menu_misc.toggle_list[2].label
+        octave = on_off_mapping[self.options_menu_misc.toggle_list[1].label]
+        helper = on_off_mapping[self.options_menu_misc.toggle_list[2].label]
         allowed_difference = self.options_menu_misc.toggle_list[3].label
 
 
