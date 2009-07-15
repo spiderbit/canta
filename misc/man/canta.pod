@@ -1,0 +1,28 @@
+=head1 NAME
+
+Canta - karaoke-like game
+
+=head1 SYNOPSIS
+
+B<canta>
+
+=head1 DESCRIPTION
+
+B<canta> is a karaoke-like game. Its compatible to the ultrastarsong format.
+
+=head1 OPTIONS
+
+No options at the moment
+
+=head1 BUGS
+
+Please report bugs at http://canta-game.org/projects/canta/issues
+
+=head1 AUTHORS
+
+B<Canta> was written by Felix Rodriguez Lopez <felix@canta-game.org> and Andreas Koatna <andreas@canta-game.org> and Stefan Huchler <stefan@canta-game.org>. This manual page was written by Stefan Huchler <stefan@canta-game.org>.
+
+Both are released under the GNU General Public License, version 3 or later.
+
+=cut
+

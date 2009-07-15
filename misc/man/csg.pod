@@ -1,0 +1,67 @@
+=head1 NAME
+
+csg - Canta Song Generator
+
+=head1 SYNOPSIS
+
+B<csg> [OPTION]... [FILE]
+
+=head1 DESCRIPTION
+
+B<csg> is a tool to creates ultrastar-compatible songs primary for Canta
+
+=head1 OPTIONS
+
+The easiest way to use this tool is to start the gui.
+If you starts B<csg> without an option the gui starts.
+
+But the console version has more options:
+
+=over 8
+
+=item B<-a, --artist=<STRING>>
+
+Use the string for the artist field
+
+=item B<-A, --ask>
+
+Asks you all the values
+
+=item B<-d, --duration=<SIZE>>
+
+sets the duration of each entry/tone in beats or seconds just add an s at the end (5.5s)
+
+=item B<-e, --entries=<NUMBER>>
+
+sets the number of entries per line
+
+=item B<-h, --help>
+
+shows a at the moment more complete help
+
+=item B<-m, --midi-file=<FILE>>
+
+starts B<csg> in midi-mode and makes an skeleton songfile that matches this data
+
+=item B<-s, --spacing=<SIZE>>
+
+sets the spacing between the entries/tones in beats or seconds just add an s at the end (5.5s)
+
+=item B<-t, --title=<STRING>>
+
+sets the song title
+
+=back
+
+=head1 BUGS
+
+Please report bugs at http://canta-game.org/projects/canta/issues
+
+=head1 AUTHORS
+
+B<csg> was written by Felix Rodriguez Lopez <felix@canta-game.org> and Andreas Koatna <andreas@canta-game.org> and Stefan Huchler <stefan@canta-game.org>. This manual page was written by Stefan Huchler <stefan@canta-game.org>.
+
+Both are released under the GNU General Public License, version 3 or later.
+
+=cut
+
