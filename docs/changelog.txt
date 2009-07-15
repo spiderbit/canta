@@ -1,4 +1,8 @@
-Canta 0.2-rc1
+Canta 0.2-rc2
+
+* dates in changelog
+
+Canta 0.2-rc1 (2009-07-15)
 
 * small improvements in translation code and translation files
 * new config options "Easier tone hitting" and "Allowed difference"
@@ -14,7 +18,7 @@ Canta 0.2-rc1
 * adds directory entry to the songbrowser you can walk now through a directory structure in songs
 * refactored microphon input processing and visualisation see commit 1421a6b for more info
 
-Canta 0.2-beta6
+Canta 0.2-beta6 (2009-03-08)
 
 * easy automatic generation of note-textures for the songs inside the songeditor
 * generation of sheet music of only the current line (on-the-fly), thats
@@ -27,7 +31,7 @@ with change in the songeditor
 * songs/themes are now seperated in another repository
 
 
-Canta 0.2-beta5
+Canta 0.2-beta5 (2008-12-08)
 
 * add some resolutions for netbooks
 * better configfile-format (cleartext readable/editable)
@@ -44,7 +48,8 @@ Canta 0.2-beta5
 * hide optional sound_modules which are not installed
 * change default theme in config to silver
 
-Canta 0.2-beta4
+Canta 0.2-beta4 (2008-07-04)
+
 * new Canta Song Generator which can make a skelet for a new song, with and
 without a midi file
 * Support for different languages
@@ -59,9 +64,11 @@ without a midi file
 * Canta bar-colors can now be adjusted by themes
 
 Canta 0.2-beta3
+
 * Swichted off "maximize" button.
 
 Canta 0.2-beta2
+
 * New code for finding the song position.
 * Huge parser update.
 * SongEditor plays mp3s and notes as midi (Windows-only)
@@ -69,5 +76,6 @@ Canta 0.2-beta2
 * Improved Settings menu.
 
 Canta 0.2-beta1
+
 * Initial version.
 
