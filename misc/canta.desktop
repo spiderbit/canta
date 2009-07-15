@@ -3,6 +3,6 @@ Encoding=UTF-8
 Type=Application
 Name=Canta
 Comment=Canta is a platform-independent karaoke (singstar-like) Game
-Exec=canta
+Exec=/usr/games/canta
 Icon=canta.png
 Categories=Game;Music;

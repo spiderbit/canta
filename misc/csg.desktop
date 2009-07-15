@@ -3,6 +3,6 @@ Encoding=UTF-8
 Type=Application
 Name=csg
 Comment=Canta Song Generator is a tool to make new Songs for Canta
-Exec=csg
+Exec=/usr/games/csg
 Icon=csg.png
 Categories=Game;Music;
