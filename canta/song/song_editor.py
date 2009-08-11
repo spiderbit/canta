@@ -43,11 +43,12 @@ from canta.song.song_segment import SongSegment
 
 
 
-class SongEditor(soya.Body):
+class SongEditor(Menu):
     """TODO...
     """
     def __init__(self, app_dir, widget_properties, theme_mgr, main_menu, player):
 
+        Menu.__init__(self, widget_properties)
         self.l_help_hint_0 = _(u'Press [h] for help...')
         self.l_help_hint_1 = _(u'Press [ESC] to go back...')
         self.l_help_hint = self.l_help_hint_0
@@ -58,7 +59,6 @@ class SongEditor(soya.Body):
         self.help_file_path = os.path.join(app_dir, 'misc', 'HELP.txt')
         self.widget_properties = widget_properties
         self.app_dir = app_dir
-        self.parent_world = widget_properties['root_world']
         self.parent_widget = widget_properties['root_widget']
         self.theme_mgr = theme_mgr
 
@@ -72,18 +72,10 @@ class SongEditor(soya.Body):
         self.color_h = widget_properties['font']['h1']['color']
 
         self.main_menu = main_menu
-        # A container for the heading label:
-        self.v_cont = pudding.container.VerticalContainer( \
-                self.parent_widget, left=20, top=20)
-        self.v_cont.padding = 15
-        self.v_cont.anchors = pudding.ANCHOR_TOP | pudding.ANCHOR_LEFT
-        self.v_cont.visible = 0
-
         self.help_hint_cont = pudding.container.VerticalContainer( \
-                self.parent_widget, left=self.screen_res_x / 2.5, top=5)
+                self, left=self.screen_res_x / 2.5, top=5)
         self.help_hint_cont.right = 10
         self.help_hint_cont.anchors = pudding.ANCHOR_ALL
-        self.help_hint_cont.visible = 0
         self.keyboard_event = KeyboardEvent(self.widget_properties, theme_mgr)
 
         self.txt_input = InputField(self.widget_properties, '')
@@ -179,11 +171,10 @@ class SongEditor(soya.Body):
         fd_help = open(self.help_file_path, 'r')
         help = fd_help.read()
         self.help_menu.add_text(help)
-        self.help_menu.text_cont.visible = 0
         self.help_hint = pudding.control.SimpleLabel(self.help_hint_cont, \
                 label=self.l_help_hint)
 
-        self.help_hint_cont.visible = 1
+        self.add_child(self.help_menu)
         # needs testing
         #click_observer = ClickObserver(self.player)
         #self.song_data.attach(click_observer)
@@ -222,8 +213,7 @@ class SongEditor(soya.Body):
         self.heading_label.visible = 0
         self.line_number_label.visible = 0
         self.bpm_number_label.visible = 0
-        self.help_menu.text_cont.visible = 1
-        self.help_menu.box_cont.visible = 1
+        self.help_menu.visible = 1
         self.help_hint.label = self.l_help_hint_1
 
 
@@ -234,8 +224,7 @@ class SongEditor(soya.Body):
         self.keyboard_event.reset()
         self.__connect_keys__()
         self.help_hint.label = self.l_help_hint_0
-        self.help_menu.text_cont.visible = 0
-        self.help_menu.box_cont.visible = 0
+        self.help_menu.visible = 0
         self.refresh()
 
 
