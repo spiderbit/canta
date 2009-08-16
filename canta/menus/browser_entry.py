@@ -61,20 +61,9 @@ class CommonEntryPresentation(pudding.container.Container):
 
         pos_size = {}
         pos_size['top'] = 0
-        pos_size['left'] = self.width * 0.9
+        pos_size['left'] = self.width * 0.4
         pos_size['height'] = self.height * 0.05
         pos_size['width'] = self.width * 0.3
-
-        self.choose_base_button = MenuButton("", \
-            widget_properties = self.widget_properties, pos_size=pos_size)
-        self.directory_cont.add_child(self.choose_base_button, \
-                pudding.ALIGN_RIGHT)
-
-        pos_size = {}
-        pos_size['top'] = self.height *0.1
-        pos_size['left'] = self.width*0.25
-        pos_size['width'] = self.width/2
-        pos_size['height'] = self.height / 10
 
         self.start_button = MenuButton('No Songs found',\
             widget_properties = self.widget_properties, pos_size=pos_size)
@@ -166,11 +155,11 @@ class SongEntry(SongEntryPresentation):
         self.start_button.args = self.get_button_args()
         self.start_button.label = self.get_start_button_text()
         self.directory_up_button.function = self.song_manager.directory_up
-        self.choose_base_button.function = self.parent.choose_base
+
+
 
     def show(self):
         self.visible=1
-        self.choose_base_button.label = self.song_manager.name
         self.on_resize()
         if self.parent.preview:
             self.player.load(self.song.path, self.song.info['mp3'])
@@ -265,7 +254,6 @@ class DirectoryEntry(DirectoryEntryPresentation):
         self.entries = []
         self.current_entry = 0
         self.directory_up_button.function = self.song_manager.directory_up
-        self.choose_base_button.function = self.parent.choose_base
         self.cover_loaded = False
 
     def append(self, obj):

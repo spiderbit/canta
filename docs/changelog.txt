@@ -1,5 +1,6 @@
 Canta 0.2-rc2
 
+* fixes bug with basepath choice button
 * starter scripts start now from each prefix not only /usr
 * fixes songeditor help
 * point to the canta-media 0.2-rc1 version (in git-tree)

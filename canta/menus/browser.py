@@ -64,6 +64,19 @@ class MenuBrowserPresentation(Menu):
                 z_index=-3)
         self.bg_box.anchors = pudding.ANCHOR_ALL
 
+        pos_size = {}
+        pos_size['top'] = self.height *0.1
+        pos_size['left'] = self.width*0.0
+        pos_size['width'] = self.width/2
+        pos_size['height'] = self.height / 10
+
+
+        self.choose_base_button = MenuButton("", \
+            widget_properties = self.widget_properties, pos_size=pos_size)
+        self.box_cont.add_child(self.choose_base_button, \
+                pudding.ALIGN_RIGHT)
+
+
 
 class MenuBrowser(MenuBrowserPresentation):
     def __init__(self, default_manager, widget_properties, sing_screen,\
@@ -98,6 +111,8 @@ class MenuBrowser(MenuBrowserPresentation):
             song_manager.sort()
             self.song_managers.append(song_manager)
 
+        self.choose_base_button.function = self.choose_base
+        self.choose_base_button.label = song_manager.name
 
     def choose_base(self):
         self.selected_manager += 1
@@ -128,6 +143,7 @@ class MenuBrowser(MenuBrowserPresentation):
         if 'selected_entry' in self.__dict__:
             self.selected_entry.hide()
             self.selected_entry.stop_preview()
+        self.choose_base_button.label = song_manager.name
         self.selected_entry = entry
         self.selected_entry.left = self.bc_left
         self.selected_entry.top = self.bc_top
