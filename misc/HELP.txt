@@ -2,12 +2,12 @@ Keyboard Shortcuts for Song Editor:
 
 === SONG ===
 
-[d/c] increase/decrease BPM             [g] generate Music Sheets
+[d/c] increase/decrease BPM             [g] generate Music Sheets (experimental)
 
 === LINE ===
 
 [l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
-[n] play (Frequencies)                  [e] generate Music Sheets
+[n] play (Frequencies)                  [e] generate Music Sheets (experimental)
 [b] play (both)                         [u/i] split/merge
 
 === TONE ===
