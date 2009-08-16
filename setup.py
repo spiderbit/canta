@@ -28,7 +28,7 @@ setup_data_files.append(('share/games/canta/', ['run_canta', 'run_song_generator
 setup_data_files.append(('share/pixmaps', ['misc/canta.png', 'misc/csg.png']))
 setup_data_files.append(('share/applications', ['misc/canta.desktop', 'misc/csg.desktop']))
 setup_data_files.append(('share/games/canta/misc', ['misc/HELP.txt', 'misc/ABOUT.txt', 'misc/configspec']))
-setup_data_files.append(('games', ['starter/canta', 'starter/csg']))
+setup_data_files.append(('games/bin', ['starter/canta', 'starter/csg']))
 
 dirs = []
 elements = glob('canta/*')
