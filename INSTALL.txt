@@ -38,4 +38,4 @@ Installation / Requirements
 	- python-wxgtk
 	- python-mingus >= 0.4.0.1
 	- and of course: python (2.6)
-
+	- canta-media (same version)
