@@ -64,16 +64,34 @@ class MenuBrowserPresentation(Menu):
                 z_index=-3)
         self.bg_box.anchors = pudding.ANCHOR_ALL
 
-        pos_size = {}
-        pos_size['top'] = self.height *0.1
-        pos_size['left'] = self.width*0.0
-        pos_size['width'] = self.width/2
-        pos_size['height'] = self.height / 10
+        self.directory_cont = pudding.container.HorizontalContainer( \
+            self.box_cont, top=self.height * 0.02, \
+            right=self.right, width=self.width, \
+            height=self.height, left=0)
 
+        pos_size = {}
+        pos_size['top'] = 0
+        pos_size['left'] = 0
+        pos_size['height'] = self.height * 0.05
+        pos_size['width'] = self.width * 0.3
+
+        self.directory_cont.anchors = pudding.ANCHOR_ALL
+        self.directory_cont.padding = 10
+
+        self.directory_up_button = MenuButton("<<", \
+            widget_properties = self.widget_properties, pos_size=pos_size)
+        self.directory_cont.add_child(self.directory_up_button, \
+                pudding.ALIGN_LEFT)
+
+        pos_size = {}
+        pos_size['top'] = 0
+        pos_size['left'] = self.width * 0.9
+        pos_size['height'] = self.height * 0.05
+        pos_size['width'] = self.width * 0.3
 
         self.choose_base_button = MenuButton("", \
             widget_properties = self.widget_properties, pos_size=pos_size)
-        self.box_cont.add_child(self.choose_base_button, \
+        self.directory_cont.add_child(self.choose_base_button, \
                 pudding.ALIGN_RIGHT)
 
 
@@ -111,8 +129,13 @@ class MenuBrowser(MenuBrowserPresentation):
             song_manager.sort()
             self.song_managers.append(song_manager)
 
+        self.directory_up_button.function = self.directory_up
         self.choose_base_button.function = self.choose_base
         self.choose_base_button.label = song_manager.name
+
+
+    def directory_up(self):
+        self.song_managers[self.selected_manager].directory_up()
 
     def choose_base(self):
         self.selected_manager += 1
@@ -135,6 +158,10 @@ class MenuBrowser(MenuBrowserPresentation):
 
     def reload_view(self, direction, pos=None):
         song_manager = self.song_managers[self.selected_manager]
+        if song_manager.dir_pos!='':
+            self.directory_up_button.visible=1
+        else:
+            self.directory_up_button.visible=0
         if len(song_manager.browsable_items) == 0:
             return
         song_manager.select_entry(direction, pos)

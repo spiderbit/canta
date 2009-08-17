@@ -40,30 +40,11 @@ class CommonEntryPresentation(pudding.container.Container):
         self.widget_properties = self.parent.widget_properties
         self.visible=0
 
-        self.directory_cont = pudding.container.HorizontalContainer( \
-            self, top=self.height * 0.02, \
-            right=self.right, width=self.width, \
-            height=self.height, left=0)
-
         pos_size = {}
-        pos_size['top'] = 0
-        pos_size['left'] = 0
-        pos_size['height'] = self.height * 0.05
-        pos_size['width'] = self.width * 0.3
-
-        self.directory_cont.anchors = pudding.ANCHOR_ALL
-        self.directory_cont.padding = 10
-
-        self.directory_up_button = MenuButton("<<", \
-            widget_properties = self.widget_properties, pos_size=pos_size)
-        self.directory_cont.add_child(self.directory_up_button, \
-                pudding.ALIGN_LEFT)
-
-        pos_size = {}
-        pos_size['top'] = 0
-        pos_size['left'] = self.width * 0.4
-        pos_size['height'] = self.height * 0.05
-        pos_size['width'] = self.width * 0.3
+        pos_size['top'] = self.height *0.1
+        pos_size['left'] = self.width*0.25
+        pos_size['width'] = self.width/2
+        pos_size['height'] = self.height / 10
 
         self.start_button = MenuButton('No Songs found',\
             widget_properties = self.widget_properties, pos_size=pos_size)
@@ -154,8 +135,6 @@ class SongEntry(SongEntryPresentation):
         self.start_button.function = self.get_button_func()
         self.start_button.args = self.get_button_args()
         self.start_button.label = self.get_start_button_text()
-        self.directory_up_button.function = self.song_manager.directory_up
-
 
 
     def show(self):
@@ -253,7 +232,6 @@ class DirectoryEntry(DirectoryEntryPresentation):
         self.song_manager = song_manager
         self.entries = []
         self.current_entry = 0
-        self.directory_up_button.function = self.song_manager.directory_up
         self.cover_loaded = False
 
     def append(self, obj):
@@ -263,7 +241,6 @@ class DirectoryEntry(DirectoryEntryPresentation):
         self.start_button.label = self.get_start_button_text()
         self.start_button.args = self.get_button_args()
         self.start_button.function = self.get_button_func()
-        self.choose_base_button.label = self.song_manager.name
         self.desc_label.label = self.get_desc()
         if self.parent.use_pil:
             cover_path = self.get_cover()
