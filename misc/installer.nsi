@@ -1,5 +1,8 @@
 ; Canta Install Script
 
+; this script is not used since version 0.2 beta4
+; so you have to modify it, if you want to get it working
+
 !define exec "canta.exe"
 !define icon "canta.ico"
 

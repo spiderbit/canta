@@ -18,5 +18,5 @@ help:
 	@echo "\nMakefile options are:\n"
 	@echo "	clean:		clean temporary files"
 	@echo "	run:		to start canta"
-	@echo "	install:	to install canta to /usr"
+	@echo "	install:	to install canta"
 	@echo "\n"
