@@ -1,3 +1,5 @@
 #!/bin/sh
 
-python ../../share/games/canta/run_song_generator $*
+abspath="$(cd "${0%/*}" 2>/dev/null; echo "$PWD"/"${0##*/}")"
+path_only=`dirname "$abspath"`
+python $path_only/../share/games/canta/run_song_generator $*

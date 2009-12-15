@@ -1,4 +1,8 @@
-Canta 0.2-rc2
+Canta 0.2.0
+
+* starter scripts now start from each prefix (this time I hope really ;) )
+
+Canta 0.2-rc2 (2009-08-17)
 
 * fixes bug with basepath choice button
 * starter scripts start now from each prefix not only /usr
