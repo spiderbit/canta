@@ -44,8 +44,8 @@ def main():
     #else:
     #    version = '(experimental)'
 
-    version = '(experimental)'
-#    version = '0.2-rc3'
+#    version = '(experimental)'
+    version = '0.2.0'
 
     # debug flag:
     # python sets an own debug variable if you start python with the right parameter
