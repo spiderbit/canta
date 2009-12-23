@@ -82,8 +82,8 @@ start_screen = """
     Press Enter if you like the preset in []
 """
 
-
-usage = """
+def print_usage():
+    usage = """
 Usage:  %s [OPTION]... [FILE]
 
    -h, --help\t\t\tPrints this page
@@ -117,8 +117,8 @@ QUICK MODE (without need of a midi):
 
 supported formats: <%s>
 
-""" % (sys.argv[0], sys.argv[0], sys.argv[0], sys.argv[0], (', '.join(supported_formats())))
-
+    """ % (name, name, name, name, (', '.join(supported_formats())))
+    print usage
 
 
 def print_error(error_msg):
@@ -491,20 +491,20 @@ class MainWindow(wx.Frame):
 
 ####################################################################################################
 
-
+name = sys.argv[0]
 
 def main():
 
     try:
-        opts, args = getopt.gnu_getopt(sys.argv[1:], "hAm:t:a:e:s:d:", \
+        opts, args = getopt.gnu_getopt(sys.argv[1:], "hAm:t:a:e:s:d:n:", \
                                ["help", "ask", "midi-file", "title=", "artist=", \
-                                "entries=", "spacing=", "duration="])
+                                "entries=", "spacing=", "duration=", "name="])
 
     except getopt.GetoptError, err:
 
          # print help information and exit:
          print str(err) # will print something like "option -a not recognized"
-         print usage
+         print_usage()
          sys.exit(2)
 
     music_file = None
@@ -520,7 +520,8 @@ def main():
     if len(args) == 1:
         music_file = args[0]
         check_file(music_file)
-    elif len(args) ==  0 and len(opts) == 0:
+    elif len(args) == 0 and (len(opts) == 0 or \
+        len(opts) == 1 and (opts[0][0] == '-n' or opts[0][0] == '--name')):
         app = wx.App()
         frame = MainWindow()
         frame.Show()
@@ -530,9 +531,8 @@ def main():
         pass
     else:
         print sys.argv[0], 'requires a audio file '
-        print usage
+        print_usage()
         sys.exit(2)
-
 
     for o, a in opts:
         if o in ('-m', '--midi-file'):
@@ -551,8 +551,17 @@ def main():
             #verbose = True
         elif o in ("-A", "--ask"):
             ask = True
+        elif o in ("-n", "--name"):
+            '''
+            name is a intern option for starter scripts
+            to overwrite the usage-starter-name
+            the option must be before -h or --help
+            '''
+
+            global name
+            name = a
         elif o in ("-h", "--help"):
-            print usage
+            print_usage()
             sys.exit(2)
         else:
             assert False, "unhandled option"
@@ -571,7 +580,7 @@ def get_time(x):
         if tones > 0:
             return tones
         else:
-            print usage
+            print_usage()
             sys.exit(2)
     except:
         if x[-1] == 's':
@@ -583,10 +592,10 @@ def get_time(x):
                         tones = 1
                     return tones
                 else:
-                    print usage
+                    print_usage()
                     sys.exit(2)
             except:
-                print usage
+                print_usage()
                 sys.exit(2)
 
 

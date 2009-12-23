@@ -1,5 +1,6 @@
 Canta 0.2.0
 
+* song-generator displays the name of the starter-script in the usage-screen now
 * starter scripts now start from each prefix (this time I hope really ;) )
 
 Canta 0.2-rc2 (2009-08-17)
