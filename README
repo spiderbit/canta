@@ -1,0 +1,41 @@
+Installation / Requirements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. RUN DIRECTLY
+
+	> sh run_canta				starts canta
+	> sh run_song_generator			starts canta song generator
+						(--help for more)
+
+	you need all the Dependencies listet under Point 3
+
+2. INSTALL IT TO YOUR SYSTEM
+
+ * Windows
+
+	Just download the windows installer
+
+ * Ubuntu, Debian, Other debian-based distries
+
+	Download the deb package from the homepage and all listet other files there
+	and install it with your packetmanager
+
+ * Other Distries:
+	** did only try under ubuntu,
+	but should work on freebsd and other linux distries
+
+	> make install   (in this directory)
+
+	you need the Dependencies listet under Point 3
+
+
+3. DEPENDENCIES:
+
+	- python-soya
+	- python-configobj
+	- python-gst > 0.10
+	- python-mutagen
+	- python-wxgtk
+	- python-mingus >= 0.4.0.1
+	- and of course: python (2.6)
+	- canta-media (same version)
