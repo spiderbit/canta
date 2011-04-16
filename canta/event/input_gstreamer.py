@@ -161,4 +161,4 @@ class Input(Thread):
 
     def stop(self):
         self.player_pipeline.set_state(gst.STATE_NULL)
-
+        gtk.main_quit()
