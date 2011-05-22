@@ -45,7 +45,7 @@ def main():
     #    version = '(experimental)'
 
 #    version = '(experimental)'
-    version = '0.2.0'
+    version = '0.2.1'
 
     # debug flag:
     # python sets an own debug variable if you start python with the right parameter
