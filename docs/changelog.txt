@@ -1,5 +1,10 @@
 * refactored Canta core
 
+Canta 0.2.1 (2011-05-22)
+
+* adds compiled language files for canta, they are needed in cantas current language module
+* fixes a bug: canta crashes if you press the quit button after you played a song.
+
 Canta 0.2.0 (2009-12-23)
 
 * song-generator displays the name of the starter-script in the usage-screen now

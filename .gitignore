@@ -1,7 +1,6 @@
 tests/song_compare.pkl
 #.gitignore
 tmp
-*.mo
+#*.mo
 *.pyc
 *.pyo
-lang/*/LC_MESSAGES/canta-old.po

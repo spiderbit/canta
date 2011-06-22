@@ -39,3 +39,13 @@ Installation / Requirements
 	- python-mingus >= 0.4.0.1
 	- and of course: python (2.6)
 	- canta-media (same version)
+
+
+4. KNOWN PROBLEMS:
+
+        - in current ubuntu (natty narwhal) and maybe also other 
+          distries you maybe need to preload libglu to get canta
+          working:
+
+        > LD_PRELOAD=/usr/lib/libGLU.so.1 python run_canta
+
