@@ -6,3 +6,4 @@ Comment=Canta is a platform-independent karaoke (singstar-like) Game
 Exec=/usr/games/canta
 Icon=canta.png
 Categories=Game;Music;
+Comment[ru]=Образовательная караоке-игра

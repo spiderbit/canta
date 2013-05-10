@@ -6,3 +6,4 @@ Comment=Canta Song Generator is a tool to make new Songs for Canta
 Exec=/usr/games/csg
 Icon=csg.png
 Categories=Game;Music;
+Comment[ru]=Утилита для создания песен для Canta

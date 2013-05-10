@@ -56,7 +56,6 @@ class SongEditor(Menu):
         self.l_line_no = _(u'Line: ')
         self.separator = u' - '
         self.h_help = _(u'Help')
-        self.help_file_path = os.path.join(app_dir, 'misc', 'HELP.txt')
         self.widget_properties = widget_properties
         self.app_dir = app_dir
         self.parent_widget = widget_properties['root_widget']
@@ -165,12 +164,37 @@ class SongEditor(Menu):
         self.parent_world.add(self.keyboard_event)
 
         # Help menu:
+        songeditor_help_body = _(u'''Keyboard Shortcuts for Song Editor:
+
+=== SONG ===
+
+[d/c] increase/decrease BPM             [g] generate Music Sheets (experimental)
+
+=== LINE ===
+
+[l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line
+[n] play (Frequencies)                  [e] generate Music Sheets (experimental)
+[b] play (both)                         [u/i] split/merge
+
+=== TONE ===
+
+[ARROW-LEFT/RIGHT] select next/previous
+[ARROW-UP/DOWN] increase/decrease pitch
+
+[a/r] Add/Remove                        [SPACE] play (Waveform)
+[x/y] move to the right/left            [m] play (Frequencies)
+[+/-] increase/decrease duration        [v] play (both)
+[t] change Text                         [z] change length of the bars (in beats)
+
+=== FILE ===
+
+[s] Save changes                        [q] Quit to main menu
+
+P.S: try, error and enjoy!! ;-)''')
         self.help_menu = MenuText(self.widget_properties, top=self.screen_res_y / 5, \
                 left=self.screen_res_x / 2)
         self.help_menu.set_heading(self.h_help)
-        fd_help = open(self.help_file_path, 'r')
-        help = fd_help.read()
-        self.help_menu.add_text(help)
+        self.help_menu.add_text(songeditor_help_body)
         self.help_hint = pudding.control.SimpleLabel(self.help_hint_cont, \
                 label=self.l_help_hint)
 
@@ -533,4 +557,3 @@ def main():
 if __name__ == '__main__': main()
 
 # vim: ai ts=4 sts=4 et sw=4
-

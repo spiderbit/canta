@@ -210,9 +210,23 @@ class CoreInit:
         h1_about =  _(u'About')
         h1_song_browser =  _(u'Choose a song...')
 
+        about_body = _(u'''CANTA - A free entertaining educational software for singing
+Copyright (C) 2007, 2008, 2009  S. Huchler, A. Kattner, F. Lopez
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.''')
 
         # File paths:
-        about_file = os.path.join('misc', 'ABOUT.txt')
         logo_path = 'logo.png'
         show_logo = False
 
@@ -232,9 +246,7 @@ class CoreInit:
         about_quit = MenuButton(l_quit, function=self.quit, \
             pos_size=0, widget_properties = self.widget_properties)
         about_menu.add(about_quit, 'center')
-        fd_license = open(os.path.join(self.app_dir, about_file), 'r')
-        license = fd_license.read()
-        about_menu.add_text(license)
+        about_menu.add_text(about_body)
 
         self.load_player()
         song_editor = SongEditor(self.app_dir, self.widget_properties, \
@@ -256,12 +268,12 @@ class CoreInit:
         # Song browser:
         entries = []
         entry_sing_screen = {}
-        entry_sing_screen['song_start_text'] = 'Start'
+        entry_sing_screen['song_start_text'] = _(u'Start')
         entry_sing_screen['start_screen'] = sing_screen
         entry_sing_screen['menu_text'] = _(u"Sing")
         entry_sing_screen['default_manager'] = 0
         entry_song_editor = {}
-        entry_song_editor['song_start_text'] = 'Edit'
+        entry_song_editor['song_start_text'] = _(u'Edit')
         entry_song_editor['start_screen'] = song_editor
         entry_song_editor['menu_text'] = _(u'Song Editor')
         entry_song_editor['default_manager'] = 1
@@ -433,4 +445,3 @@ def main():
     pass
 
 if __name__ == '__main__': main()
-

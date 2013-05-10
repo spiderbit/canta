@@ -97,10 +97,10 @@ class SongEntry(SongEntryPresentation):
         self.l_artist = ""#'Artist: '
         self.l_title = ""#'Title: '
         self.l_description = ""#'Decription: '
-        self.l_genre = str(_('Genre: '))
-        self.l_edition = str(_('Edition: '))
-        self.l_creator = str(_('Creator: '))
-        self.l_bpm = str(_('BPM: '))
+        self.l_genre = _(u'Genre: ')
+        self.l_edition = _(u'Edition: ')
+        self.l_creator = _(u'Creator: ')
+        self.l_bpm = _(u'BPM: ')
         self.l_start = start_button_text
         self.cover_loaded = False
 
@@ -298,4 +298,3 @@ class DirectoryEntry(DirectoryEntryPresentation):
 
     def stop_preview(self):
         pass
-

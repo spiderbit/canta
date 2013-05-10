@@ -114,10 +114,10 @@ class MenuBrowser(MenuBrowserPresentation):
         self.song_start_text = song_start_text
         directories = []
         sys_directory = {}
-        sys_directory['name'] = 'System'
+        sys_directory['name'] = _(u'System')
         sys_directory['path'] = Directory(os.path.join(app_dir, 'media', 'songs'))
         home_directory = {}
-        home_directory['name'] = 'Home'
+        home_directory['name'] = _(u'Home')
         home_directory['path'] = Directory(os.path.join(self.config_path, 'songs'))
         directories.append(sys_directory)
         directories.append(home_directory)
@@ -186,4 +186,3 @@ class MenuBrowser(MenuBrowserPresentation):
         # Deprecated
         self.nav_cont.add_child(button, pudding.EXPAND_BOTH)
         button.root=self
-

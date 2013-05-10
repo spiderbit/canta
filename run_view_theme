@@ -27,13 +27,6 @@ import soya.sphere
 import getopt
 from canta.theme.theme_manager import ThemeManager
 from canta.theme.editor import Editor
-try:
-    import psyco
-    psyco.full()
-except ImportError:
-    print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
-    pass
-
 from canta.display.core_init import CoreInit
 
 def usage():
@@ -152,4 +145,3 @@ def main():
 
 
 if __name__ == '__main__': main()
-

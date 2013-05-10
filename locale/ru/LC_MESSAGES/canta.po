@@ -1,0 +1,375 @@
+# Russian translations for PACKAGE package.
+# Copyright (C) 2008 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# AlexL loginov.alex.valer@gmail.com, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: canta 0.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-05-10 15:44+0000\n"
+"PO-Revision-Date: 2013-05-10 16:19-0000\n"
+"Last-Translator: AlexL <loginov.alex.valer@gmail.com>\n"
+"Language-Team: Russian\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: canta/event/observers/time_label.py:39
+msgid "Time: "
+msgstr "Время: "
+
+#: canta/event/observers/resultview.py:34
+msgid "main menu"
+msgstr "главное меню"
+
+#: canta/event/observers/resultview.py:35
+msgid "choose another song"
+msgstr "выбрать другую песню"
+
+#: canta/event/observers/resultview.py:36
+#: canta/menus/settings.py:78
+#: canta/display/core_init.py:206
+msgid "quit"
+msgstr "выход"
+
+#: canta/event/observers/resultview.py:39
+msgid "normal points"
+msgstr "нормальные точки"
+
+#: canta/event/observers/resultview.py:40
+msgid "freestyle points"
+msgstr "свободные точки"
+
+#: canta/event/observers/resultview.py:41
+msgid "bonus points"
+msgstr "бонусные точки"
+
+#: canta/event/observers/resultview.py:42
+msgid "points"
+msgstr "точки"
+
+#: canta/event/observers/resultview.py:43
+msgid "SCORE"
+msgstr "Счёт"
+
+#: canta/event/observers/pause.py:31
+msgid "continue singing"
+msgstr "продолжить пение"
+
+#: canta/event/observers/pause.py:32
+msgid "quit song"
+msgstr "завершить песню"
+
+#: canta/song/song_editor.py:52
+msgid "Press [h] for help..."
+msgstr "Нажмите [h] для справки..."
+
+#: canta/song/song_editor.py:53
+msgid "Press [ESC] to go back..."
+msgstr "Нажмите [ESC] чтобы вернуться назад..."
+
+#: canta/song/song_editor.py:55
+#: canta/menus/browser_entry.py:103
+msgid "BPM: "
+msgstr "BPM: "
+
+#: canta/song/song_editor.py:56
+msgid "Line: "
+msgstr "Линия: "
+
+#: canta/song/song_editor.py:58
+msgid "Help"
+msgstr "Помощь"
+
+#: canta/song/song_editor.py:167
+msgid ""
+"Keyboard Shortcuts for Song Editor:\n"
+"\n"
+"=== SONG ===\n"
+"\n"
+"[d/c] increase/decrease BPM             [g] generate Music Sheets (experimental)\n"
+"\n"
+"=== LINE ===\n"
+"\n"
+"[l] play (Waveform)                     [PAGE-UP/DOWN] show previous/next line\n"
+"[n] play (Frequencies)                  [e] generate Music Sheets (experimental)\n"
+"[b] play (both)                         [u/i] split/merge\n"
+"\n"
+"=== TONE ===\n"
+"\n"
+"[ARROW-LEFT/RIGHT] select next/previous\n"
+"[ARROW-UP/DOWN] increase/decrease pitch\n"
+"\n"
+"[a/r] Add/Remove                        [SPACE] play (Waveform)\n"
+"[x/y] move to the right/left            [m] play (Frequencies)\n"
+"[+/-] increase/decrease duration        [v] play (both)\n"
+"[t] change Text                         [z] change length of the bars (in beats)\n"
+"\n"
+"=== FILE ===\n"
+"\n"
+"[s] Save changes                        [q] Quit to main menu\n"
+"\n"
+"P.S: try, error and enjoy!! ;-)"
+msgstr ""
+"Горячие клавиши для редактора песен:\n"
+"\n"
+"=== ПЕСНЯ ===\n"
+"\n"
+"[d/c] увеличить/уменьшить BPM           [g] генерировать музыкальные листы (экспериментально)\n"
+"\n"
+"=== СТРОКА ===\n"
+"\n"
+"[l] играть (Форма волны)                [PAGE-UP/DOWN] показать предыдущую/следующую линию\n"
+"[n] играть (Частоты)                    [e] генерировать музыкальные листы (экспериментально)\n"
+"[b] играть (и то, и то)                 [u/i] разделить/объединить\n"
+"\n"
+"=== ТОН ===\n"
+"\n"
+"[СТРЕЛКА-ВЛЕВО/ВПРАВО] выбрать следующий/предыдущий\n"
+"[СТРЕЛКА-ВВЕРХ/ВНИЗ] увеличить/уменьшить шаг\n"
+"\n"
+"[a/r] Добавить/Удалить                  [ПРОБЕЛ] играть (Форма волны)\n"
+"[x/y] переместить вправо/влево          [m] играть (Частоты)\n"
+"[+/-] увеличить/уменьшить длительность  [v] играть (и то, и то)\n"
+"[t] изменить текст                      [z] изменить длину баров (в ударах)\n"
+"\n"
+"=== ФАЙЛ ===\n"
+"\n"
+"[s] Сохранить изменения                 [q] Выйти в главное меню\n"
+"\n"
+"P.S: пробуйте, ошибайтесь и наслаждайтесь!! ;-)"
+
+#: canta/menus/settings.py:70
+#: canta/menus/settings.py:81
+msgid "Settings"
+msgstr "Настройки"
+
+#: canta/menus/settings.py:71
+msgid "Screen"
+msgstr "Экран"
+
+#: canta/menus/settings.py:72
+msgid "Sound"
+msgstr "Звук"
+
+#: canta/menus/settings.py:73
+msgid "Theme"
+msgstr "Тема"
+
+#: canta/menus/settings.py:74
+msgid "Misc"
+msgstr "Разное"
+
+#: canta/menus/settings.py:75
+#: canta/display/core_init.py:203
+msgid "back"
+msgstr "назад"
+
+#: canta/menus/settings.py:76
+#: canta/display/core_init.py:204
+msgid "save"
+msgstr "сохранить"
+
+#: canta/menus/settings.py:77
+#: canta/display/core_init.py:205
+msgid "save & restart"
+msgstr "сохранить и перезапустить"
+
+#: canta/menus/settings.py:82
+msgid "Screen Settings"
+msgstr "Настройки экрана"
+
+#: canta/menus/settings.py:83
+msgid "SCREEN:"
+msgstr "Экран:"
+
+#: canta/menus/settings.py:84
+msgid "Sound Settings"
+msgstr "Настройки звука"
+
+#: canta/menus/settings.py:85
+msgid "SOUND:"
+msgstr "Звук:"
+
+#: canta/menus/settings.py:86
+msgid "Theme Settings"
+msgstr "Настройки темы"
+
+#: canta/menus/settings.py:87
+msgid "THEME:"
+msgstr "Тема:"
+
+#: canta/menus/settings.py:88
+msgid "Miscellaneous Settings"
+msgstr "Дополнительные настройки"
+
+#: canta/menus/settings.py:89
+msgid "Miscellaneous"
+msgstr "Дополнительно"
+
+#: canta/menus/settings.py:93
+#: canta/menus/settings.py:266
+msgid "off"
+msgstr "выкл"
+
+#: canta/menus/settings.py:93
+#: canta/menus/settings.py:266
+msgid "on"
+msgstr "вкл"
+
+#: canta/menus/settings.py:94
+msgid "Resolution:"
+msgstr "Разрешение:"
+
+#: canta/menus/settings.py:95
+msgid "Fullscreen:"
+msgstr "Весь экран:"
+
+#: canta/menus/settings.py:96
+msgid "FPS label:"
+msgstr "Кол-во кадров в секунду:"
+
+#: canta/menus/settings.py:97
+msgid "Cover images:"
+msgstr "Изображения обложек:"
+
+#: canta/menus/settings.py:98
+msgid "Select sound output engine:"
+msgstr "Выберите вывод звука:"
+
+#: canta/menus/settings.py:99
+msgid "Select sound input engine:"
+msgstr "Выберите ввод звука:"
+
+#: canta/menus/settings.py:100
+msgid "Play preview in song browser:"
+msgstr "Играть предпросмотр в песенном браузере:"
+
+#: canta/menus/settings.py:101
+msgid "Choose a theme:"
+msgstr "Выберите тему:"
+
+#: canta/menus/settings.py:102
+msgid "Choose a language:"
+msgstr "Выберите язык:"
+
+#: canta/menus/settings.py:103
+msgid "Octave correctness:"
+msgstr "Корректность октавы:"
+
+#: canta/menus/settings.py:104
+msgid "Easier tone hitting:"
+msgstr "Легче тон попадания:"
+
+#: canta/menus/settings.py:105
+msgid "Allowed difference:"
+msgstr "Разрешить разницу:"
+
+#: canta/menus/browser_entry.py:100
+msgid "Genre: "
+msgstr "Жанр: "
+
+#: canta/menus/browser_entry.py:101
+msgid "Edition: "
+msgstr "Редакция: "
+
+#: canta/menus/browser_entry.py:102
+msgid "Creator: "
+msgstr "Автор: "
+
+#: canta/menus/browser.py:38
+msgid "next >>"
+msgstr "следующая >>"
+
+#: canta/menus/browser.py:39
+msgid "<< previous"
+msgstr "<< предыдущая"
+
+#: canta/menus/browser.py:117
+msgid "System"
+msgstr "Системный"
+
+#: canta/menus/browser.py:120
+msgid "Home"
+msgstr "Домашний"
+
+#: canta/display/sing_screen.py:68
+msgid "Pause"
+msgstr "Пауза"
+
+#: canta/display/sing_screen.py:69
+msgid "Results"
+msgstr "Результаты"
+
+#: canta/display/core_init.py:197
+#: canta/display/core_init.py:273
+msgid "Sing"
+msgstr "Пение"
+
+#: canta/display/core_init.py:198
+#: canta/display/core_init.py:278
+msgid "Song Editor"
+msgstr "Редактор песен"
+
+#: canta/display/core_init.py:200
+#: canta/display/core_init.py:210
+msgid "About"
+msgstr "О программе"
+
+#: canta/display/core_init.py:201
+msgid "Quit"
+msgstr "Выход"
+
+#: canta/display/core_init.py:209
+msgid "Main Menu"
+msgstr "Главное меню"
+
+#: canta/display/core_init.py:211
+msgid "Choose a song..."
+msgstr "Выбор песни..."
+
+#: canta/display/core_init.py:213
+msgid ""
+"CANTA - A free entertaining educational software for singing\n"
+"Copyright (C) 2007, 2008, 2009  S. Huchler, A. Kattner, F. Lopez\n"
+"\n"
+"This program is free software: you can redistribute it and/or modify\n"
+"it under the terms of the GNU General Public License as published by\n"
+"the Free Software Foundation, either version 3 of the License, or\n"
+"(at your option) any later version.\n"
+"\n"
+"This program is distributed in the hope that it will be useful,\n"
+"but WITHOUT ANY WARRANTY; without even the implied warranty of\n"
+"MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n"
+"See the GNU General Public License for more details.\n"
+"\n"
+"You should have received a copy of the GNU General Public License\n"
+"along with this program.  If not, see <http://www.gnu.org/licenses/>."
+msgstr ""
+"CANTA - свободная развлекательная образовательная программа для пения\n"
+"Copyright (C) 2007, 2008, 2009  S. Huchler, A. Kattner, F. Lopez\n"
+"\n"
+"Эта программа является свободной: Вы можете распространять и/или изменять\n"
+"её в соответствии с лицензией GNU General Public License, опубликованной\n"
+"Free Software Foundation, версией 3 этой лицензии, или\n"
+"(по Вашему усмотрению) любой более поздней версией.\n"
+"\n"
+"Эта программа распространяется в надежде, что она будет полезной,\n"
+"но БЕЗ ВСЯКИХ ГАРАНТИЙ; даже без подразумеваемых гарантий\n"
+"РАБОТОСПОСОБНОСТИ или ПРИГОДНОСТИ ДЛЯ КОНКРЕТНЫХ ЦЕЛЕЙ.\n"
+"Смотрите GNU General Public License для большей информации.\n"
+"\n"
+"Вы должны были получить копию GNU General Public License,\n"
+"идущую с этой программой. Или смотрите <http://www.gnu.org/licenses/>."
+
+#: canta/display/core_init.py:276
+msgid "Edit"
+msgstr "Правка"
+
+#: canta/display/core_init.py:423
+msgid "Loading, please wait..."
+msgstr "Загрузка, пожалуйста, подождите..."
+

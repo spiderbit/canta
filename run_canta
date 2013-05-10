@@ -20,13 +20,6 @@
 import sys
 import os
 
-try:
-    import psyco
-    psyco.full()
-except ImportError:
-    print '+ Canta + Warning: Psyco not found. Performance will not be optimized.'
-    pass
-
 from canta.display.core_init import CoreInit
 
 
