@@ -479,8 +479,7 @@ class MainWindow(wx.Frame):
         if dialog.ShowModal() == wx.ID_OK:
             user_provided_filename = True
             self.filename = dialog.GetFilename()
-            self.dirname = dialog.GetDirectory()
-
+            self.dirname = os.path.dirname(dialog.GetPath())
         else:
             user_provided_filename = False
         dialog.Destroy()

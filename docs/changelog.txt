@@ -1,3 +1,4 @@
+* fixes path recognition that could cause crashes in the filedialog of csg
 * fixes bug in song-browser,
   that made next and prev button not work, if you switched to other location with no songs in it.
 * hides the songs from System location in songeditor because
