@@ -1,3 +1,5 @@
+* fixes bug in song-browser,
+  that made next and prev button not work, if you switched to other location with no songs in it.
 * hides the songs from System location in songeditor because
     if users would edit them they except that their changes can be saved
 * adds russion translation for desktop starter files

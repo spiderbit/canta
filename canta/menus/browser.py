@@ -138,12 +138,15 @@ class MenuBrowser(MenuBrowserPresentation):
     def directory_up(self):
         self.song_managers[self.selected_manager].directory_up()
 
-    def choose_base(self):
+    def choose_next(self):
         self.selected_manager += 1
         self.selected_manager %= len(self.song_managers)
         self.browsable_items = self.song_managers[self.selected_manager].get_entries()
 
-
+    def choose_base(self):
+        self.choose_next()
+        if len (self.browsable_items) == 0:
+            self.choose_next()
         self.reload_view('start')
 
     def stop_preview(self):
