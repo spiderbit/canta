@@ -98,7 +98,7 @@ class MenuBrowserPresentation(Menu):
 
 class MenuBrowser(MenuBrowserPresentation):
     def __init__(self, default_manager, widget_properties, sing_screen,\
-             config=None, player=None, song_start_text='enter'):
+                 config=None, player=None, song_start_text='enter', show_directory_chooser=True):
         MenuBrowserPresentation.__init__(self, widget_properties)
         self.config = config
         self.cover_loaded = False
@@ -132,7 +132,8 @@ class MenuBrowser(MenuBrowserPresentation):
         self.directory_up_button.function = self.directory_up
         self.choose_base_button.function = self.choose_base
         self.choose_base_button.label = song_manager.name
-
+        if not show_directory_chooser:
+            self.choose_base_button.visible = False
 
     def directory_up(self):
         self.song_managers[self.selected_manager].directory_up()
@@ -141,6 +142,8 @@ class MenuBrowser(MenuBrowserPresentation):
         self.selected_manager += 1
         self.selected_manager %= len(self.song_managers)
         self.browsable_items = self.song_managers[self.selected_manager].get_entries()
+
+
         self.reload_view('start')
 
     def stop_preview(self):

@@ -272,11 +272,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.''')
         entry_sing_screen['start_screen'] = sing_screen
         entry_sing_screen['menu_text'] = _(u"Sing")
         entry_sing_screen['default_manager'] = 0
+        entry_sing_screen['show_manager_chooser'] = True
         entry_song_editor = {}
         entry_song_editor['song_start_text'] = _(u'Edit')
         entry_song_editor['start_screen'] = song_editor
         entry_song_editor['menu_text'] = _(u'Song Editor')
         entry_song_editor['default_manager'] = 1
+        entry_song_editor['show_manager_chooser'] = False
         entries.append(entry_sing_screen)
         entries.append(entry_song_editor)
 
@@ -284,7 +286,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.''')
         for entry in entries:
             browser = MenuBrowser(entry['default_manager'], self.widget_properties, \
                 entry['start_screen'], self.config, player = self.player,\
-                song_start_text=entry['song_start_text'])
+                                  song_start_text=entry['song_start_text'],\
+                                  show_directory_chooser=entry['show_manager_chooser'])
             browser.set_heading(h1_song_browser)
 
             back_button = MenuButton(l_back, target=main_menu, \

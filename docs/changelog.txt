@@ -1,3 +1,5 @@
+* hides the songs from System location in songeditor because
+    if users would edit them they except that their changes can be saved
 * adds russion translation for desktop starter files
 * removes psyco import strings (caused crash, if psyco was installed)
 * adds russion translation
