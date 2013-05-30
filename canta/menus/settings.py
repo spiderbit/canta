@@ -74,7 +74,6 @@ class Settings:
         l_settings_misc = _(u'Misc')
         l_back =  _(u'back')
         l_save =  _(u'save')
-        l_save_quit =  _(u'save & restart')
         l_quit =  _(u'quit')
 
         # Menu headings:
@@ -123,8 +122,6 @@ class Settings:
             widget_properties=self.widget_properties, pos_size=pos_size), 'horiz')
         self.options_menu_main.add(MenuButton(l_save, function=self.save, \
             widget_properties = self.widget_properties, pos_size=pos_size), 'horiz')
-        self.options_menu_main.add(MenuButton(l_save_quit, function=self.save, \
-            args='quit', widget_properties=self.widget_properties, pos_size=pos_size), 'horiz')
 
         self.options_menu_main.add(MenuButton(l_settings_screen, target=self.options_menu_screen, \
             widget_properties=self.widget_properties, pos_size=pos_size), 'center')
@@ -145,25 +142,19 @@ class Settings:
             widget_properties=self.widget_properties)
         save_button = MenuButton(l_save, function=self.save, \
             widget_properties=self.widget_properties)
-        save_quit_button = MenuButton(l_save_quit, function=self.save, \
-            args='quit', widget_properties=self.widget_properties)
 
         # Add items to settings menus:
         self.options_menu_screen.add(back_from_screen, 'center')
         self.options_menu_screen.add(save_button, 'center')
-        self.options_menu_screen.add(save_quit_button, 'center')
 
         self.options_menu_sound.add(back_from_sound, 'center')
         self.options_menu_sound.add(save_button, 'center')
-        self.options_menu_sound.add(save_quit_button, 'center')
 
         self.options_menu_theme.add(back_from_theme, 'center')
         self.options_menu_theme.add(save_button, 'center')
-        self.options_menu_theme.add(save_quit_button, 'center')
 
         self.options_menu_misc.add(back_from_misc, 'center')
         self.options_menu_misc.add(save_button, 'center')
-        self.options_menu_misc.add(save_quit_button, 'center')
 
 
 
@@ -308,4 +299,3 @@ class Settings:
         if args == 'quit':
             soya.quit()
             self.core._start()
-
